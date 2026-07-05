@@ -1,5 +1,7 @@
 # Explaining Markets — examples
 
+[![CI](https://github.com/explaining-markets/examples/actions/workflows/ci.yml/badge.svg)](https://github.com/explaining-markets/examples/actions/workflows/ci.yml)
+
 Notebook examples for exploring the [Explaining Markets](https://explainingmarkets.ai/)
 competition API and its historical data archive. Notebook-first, with the repeated
 API / parsing / plotting boilerplate factored into a small `examples` package so the
