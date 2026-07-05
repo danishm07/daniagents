@@ -1,0 +1,16 @@
+# Notebook hygiene + Python lint/format. Install once with:
+#   uv run pre-commit install
+repos:
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.9.6
+    hooks:
+      - id: ruff
+        args: ["--fix"]
+      - id: ruff-format
+
+  # Strip notebook outputs and execution metadata before commit, so diffs stay
+  # small and no API responses or credentials leak into git history.
+  - repo: https://github.com/kynan/nbstripout
+    rev: 0.8.1
+    hooks:
+      - id: nbstripout
