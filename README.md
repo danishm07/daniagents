@@ -1,6 +1,10 @@
 # Explaining Markets — examples
 
 [![CI](https://github.com/explaining-markets/examples/actions/workflows/ci.yml/badge.svg)](https://github.com/explaining-markets/examples/actions/workflows/ci.yml)
+[![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue.svg)](https://www.python.org)
+[![uv](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/uv/main/assets/badge/v0.json)](https://github.com/astral-sh/uv)
+[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
 Notebook examples for exploring the [Explaining Markets](https://explainingmarkets.ai/)
 competition API and its historical data archive. Notebook-first, with the repeated
