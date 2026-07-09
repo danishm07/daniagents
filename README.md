@@ -16,7 +16,7 @@ notebooks stay short and readable.
 | Notebook | What it covers |
 |---|---|
 | [`notebooks/00_api_quickstart.ipynb`](notebooks/00_api_quickstart.ipynb) | The read endpoints — events calendar (table + chart), submission health, archive manifest, webhook self-test |
-| [`notebooks/01_historical_archive.ipynb`](notebooks/01_historical_archive.ipynb) | Download, cache, and load the historical event archive for offline experiments |
+| [`notebooks/01_historical_archive.ipynb`](notebooks/01_historical_archive.ipynb) | Download, cache, and load the historical archive, then reproduce the baseline scoring regressions (Koijen & Levy WP, Table 3) with the competition's exact scoring transform |
 
 Both run top-to-bottom. With an API key they hit the live API; **without one they
 fall back to a small bundled sample** (`data/sample/`), so you can run them — and CI
@@ -55,7 +55,7 @@ events_frame(events).head()
 
 ```text
 notebooks/   the numbered, narrative examples
-src/examples/  helper package: config · client · schemas · frames · plotting · archive
+src/examples/  helper package: config · client · schemas · frames · plotting · archive · scoring
 scripts/     small runnable scripts (e.g. headless archive download)
 tests/       offline unit tests (mocked HTTP + bundled sample data)
 data/
