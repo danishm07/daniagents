@@ -11,6 +11,7 @@ Quick tour:
   frames    — turn responses into tidy, display-friendly pandas objects
   plotting  — a colorblind-safe event-calendar chart
   archive   — download, cache, and load the historical event archive
+  scoring   — the competition's exact percentile scoring transform
 """
 
 from __future__ import annotations
