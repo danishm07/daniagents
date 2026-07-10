@@ -81,4 +81,4 @@ need `EM_API_KEY` and are excluded by default.
 
 - [`starter-modal`](https://github.com/explaining-markets/starter-modal) — deploy a webhook handler on Modal
 - [`starter-railway`](https://github.com/explaining-markets/starter-railway) — the same, on other platforms
-- Official baselines — reference agents to measure yourself against
+- [`Official baselines`](https://github.com/explaining-markets/baseline-earnings-summary) — reference agents to measure yourself against
