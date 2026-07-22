@@ -7,7 +7,16 @@ from examples.schemas import ArchiveManifest, CalendarEvent, SubmissionHealth
 
 
 def test_events_frame_sorts_and_flattens(sample_events: list[dict]) -> None:
-    events = [CalendarEvent.model_validate(e) for e in sample_events]
+    # event_type is an open string set: an as-yet-unknown type (here with no
+    # focal assets) must flow through without any special-casing.
+    future_event = {
+        "event_id": "0f8c2a10-1b2c-4d5e-8a9b-0000000000ff",
+        "event_type": "SOME_FUTURE_TYPE",
+        "timing_category": "SCHEDULED",
+        "event_datetime": "2026-01-28T13:30:00Z",
+        "focal_assets": [],
+    }
+    events = [CalendarEvent.model_validate(e) for e in [*sample_events, future_event]]
     df = events_frame(events)
 
     assert list(df.columns) == [
@@ -24,10 +33,10 @@ def test_events_frame_sorts_and_flattens(sample_events: list[dict]) -> None:
     earnings = df[df["event_type"] == "EARNINGS_RELEASE"].iloc[0]
     assert earnings["n_assets"] == 1
     assert earnings["tickers"] != ""
-    # A macro event with no focal assets renders as empty tickers, zero count.
-    macro = df[df["event_type"] == "MACRO_DATA_CPI"].iloc[0]
-    assert macro["tickers"] == ""
-    assert macro["n_assets"] == 0
+    # An event with no focal assets renders as empty tickers, zero count.
+    no_assets = df[df["event_type"] == "SOME_FUTURE_TYPE"].iloc[0]
+    assert no_assets["tickers"] == ""
+    assert no_assets["n_assets"] == 0
 
 
 def test_events_frame_empty() -> None:
@@ -41,7 +50,7 @@ def test_manifest_frame_hides_urls_and_sorts() -> None:
         {
             "files": [
                 {
-                    "event_type": "FOMC_MEETING",
+                    "event_type": "SOME_FUTURE_TYPE",
                     "quarter": "2026Q2",
                     "key": "k2",
                     "url": "https://cdn/secret2",
@@ -62,7 +71,7 @@ def test_manifest_frame_hides_urls_and_sorts() -> None:
     df = manifest_frame(manifest)
     # Signed URLs never surface in the display frame.
     assert not any("url" in c for c in df.columns)
-    # Sorted by (event_type, quarter): EARNINGS before FOMC.
+    # Sorted by (event_type, quarter): EARNINGS_RELEASE before SOME_FUTURE_TYPE.
     assert df.iloc[0]["event_type"] == "EARNINGS_RELEASE"
     assert df.iloc[0]["size_mb"] == 0.0  # 863 bytes rounds to 0.00 MB
     assert df.iloc[1]["size_mb"] == 2.0

@@ -3,8 +3,9 @@
 These mirror the competition's OpenAPI schemas (``/docs/api``). They are
 deliberately **lenient** — ``extra="allow"`` — so unknown or newly added fields
 pass through untouched rather than raising. Event types in particular are an
-open string set (``EARNINGS_RELEASE``, ``FOMC_MEETING``, ``MACRO_DATA_CPI``, …),
-so we keep them as plain ``str`` and never validate against a closed enum.
+open string set — currently only ``EARNINGS_RELEASE`` is emitted — so we keep
+them as plain ``str`` and never validate against a closed enum; new types can
+appear without breaking parsing.
 
 Only the read/exercise endpoints are modeled here. Prediction *submission*
 (``POST /predictions``) is intentionally omitted — that belongs to a live agent
