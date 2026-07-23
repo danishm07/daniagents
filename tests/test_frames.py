@@ -21,6 +21,7 @@ def test_events_frame_sorts_and_flattens(sample_events: list[dict]) -> None:
 
     assert list(df.columns) == [
         "event_datetime",
+        "knowledge_cutoff",
         "event_type",
         "timing_category",
         "tickers",
@@ -42,7 +43,7 @@ def test_events_frame_sorts_and_flattens(sample_events: list[dict]) -> None:
 def test_events_frame_empty() -> None:
     df = events_frame([])
     assert df.empty
-    assert list(df.columns)[:2] == ["event_datetime", "event_type"]
+    assert list(df.columns)[:2] == ["event_datetime", "knowledge_cutoff"]
 
 
 def test_manifest_frame_hides_urls_and_sorts() -> None:
