@@ -13,6 +13,7 @@ from examples.schemas import ArchiveManifest, CalendarEvent, SubmissionHealth
 # Columns, in reading order, for the events table.
 _EVENT_COLUMNS = [
     "event_datetime",
+    "knowledge_cutoff",
     "event_type",
     "timing_category",
     "tickers",
@@ -31,6 +32,7 @@ def events_frame(events: list[CalendarEvent]) -> pd.DataFrame:
     rows = [
         {
             "event_datetime": ev.event_datetime,
+            "knowledge_cutoff": ev.knowledge_cutoff,
             "event_type": ev.event_type,
             "timing_category": ev.timing_category,
             "tickers": ", ".join(a.identifier_value for a in ev.focal_assets),
@@ -42,6 +44,7 @@ def events_frame(events: list[CalendarEvent]) -> pd.DataFrame:
     df = pd.DataFrame(rows, columns=_EVENT_COLUMNS)
     if not df.empty:
         df["event_datetime"] = pd.to_datetime(df["event_datetime"], utc=True, format="ISO8601")
+        df["knowledge_cutoff"] = pd.to_datetime(df["knowledge_cutoff"], utc=True, format="ISO8601")
         df = df.sort_values("event_datetime").reset_index(drop=True)
     return df
 
