@@ -35,9 +35,9 @@ class CalendarEvent(_Model):
     event_type: str
     timing_category: str  # "SCHEDULED" | "UNSCHEDULED"
     event_datetime: str
-    # The market close that opens the event's one-day return window - the
-    # participants' knowledge cutoff. Optional so older cached/sample payloads
-    # from before the field existed still parse.
+    # The event's knowledge cutoff: an agent must not use information from
+    # after this instant (ISO 8601, UTC). Optional so older cached/sample
+    # payloads from before the field existed still parse.
     knowledge_cutoff: str | None = None
     focal_assets: list[AssetIdentifier] = []
 
