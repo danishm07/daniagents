@@ -192,9 +192,7 @@ def test_score_submission_imputed_matches_hand_built_fill() -> None:
     want_surprise = ols_fit(list(zip(df["surprise_pct"], df["y"], strict=True)))
     assert want is not None and want_surprise is not None
     assert scores["r_squared_imputed"] == pytest.approx(want.r_squared)
-    assert scores["r_squared_surprise_imputed"] == pytest.approx(
-        want_surprise.r_squared
-    )
+    assert scores["r_squared_surprise_imputed"] == pytest.approx(want_surprise.r_squared)
     assert scores["delta_r_squared_imputed"] == pytest.approx(
         want.r_squared - want_surprise.r_squared
     )
@@ -212,9 +210,7 @@ def test_score_submission_surprise_benchmark_submission_invariant() -> None:
     a = score_submission(df, "sub_a")
     b = score_submission(df, "sub_b")
     # The imputed benchmark is fit on the full common sample -> identical.
-    assert a["r_squared_surprise_imputed"] == pytest.approx(
-        b["r_squared_surprise_imputed"]
-    )
+    assert a["r_squared_surprise_imputed"] == pytest.approx(b["r_squared_surprise_imputed"])
 
 
 def test_score_submission_no_coverage_all_none() -> None:

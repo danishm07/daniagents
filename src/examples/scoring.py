@@ -29,8 +29,8 @@ first to the higher timely-prediction coverage before imputation (``n_obs``);
 prizes for any remaining exact tie are combined and split equally — no random
 tie-break.
 
-:func:`percentile_ranks`, :func:`ols_fit`, and :func:`ols_fit2` are verbatim
-ports of the production scorer — tie handling, degenerate-fit guards and all —
+:func:`percentile_ranks`, :func:`ols_fit`, and :func:`ols_fit2` are exact
+semantic ports of the production scorer — tie handling, degenerate-fit guards and all —
 so offline numbers match what the leaderboard computes float-for-float. The
 rest assembles the per-``(event, asset)`` analysis frame from archive records
 (as produced by :func:`examples.archive.load_archive` /
@@ -229,14 +229,10 @@ def ols_fit2(points: list[tuple[float, float, float]]) -> OLSFit | None:
     beta1 = (s22 * s1y - s12 * s2y) / det
     beta2 = (s11 * s2y - s12 * s1y) / det
     alpha = mean_y - beta1 * mean_x1 - beta2 * mean_x2
-    ss_res = sum(
-        (p[2] - (alpha + beta1 * p[0] + beta2 * p[1])) ** 2 for p in points
-    )
+    ss_res = sum((p[2] - (alpha + beta1 * p[0] + beta2 * p[1])) ** 2 for p in points)
     mse = ss_res / n
     r_squared = 0.0 if s_yy == 0.0 else 1.0 - ss_res / s_yy
-    return OLSFit(
-        n=n, alpha=alpha, beta=beta1, r_squared=r_squared, mse=mse, beta_surprise=beta2
-    )
+    return OLSFit(n=n, alpha=alpha, beta=beta1, r_squared=r_squared, mse=mse, beta_surprise=beta2)
 
 
 # ----- Contest imputation + scoring (Official Rules §5) ----------------------
@@ -257,9 +253,7 @@ class ImputedPredictions:
     imputed_event_count: int
 
 
-def impute_predictions(
-    common: pd.DataFrame, prediction_col: str
-) -> ImputedPredictions | None:
+def impute_predictions(common: pd.DataFrame, prediction_col: str) -> ImputedPredictions | None:
     """Mean-impute a submission's missing predictions over the common sample.
 
     ``common`` is the common-sample frame (every Scored Event row — see
@@ -338,9 +332,7 @@ def score_submission(frame: pd.DataFrame, prediction_col: str) -> dict:
             out[f"delta_r_squared{suffix}"] = fit.r_squared - surprise_fit.r_squared
 
     # No-fill family: only the rows the submission actually predicted.
-    points = [
-        (float(x), s, y) for x, s, y in zip(xs, ss, ys, strict=True) if pd.notna(x)
-    ]
+    points = [(float(x), s, y) for x, s, y in zip(xs, ss, ys, strict=True) if pd.notna(x)]
     out["n_obs"] = len(points)
     fit = ols_fit2(points)
     emit(fit, ols_fit([(s, y) for _x, s, y in points]) if fit else None, "")
@@ -357,9 +349,7 @@ def score_submission(frame: pd.DataFrame, prediction_col: str) -> dict:
     return out
 
 
-def rank_submissions(
-    scores: pd.DataFrame, metric: str = "delta_r_squared_imputed"
-) -> pd.DataFrame:
+def rank_submissions(scores: pd.DataFrame, metric: str = "delta_r_squared_imputed") -> pd.DataFrame:
     """Order a per-submission scores frame by the contest ranking rules.
 
     ``scores`` needs one row per submission with columns ``submission``,
