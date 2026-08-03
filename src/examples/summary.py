@@ -1,8 +1,8 @@
-"""Exact port of the Explaining Markets earnings-call fact-extraction summarizer.
+"""Explaining Markets earnings-call fact-extraction summarizer.
 
 Every ``EARNINGS_RELEASE`` event you receive carries a ``disclosure`` block whose
 ``items`` include one with ``kind="facts"`` and ``source="earnings_call"``. Its
-``content`` is a list of exactly ten sentences. This module is the call that
+``content`` is a list of exactly "facts." This module is the call that
 produces them, so you can see what the extraction optimizes for rather than
 treating the facts as an opaque input.
 
@@ -20,12 +20,6 @@ semantic ports of the production summarizer — fence stripping, bracket repair,
 trim-to-ten and every failure note included — so a request you build here is
 byte-identical to the one the pipeline sends. :func:`format_transcript` is the
 same renderer the pipeline feeds it.
-
-**You will not reproduce the competition's facts by running this.** Two reasons,
-both unavoidable: the production input is a licensed full-length earnings-call
-transcript that is not distributed with this repo, and extended thinking makes
-the call nondeterministic even on identical input. Treat a local run as an
-illustration of the mechanism, not a way to regenerate or predict a disclosure.
 
 Typical use::
 
@@ -353,9 +347,7 @@ def summarize_transcript(
     resp = client.messages.create(**build_request(transcript_md, model))
 
     raw = "".join(b.text for b in resp.content if getattr(b, "type", None) == "text")
-    thinking_summary = (
-        "".join(b.thinking for b in resp.content if getattr(b, "type", None) == "thinking") or None
-    )
+    thinking_summary = "".join(b.thinking for b in resp.content if getattr(b, "type", None) == "thinking") or None
     facts, parse_note = recover_facts(raw)
     return SummaryResult(
         facts=facts,
