@@ -13,6 +13,8 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 SAMPLE_DIR = REPO_ROOT / "data" / "sample"
 SAMPLE_EVENTS = SAMPLE_DIR / "events_sample.json"
 SAMPLE_ARCHIVE = SAMPLE_DIR / "archive_EARNINGS_RELEASE_2025Q3.jsonl.gz"
+SAMPLE_TRANSCRIPT = SAMPLE_DIR / "transcript_sample.json"
+SAMPLE_SUMMARY = SAMPLE_DIR / "summary_sample.json"
 
 TEST_BASE_URL = "https://api.test/v1"
 
