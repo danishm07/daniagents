@@ -1,10 +1,13 @@
 # Notebook hygiene + Python lint/format. Install once with:
 #   uv run pre-commit install
 repos:
+  # Keep this rev in step with the `ruff` version resolved in uv.lock — CI lints
+  # with `uv run ruff`, so a drifting rev means pre-commit and CI disagree about
+  # what passes, and can enforce rules newer ruff has since retracted.
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.9.6
+    rev: v0.15.20
     hooks:
-      - id: ruff
+      - id: ruff-check
         args: ["--fix"]
       - id: ruff-format
 
