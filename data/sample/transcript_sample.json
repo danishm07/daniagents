@@ -1,0 +1,81 @@
+{
+  "_comment": "SYNTHETIC. Northwind Logistics is a fictional company and this call never happened. Real earnings-call transcripts are licensed and are not distributed with this repo; this file exists so format_transcript() and the summarization demo have something to run on offline. Shape mirrors the raw transcript record the production pipeline renders.",
+  "header": {
+    "title": "Northwind Logistics, Inc., Q2 2026 Earnings Call, Jul 28, 2026",
+    "transcriptId": "0000000",
+    "companyName": "Northwind Logistics, Inc.",
+    "ticker": "NWLG"
+  },
+  "components": [
+    {
+      "speakerName": "Operator",
+      "speakerType": "Operator",
+      "text": "Good afternoon, and welcome to the Northwind Logistics second quarter fiscal 2026 earnings conference call. All participants are in a listen-only mode. After today's presentation, there will be an opportunity to ask questions. I would now like to turn the call over to Dana Whitfield, Head of Investor Relations."
+    },
+    {
+      "speakerName": "Dana Whitfield",
+      "speakerType": "Executives",
+      "text": "Thank you, operator, and good afternoon everyone. Joining me today are Marcus Reyes, our Chief Executive Officer, and Priya Anand, our Chief Financial Officer. Before we begin, I'd remind you that today's call contains forward-looking statements subject to risks and uncertainties, and that we will reference non-GAAP measures reconciled in today's press release."
+    },
+    {
+      "speakerName": "Marcus Reyes",
+      "speakerType": "Executives",
+      "text": "Thanks, Dana. We delivered a strong second quarter. Total revenue was $842 million, up 14% year over year, ahead of the high end of our guidance range of $810 to $825 million. Growth was broad-based, but the standout was our Managed Freight platform, which grew 31% year over year and now represents 38% of total revenue, up from 33% a year ago. We ended the quarter with 4,180 enterprise shippers on the platform, a net addition of 240 in the quarter, and our net revenue retention improved to 118% from 112% last year."
+    },
+    {
+      "speakerName": "Marcus Reyes",
+      "speakerType": "Executives",
+      "text": "Operationally, we continued to see the benefits of the network densification work we started eighteen months ago. Load matching automation now handles 71% of volume without human intervention, up from 54% a year ago, and that is the single biggest driver of the gross margin expansion Priya will walk through. We also opened two new cross-dock facilities in Memphis and Reno, which we expect to contribute meaningfully to capacity in the back half."
+    },
+    {
+      "speakerName": "Priya Anand",
+      "speakerType": "Executives",
+      "text": "Thank you, Marcus. Gross margin was 27.4%, expanding 310 basis points year over year, driven primarily by the automation mix shift Marcus described and, to a lesser extent, favorable purchased transportation rates. Adjusted EBITDA was $118 million, or a 14.0% margin, compared with $71 million and a 9.6% margin in the prior-year quarter. Adjusted earnings per share was $0.64 versus $0.35 a year ago. Operating cash flow was $96 million and free cash flow was $61 million after $35 million of capital expenditures, the majority of which related to the two new facilities."
+    },
+    {
+      "speakerName": "Priya Anand",
+      "speakerType": "Executives",
+      "text": "On the balance sheet, we ended the quarter with $410 million in cash and $250 million drawn on our revolver, for net debt of a negative $160 million. During the quarter we repurchased 1.9 million shares for $58 million, and the board has authorized an incremental $300 million buyback. Turning to guidance: for the third quarter we expect revenue of $865 to $885 million and adjusted EBITDA of $120 to $128 million. For the full year we are raising our revenue outlook to $3.38 to $3.42 billion from $3.28 to $3.34 billion previously, and raising adjusted EBITDA to $472 to $488 million from $430 to $450 million."
+    },
+    {
+      "speakerName": "Ellis Nakamura",
+      "speakerType": "Analysts",
+      "text": "Congrats on the quarter. Can you talk about the durability of the gross margin expansion? How much more runway is there on the automation rate, and should we think about 27.4% as a new baseline or is there seasonality we should be modeling?"
+    },
+    {
+      "speakerName": "Priya Anand",
+      "speakerType": "Executives",
+      "text": "Good question. We think there is more room — our internal target is 80% automated load matching by the end of fiscal 2027, and each incremental ten points has historically been worth roughly 80 to 100 basis points of gross margin. That said, Q2 does benefit from seasonal mix; I'd model the second half closer to 26.5% to 27% rather than extrapolating 27.4% straight across. We are not changing our long-term gross margin target of 30%."
+    },
+    {
+      "speakerName": "Sofia Brennan",
+      "speakerType": "Analysts",
+      "text": "On the enterprise shipper adds — 240 in the quarter is a step up. Is that a pull-forward, and what are you seeing competitively on pricing?"
+    },
+    {
+      "speakerName": "Marcus Reyes",
+      "speakerType": "Executives",
+      "text": "We don't view it as a pull-forward. The pipeline actually grew sequentially, and our win rate on competitive bids improved to 44% from 38%. On pricing, the environment is rational. We took a low-single-digit price increase across the managed book effective in May and saw effectively no elevated churn — gross churn was 4.1% on a trailing twelve month basis, which is the lowest it has been since we went public."
+    },
+    {
+      "speakerName": "Tom Okafor",
+      "speakerType": "Analysts",
+      "text": "One more on capital allocation. With net cash and the raised buyback, how are you weighing repurchases against M&A?"
+    },
+    {
+      "speakerName": "Priya Anand",
+      "speakerType": "Executives",
+      "text": "Our first priority remains organic investment, and the Memphis and Reno facilities are the clearest example. Beyond that we are comfortable being opportunistic on buybacks at current levels. On M&A, we are looking at tuck-ins in final-mile capability, but nothing we would characterize as large or imminent. We are committed to remaining at or below one turn of net leverage."
+    },
+    {
+      "speakerName": "Operator",
+      "speakerType": "Operator",
+      "text": "That concludes today's question-and-answer session. I would like to turn the call back to Marcus Reyes for closing remarks."
+    },
+    {
+      "speakerName": "Marcus Reyes",
+      "speakerType": "Executives",
+      "text": "Thank you all for joining. We're pleased with the quarter, we're raising the year, and we look forward to seeing many of you at our investor day in November. Have a good evening."
+    }
+  ]
+}

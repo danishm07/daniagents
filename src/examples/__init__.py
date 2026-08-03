@@ -12,6 +12,7 @@ Quick tour:
   plotting  — a colorblind-safe event-calendar chart
   archive   — download, cache, and load the historical event archive
   scoring   — the competition's exact percentile scoring transform
+  summary   — the exact 10-fact extraction behind each event's disclosure
 """
 
 from __future__ import annotations

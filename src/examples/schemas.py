@@ -42,6 +42,37 @@ class CalendarEvent(_Model):
     focal_assets: list[AssetIdentifier] = []
 
 
+class DisclosureItem(_Model):
+    """One piece of content attached to a realized event.
+
+    For earnings calls the item to look for is ``kind="facts"`` with
+    ``source="earnings_call"``: its ``content`` is the ten-sentence summary whose
+    provenance is documented in :mod:`examples.summary`. Both fields are open
+    string sets, like ``event_type`` — new kinds and sources can appear without
+    breaking parsing, so match on them rather than assuming a single item.
+
+    Larger or binary artifacts are referenced rather than inlined, via
+    ``media_type`` / ``url`` / ``bytes`` / ``sha256``.
+    """
+
+    id: str | None = None
+    kind: str
+    source: str | None = None
+    content: list[str] = []
+    media_type: str | None = None
+    url: str | None = None
+    bytes: int | None = None
+    sha256: str | None = None
+
+
+class Disclosure(_Model):
+    """The ``disclosure`` block on a realized event — a bundle of content items."""
+
+    schema_version: str | None = None
+    generated_at: str | None = None
+    items: list[DisclosureItem] = []
+
+
 class ArchiveFile(_Model):
     """One quarter-by-event-type file in the historical archive manifest.
 

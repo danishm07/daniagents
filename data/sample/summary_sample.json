@@ -1,0 +1,38 @@
+{
+  "_comment": "SYNTHETIC. The facts below were written by hand from data/sample/transcript_sample.json (fictional company Northwind Logistics) — they are not model output and this event never happened. Shape mirrors the artifact the production summarizer publishes, whose `response.facts` becomes the disclosure item with kind=facts / source=earnings_call.",
+  "event_id": "ea_NWLG_Q2_2026",
+  "response": {
+    "facts": [
+      "Total revenue was $842 million, up 14% year over year and above the high end of the $810-825 million guidance range.",
+      "Managed Freight revenue grew 31% year over year and rose to 38% of total revenue from 33% a year ago.",
+      "Enterprise shippers on the platform reached 4,180 after net additions of 240 in the quarter.",
+      "Net revenue retention improved to 118% from 112% in the prior-year quarter.",
+      "Gross margin expanded 310 basis points year over year to 27.4%, driven primarily by automated load matching rising to 71% of volume from 54%.",
+      "Adjusted EBITDA was $118 million, a 14.0% margin, versus $71 million and a 9.6% margin a year ago.",
+      "Adjusted earnings per share was $0.64, up from $0.35 in the prior-year quarter.",
+      "Free cash flow was $61 million on $96 million of operating cash flow, after $35 million of capital expenditures tied mainly to two new cross-dock facilities.",
+      "The company repurchased 1.9 million shares for $58 million and the board authorized an incremental $300 million buyback against a net cash position of $160 million.",
+      "Full-year revenue guidance was raised to $3.38-3.42 billion from $3.28-3.34 billion and adjusted EBITDA guidance to $472-488 million from $430-450 million."
+    ],
+    "parse_note": "strict"
+  },
+  "metadata": {
+    "ticker": "NWLG",
+    "date_event": "2026-07-28",
+    "key_dev_id": 1000000000,
+    "transcript_id": "0000000",
+    "event_id": "ea_NWLG_Q2_2026",
+    "event_id_source": "benzinga:ea-past",
+    "type": "ea-summary-anthropic",
+    "msg_postprocess": {
+      "ticker": "NWLG",
+      "keyDevId": 1000000000,
+      "id_transcript": "0000000",
+      "eventDateTime": "2026-07-28T21:00:00Z",
+      "eventType": "Earnings Calls",
+      "ticker_period_year": "NWLG_Q2_2026",
+      "fiscal_period": "Q2",
+      "fiscal_year": 2026
+    }
+  }
+}
