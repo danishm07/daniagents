@@ -347,7 +347,9 @@ def summarize_transcript(
     resp = client.messages.create(**build_request(transcript_md, model))
 
     raw = "".join(b.text for b in resp.content if getattr(b, "type", None) == "text")
-    thinking_summary = "".join(b.thinking for b in resp.content if getattr(b, "type", None) == "thinking") or None
+    thinking_summary = (
+        "".join(b.thinking for b in resp.content if getattr(b, "type", None) == "thinking") or None
+    )
     facts, parse_note = recover_facts(raw)
     return SummaryResult(
         facts=facts,
