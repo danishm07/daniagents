@@ -221,6 +221,48 @@ def test_score_submission_no_coverage_all_none() -> None:
     assert scores["delta_r_squared_imputed"] is None
 
 
+def test_reversed_predictions_earn_no_credit() -> None:
+    # delta_r_squared == beta1**2 * s11_2 / s_yy is symmetric in sign(beta1),
+    # so p -> 1-p produces a mirrored fit. Only the correctly-signed direction
+    # is credited; its mirror reports the surprise-only fit.
+    df = _contest_frame()
+    df["mirror"] = [1.0 - v for v in df["sub_b"]]
+    fwd = score_submission(df, "sub_b")
+    rev = score_submission(df, "mirror")
+
+    assert fwd["beta"] == pytest.approx(-rev["beta"])
+    gated_side, kept = (fwd, rev) if fwd["beta"] < 0 else (rev, fwd)
+    assert gated_side["delta_r_squared"] == 0.0
+    assert gated_side["r_squared"] == pytest.approx(gated_side["r_squared_surprise"])
+    assert kept["delta_r_squared"] > 0.0
+    # Both families gate independently, on their own coefficient.
+    assert gated_side["delta_r_squared_imputed"] == 0.0
+
+
+def test_gated_row_triple_still_reconciles() -> None:
+    # delta == r_squared - r_squared_surprise must hold on both branches, or a
+    # gated row's published columns visibly disagree.
+    df = _contest_frame()
+    df["mirror"] = [1.0 - v for v in df["sub_b"]]
+    for col in ("sub_b", "mirror"):
+        s = score_submission(df, col)
+        for suffix in ("", "_imputed"):
+            assert s[f"delta_r_squared{suffix}"] == pytest.approx(
+                s[f"r_squared{suffix}"] - s[f"r_squared_surprise{suffix}"]
+            )
+
+
+def test_positive_rescaling_leaves_the_score_unchanged() -> None:
+    # Deliberate: this measures explanatory power, not calibration. Only the
+    # direction binds — a uniform positive affine remap must change nothing.
+    df = _contest_frame()
+    df["scaled"] = [0.25 + 0.5 * v for v in df["sub_b"]]
+    base, scaled = score_submission(df, "sub_b"), score_submission(df, "scaled")
+    for name in ("r_squared", "r_squared_surprise", "delta_r_squared", "mse"):
+        for suffix in ("", "_imputed"):
+            assert scaled[f"{name}{suffix}"] == pytest.approx(base[f"{name}{suffix}"])
+
+
 def test_rank_submissions_order_gate_and_tiebreak() -> None:
     scores = pd.DataFrame(
         [

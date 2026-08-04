@@ -14,6 +14,13 @@ submission's predicted percentiles explain, over and above the naive
 earnings-surprise benchmark (the same sample refit on the surprise alone;
 ``delta_r_squared`` is the difference between the two R^2 values).
 
+Credit for the prediction regressor is gated on its **sign** (:func:`gated`).
+A predicted percentile means ``0`` = most negative expected reaction, ``1`` =
+most positive, so a submission whose predictions explain the realized ranking
+inversely earns nothing over the benchmark: it reports the surprise-only fit
+and a ``delta_r_squared`` of ``0``. Direction binds; scale does not — a uniform
+positive rescaling of a prediction vector leaves every metric unchanged.
+
 **Contest scoring — the imputed family (Official Rules §5).** For the contest,
 every submission is evaluated on the same common set of valid scored events
 (the "Scored Events"). First the arithmetic mean of the submission's timely,
@@ -235,6 +242,42 @@ def ols_fit2(points: list[tuple[float, float, float]]) -> OLSFit | None:
     return OLSFit(n=n, alpha=alpha, beta=beta1, r_squared=r_squared, mse=mse, beta_surprise=beta2)
 
 
+# ----- Wrong-signed predictions ---------------------------------------------
+
+
+def gated(fit: OLSFit) -> bool:
+    """Does this fit earn credit for its prediction regressor?
+
+    Only when the prediction enters with the economically-meaningful sign. A
+    submitted percentile is defined so that ``0`` is the most negative expected
+    reaction and ``1`` the most positive, so a submission whose predictions
+    explain the realized ranking *inversely* has not forecast the direction.
+
+    This has to be stated explicitly because the incremental fit is symmetric
+    in the prediction coefficient::
+
+        delta_r_squared  ==  beta1**2 * s11_2 / s_yy
+
+    (``s11_2`` = the prediction's residual variance after projecting out the
+    surprise). ``beta1`` enters squared, so replacing every prediction ``p``
+    with ``1 - p`` would otherwise leave the multiple R^2, the delta, and the
+    ranking bit-for-bit identical. Scoring takes the one-sided branch of that
+    statistic — credit ``max(beta1, 0)**2``.
+
+    The gate is continuous at ``beta1 == 0`` (delta_r_squared -> 0 as beta1 ->
+    0), so a submission hovering near zero is not thrown off a cliff. A uniform
+    *positive* rescaling of a prediction vector still changes nothing: this
+    measures explanatory power, not calibration. Only the direction binds.
+
+    A wrong-signed row reports the surprise-only fit verbatim — ``r_squared``
+    collapses to ``r_squared_surprise``, ``delta_r_squared`` to ``0.0``. The
+    coefficients (``beta``, ``alpha``, ``beta_surprise``) are left as fitted,
+    so the reason a row was gated stays visible. Verbatim port of the
+    production scorer.
+    """
+    return fit.beta > 0
+
+
 # ----- Contest imputation + scoring (Official Rules §5) ----------------------
 
 
@@ -322,14 +365,17 @@ def score_submission(frame: pd.DataFrame, prediction_col: str) -> dict:
     def emit(fit: OLSFit | None, surprise_fit: OLSFit | None, suffix: str) -> None:
         if fit is None:
             return
-        out[f"r_squared{suffix}"] = fit.r_squared
+        # Wrong-signed predictions earn no credit (see `gated` above): the row
+        # reports the surprise-only fit verbatim, so the delta is exactly 0.
+        credited = fit if surprise_fit is None or gated(fit) else surprise_fit
+        out[f"r_squared{suffix}"] = credited.r_squared
         out[f"beta{suffix}"] = fit.beta
         out[f"beta_surprise{suffix}"] = fit.beta_surprise
         out[f"alpha{suffix}"] = fit.alpha
-        out[f"mse{suffix}"] = fit.mse
+        out[f"mse{suffix}"] = credited.mse
         if surprise_fit is not None:
             out[f"r_squared_surprise{suffix}"] = surprise_fit.r_squared
-            out[f"delta_r_squared{suffix}"] = fit.r_squared - surprise_fit.r_squared
+            out[f"delta_r_squared{suffix}"] = credited.r_squared - surprise_fit.r_squared
 
     # No-fill family: only the rows the submission actually predicted.
     points = [(float(x), s, y) for x, s, y in zip(xs, ss, ys, strict=True) if pd.notna(x)]
