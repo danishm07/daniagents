@@ -1,0 +1,25 @@
+# Secrets — never commit
+.env
+
+# Local-only dev/maintenance scripts
+scripts/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+
+# Virtual envs / tooling
+.venv/
+venv/
+.uv/
+.pytest_cache/
+.ruff_cache/
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
