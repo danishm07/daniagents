@@ -24,6 +24,7 @@ from explaining_markets.config import openai_model
 
 _openai: OpenAI | None = None  # lazy: importing this file must not require a key
 _openai_warned = False         # one-shot warning when no key is configured
+_shape_logged = False          # one-shot structural sketch of the live payload
 
 # Timeouts, sized against the 5-minute prediction window that opens when your
 # handler ACKs the webhook. Worst case is 15 + (120 x 2) + 15 = 270s, which
@@ -33,6 +34,10 @@ _openai_warned = False         # one-shot warning when no key is configured
 SUMMARY_TIMEOUT_SECONDS = 15.0
 LLM_TIMEOUT_SECONDS = 120.0
 LLM_MAX_RETRIES = 1
+
+# Hard cap on how much of the event payload reaches the prompt. Ten facts run
+# well under this; it only bites on the raw-JSON fallback path below.
+SUMMARY_CHAR_LIMIT = 8000
 
 
 def predict(event: dict) -> list[dict]:
@@ -61,7 +66,20 @@ def predict(event: dict) -> list[dict]:
     # per asset, not per event. Today every event carries a single asset; if
     # that changes and you need several, run them concurrently rather than
     # raising the timeout.
-    return [
+    n_facts = len(_extract_facts(summary_json))
+
+    # One structural sketch per container. `facts=10` proves we FOUND ten
+    # sentences; it does not prove ten sentences are ALL the payload carries —
+    # and the extractor only located them via the depth-first fallback, so the
+    # live shape matches neither the documented sample nor the archive. Whether
+    # anything richer (a transcript, statements) sits alongside them decides
+    # whether the offline archive is a faithful proxy of the real input.
+    global _shape_logged
+    if not _shape_logged:
+        print(f"[SHAPE] information_url payload: {_describe_shape(summary_json)}")
+        _shape_logged = True
+
+    predictions = [
         {
             "identifier_value": asset["identifier_value"],
             "predicted_percentile": _ask_llm(
@@ -72,6 +90,20 @@ def predict(event: dict) -> list[dict]:
         }
         for asset in event["focal_assets"]
     ]
+
+    # One greppable line per prediction. Without this the logs record only
+    # failures, so the only way to answer "are my predictions varying at all?"
+    # is to re-run the model offline — and a submission stuck on a constant
+    # value scores exactly 0 while looking perfectly healthy from the outside.
+    # `facts=` doubles as a per-event check that extraction worked.
+    for row in predictions:
+        print(
+            f"[PREDICT] event={event.get('event_id')} "
+            f"ticker={row['identifier_value']} "
+            f"p={row['predicted_percentile']:.3f} facts={n_facts}"
+        )
+
+    return predictions
 
 
 # ----------------------------------------------------------------------
@@ -112,6 +144,144 @@ Calibration discipline:
 """
 
 
+#: A list of at least this many strings, averaging at least this many characters,
+#: is taken to be the fact list. Tuned against the real article: ten sentences
+#: averaging ~180 chars. No other list in any observed payload comes close —
+#: tickers, ids and status strings are short, and metadata lists are tiny.
+FACTS_MIN_COUNT = 3
+FACTS_MIN_MEAN_CHARS = 40
+
+
+def _as_fact_list(value: object) -> list[str] | None:
+    """``value`` if it looks like a list of fact sentences, else ``None``."""
+    if not isinstance(value, list):
+        return None
+    strings = [v.strip() for v in value if isinstance(v, str) and v.strip()]
+    if len(strings) < FACTS_MIN_COUNT:
+        return None
+    if sum(len(s) for s in strings) / len(strings) < FACTS_MIN_MEAN_CHARS:
+        return None
+    return strings
+
+
+def _search_for_facts(node: object, depth: int = 0) -> list[str] | None:
+    """Depth-first hunt for a fact-shaped list anywhere in the payload.
+
+    The safety net. The exact live shape of ``information_url`` was not known
+    when this was written — the documented sample says ``response.facts``, and
+    production logs proved otherwise — so rather than guess again, find the
+    sentences wherever they are. ``_as_fact_list`` is strict enough that a
+    false positive would need three-plus long strings in a list, which nothing
+    but the facts has.
+    """
+    if depth > 6:
+        return None
+    found = _as_fact_list(node)
+    if found:
+        return found
+    if isinstance(node, dict):
+        for value in node.values():
+            found = _search_for_facts(value, depth + 1)
+            if found:
+                return found
+    elif isinstance(node, list):
+        for value in node:
+            found = _search_for_facts(value, depth + 1)
+            if found:
+                return found
+    return None
+
+
+def _extract_facts(summary: object) -> list[str]:
+    """Pull the event's facts out of an `information_url` payload.
+
+    Tries the two documented shapes first, because an exact match is worth more
+    than a heuristic:
+
+      live sample    ``{"response": {"facts": [...]}}``
+      archive record ``{"disclosure": {"items": [{"kind": "facts", "content": [...]}]}}``
+
+    Matches on ``kind`` rather than assuming a single disclosure item — ``kind``
+    and ``source`` are open string sets upstream. Falls back to
+    :func:`_search_for_facts` for anything else, including a bare list of
+    sentences. Returns ``[]`` only when the payload holds nothing fact-shaped.
+    """
+    direct = _as_fact_list(summary)
+    if direct:
+        return direct
+
+    if isinstance(summary, dict):
+        response = summary.get("response")
+        if isinstance(response, dict):
+            known = _as_fact_list(response.get("facts"))
+            if known:
+                return known
+
+        known = _as_fact_list(summary.get("facts"))
+        if known:
+            return known
+
+        disclosure = summary.get("disclosure")
+        if isinstance(disclosure, dict):
+            for item in disclosure.get("items") or []:
+                if isinstance(item, dict) and item.get("kind") == "facts":
+                    known = _as_fact_list(item.get("content"))
+                    if known:
+                        return known
+
+    return _search_for_facts(summary) or []
+
+
+def _describe_shape(node: object, depth: int = 0) -> str:
+    """A compact structural sketch of a payload — keys and types, no values.
+
+    Printed alongside the fallback warning so an unrecognised shape can be
+    diagnosed from the logs without echoing the event's content.
+    """
+    if depth > 3:
+        return "..."
+    if isinstance(node, dict):
+        inner = ", ".join(
+            f"{k}: {_describe_shape(v, depth + 1)}" for k, v in list(node.items())[:12]
+        )
+        return "{" + inner + "}"
+    if isinstance(node, list):
+        head = _describe_shape(node[0], depth + 1) if node else "empty"
+        return f"[{len(node)} x {head}]"
+    if isinstance(node, str):
+        return f"str({len(node)})"
+    return type(node).__name__
+
+
+def _facts_text(summary: object) -> str:
+    """Render the facts as a bullet list for the prompt.
+
+    Worth knowing why this exists: this file used to read ``summary["summary"]``,
+    a key present in neither payload shape. Every event therefore fell through
+    to ``json.dumps(summary)``, feeding the model the whole raw blob —
+    provenance comments, metadata and all — instead of ten clean sentences. The
+    official baselines render the facts as a bullet list, so this matches them.
+
+    The raw-JSON dump is kept as a last resort, but now warns: an unrecognised
+    payload should still yield a prediction rather than an exception, and a
+    silent fallback is exactly the failure this fix exists to surface.
+    """
+    facts = _extract_facts(summary)
+    if facts:
+        return "\n".join(f"- {fact}" for fact in facts)[:SUMMARY_CHAR_LIMIT]
+
+    legacy = summary.get("summary") if isinstance(summary, dict) else None
+    if isinstance(legacy, str) and legacy.strip():
+        return legacy[:SUMMARY_CHAR_LIMIT]
+
+    print(
+        "[WARN] no facts found in information_url payload — falling back to raw "
+        "JSON, so the model is getting a degraded prompt. Payload shape was: "
+        f"{_describe_shape(summary)}"
+    )
+    return json.dumps(summary)[:SUMMARY_CHAR_LIMIT]
+
+
 def _ask_llm(*, summary: dict, ticker: str, event_type: str) -> float:
     """Ask the configured model for a calibrated percentile via structured outputs.
 
@@ -134,15 +304,12 @@ def _ask_llm(*, summary: dict, ticker: str, event_type: str) -> float:
             timeout=LLM_TIMEOUT_SECONDS, max_retries=LLM_MAX_RETRIES
         )
 
-    summary_text = summary.get("summary") if isinstance(summary, dict) else None
-    if not summary_text:
-        summary_text = json.dumps(summary)
-    summary_text = summary_text[:8000]
+    summary_text = _facts_text(summary)
 
     user_prompt = (
         f"Event type: {event_type}\n"
         f"Ticker: {ticker}\n\n"
-        f"Event summary:\n{summary_text}\n\n"
+        f"Facts extracted from the earnings call:\n{summary_text}\n\n"
         "Weigh, in roughly this order:\n"
         "  1. Quantitative surprise vs expectations — revenue, EPS, segment metrics.\n"
         "  2. Guidance / outlook — raises, holds, cuts vs the prior trajectory.\n"
