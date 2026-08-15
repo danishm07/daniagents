@@ -69,24 +69,55 @@ DEFAULT_RPM = 200
 BACKFILL_MAX_RETRIES = 8
 
 
+#: Tokens per minute the org allows. The request limit is not the binding one:
+#: a direct call is ~870 tokens, so 200 rpm sits comfortably under 200k TPM —
+#: but a chain-of-thought call emits reasoning, and at ~1,350 tokens the same
+#: 200 rpm asks for 270k TPM and the 429s come straight back. Counting requests
+#: alone is not throttling; this window counts tokens too.
+DEFAULT_TPM = 180_000
+
+
 class _Throttle:
-    """Let at most ``rpm`` calls start per rolling 60 seconds."""
+    """Rolling-60s budget for **both** requests and tokens.
 
-    def __init__(self, rpm: int) -> None:
+    ``wait(estimate)`` reserves an estimated token cost up front, because the
+    real cost is only known after the response arrives — by which point the
+    limit has already been breached. :meth:`record` then trues the reservation
+    up against actual usage, so the estimate self-corrects within a minute
+    instead of being a constant someone has to maintain.
+    """
+
+    def __init__(self, rpm: int, tpm: int = DEFAULT_TPM) -> None:
         self.rpm = rpm
+        self.tpm = tpm
         self.lock = threading.Lock()
-        self.starts: list[float] = []
+        self.window: list[list[float]] = []  # [timestamp, tokens]
+        self.observed: list[int] = []
 
-    def wait(self) -> None:
+    def estimate(self, default: int) -> int:
+        """Mean observed total tokens, once there is anything to average."""
+        with self.lock:
+            recent = self.observed[-200:]
+        return int(sum(recent) / len(recent)) if recent else default
+
+    def wait(self, tokens: int = 900) -> None:
         while True:
             with self.lock:
                 now = time.time()
-                self.starts = [t for t in self.starts if now - t < 60.0]
-                if len(self.starts) < self.rpm:
-                    self.starts.append(now)
+                self.window = [w for w in self.window if now - w[0] < 60.0]
+                spent = sum(w[1] for w in self.window)
+                if len(self.window) < self.rpm and spent + tokens <= self.tpm:
+                    self.window.append([now, float(tokens)])
                     return
-                sleep_for = 60.0 - (now - self.starts[0]) + 0.05
-            time.sleep(max(sleep_for, 0.05))
+                oldest = self.window[0][0] if self.window else now
+                sleep_for = 60.0 - (now - oldest) + 0.05
+            time.sleep(min(max(sleep_for, 0.05), 5.0))
+
+    def record(self, tokens: int) -> None:
+        with self.lock:
+            self.observed.append(tokens)
+            if self.window:
+                self.window[-1][1] = float(tokens)
 
 
 _throttle = _Throttle(DEFAULT_RPM)

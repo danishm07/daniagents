@@ -187,7 +187,10 @@ def generate(model: str, variant: str, events: list[dict], workers: int = 10) ->
         payload = champion.live_payload(event["facts"])
         if not predict._extract_facts(payload):
             return {"event_id": event["event_id"], "prediction": 0.5, "no_facts": True}
-        champion._throttle.wait()
+        # cot emits reasoning tokens, so its per-call cost is roughly double a
+        # direct call's; the throttle needs the estimate up front and the truth
+        # afterwards, or the token budget is breached before anyone notices.
+        champion._throttle.wait(champion._throttle.estimate(1600 if variant == "cot" else 900))
         resp = client.chat.completions.parse(
             model=model,
             messages=[
@@ -197,6 +200,8 @@ def generate(model: str, variant: str, events: list[dict], workers: int = 10) ->
             response_format=schema,
         )
         parsed = resp.choices[0].message.parsed
+        if resp.usage:
+            champion._throttle.record(resp.usage.total_tokens)
         return {
             "event_id": event["event_id"],
             "prediction": 0.5 if parsed is None else parsed.predicted_percentile,
@@ -300,8 +305,12 @@ if __name__ == "__main__":
     parser.add_argument("--full", help="model:variant to run over all dev quarters")
     parser.add_argument("--per-quarter", type=int, default=SCREEN_PER_QUARTER)
     parser.add_argument("--workers", type=int, default=10)
+    parser.add_argument("--rpm", type=int, default=150)
+    parser.add_argument("--tpm", type=int, default=champion.DEFAULT_TPM)
     parser.add_argument("--score-only", action="store_true")
     args = parser.parse_args()
+
+    champion._throttle = champion._Throttle(args.rpm, args.tpm)
 
     check_prompt_fidelity()
 
