@@ -30,3 +30,7 @@ venv/
 .vscode/
 .idea/
 .DS_Store
+
+# Champion column — regenerable from champion.py, but costs an API run.
+# Tracked deliberately: the research is not reproducible without it.
+!data/champion/

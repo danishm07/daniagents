@@ -91,14 +91,27 @@ DEV_QUARTERS = [q for q in QUARTERS if q != HOLDOUT]
 
 RUN_LOG = Path(__file__).parent / "runs" / "eval_runs.jsonl"
 
-#: Offline stand-in for the deployed submission. Our champion is a single
-#: OpenAI nano call over the ten facts, so the GPT baseline is the nearest
-#: column the archive carries. It is a *proxy*, not the champion: the deployed
-#: model is ``gpt-5.4-nano`` against the archive's ``gpt-5-nano-2025-08-07``,
-#: and the prompts differ. Generating a true champion column by running the
-#: deployed prompt over the archive is cheap and worth doing before any
-#: promotion decision is taken seriously.
-CHAMPION = GPT
+#: Fallback champion: the archive's GPT baseline. A *proxy* — different model
+#: (``gpt-5-nano-2025-08-07`` vs the deployed ``gpt-5.4-nano``), different
+#: prompt. Used only until ``champion.py`` has replayed the real thing.
+CHAMPION_PROXY = GPT
+
+
+def default_champion(quiet: bool = False) -> str:
+    """The real champion column if it has been generated, else the proxy.
+
+    Resolved per call rather than at import, so a run started after
+    ``champion.py`` finishes picks it up without anyone remembering to.
+    """
+    if harness.CHAMPION_FILE.exists():
+        return harness.CHAMPION_COLUMN
+    if not quiet:
+        print(
+            "!! no champion column — falling back to the GPT baseline proxy. "
+            "rho_b and every floor will be measured against a different model "
+            "running a different prompt. Run `uv run python champion.py`."
+        )
+    return CHAMPION_PROXY
 
 #: Single-test one-sided 95% bar. The best-of-K term below overtakes it around
 #: K≈13; until then this is what keeps the floor off the ground.
@@ -389,7 +402,7 @@ def run(
     combine: Callable[[dict[str, np.ndarray]], np.ndarray] | None = None,
     config: Mapping | None = None,
     quarters: Sequence[str] | None = None,
-    champion: str = CHAMPION,
+    champion: str | None = None,
     cost_usd: float | None = None,
     notes: str = "",
     final: bool = False,
@@ -408,6 +421,7 @@ def run(
 
     ``final=True`` is the only way to touch :data:`HOLDOUT`, and it is recorded.
     """
+    champion = default_champion() if champion is None else champion
     if quarters is None:
         quarters = QUARTERS if final else DEV_QUARTERS
     quarters = list(quarters)
@@ -850,7 +864,7 @@ if __name__ == "__main__":
     # The null that needs no invention: replaying the champion's own column.
     # Gain is exactly zero, so any positive floor must reject it.
     def replay_champion(events, quarter):
-        return load(quarter)[CHAMPION].tolist()
+        return load(quarter)[default_champion(quiet=True)].tolist()
 
     replayed = run(replay_champion, "replay of the champion — gain must be exactly zero", log=False)
     assert abs(replayed.per_quarter.vs_champion).max() < 1e-12, "replay must tie with itself"

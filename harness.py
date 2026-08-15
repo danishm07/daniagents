@@ -66,6 +66,12 @@ DEV_QUARTERS = QUARTERS[:-1]
 GEMINI = "Gemini 2.5 Flash-Lite"
 GPT = "GPT-5 nano"
 
+#: Our own deployed submission, replayed over the archive by ``champion.py``.
+#: Present only once that has been run. Until then the GPT baseline stands in,
+#: and it is a *proxy* — a different model running a different prompt.
+CHAMPION_COLUMN = "champion (deployed)"
+CHAMPION_FILE = Path(__file__).parent / "data" / "champion" / "predictions.jsonl"
+
 #: Columns a model must never see for the quarter it is predicting.
 OUTCOME_COLUMNS = ["car1", "y"]
 
@@ -148,15 +154,43 @@ def load(quarter: str) -> pd.DataFrame:
 
     frame = add_percentiles(outcomes_frame(records))
     meta = {
-        r["event_id"]: (facts_from_record(r), r.get("event_datetime"))
+        r["event_id"]: (
+            facts_from_record(r),
+            r.get("event_datetime"),
+            r.get("knowledge_cutoff"),
+        )
         for r in records
     }
     frame["facts"] = [meta[e][0] for e in frame.event_id]
     frame["n_facts"] = frame.facts.map(len)
     frame["event_datetime"] = pd.to_datetime([meta[e][1] for e in frame.event_id])
+    # Rules §04 bounds every external fetch by this instant, so it has to travel
+    # with the event rather than being looked up later.
+    frame["knowledge_cutoff"] = pd.to_datetime([meta[e][2] for e in frame.event_id], utc=True)
     frame["quarter"] = quarter
 
+    champion = champion_predictions()
+    if champion:
+        frame[CHAMPION_COLUMN] = frame.event_id.map(champion)
+
     return frame.dropna(subset=["y", "surprise_pct"]).reset_index(drop=True)
+
+
+def champion_predictions() -> dict[str, float]:
+    """``event_id -> prediction`` for our own deployed system, if generated.
+
+    Read fresh rather than cached, but :func:`load` *is* cached — after
+    regenerating the column, call ``harness.load.cache_clear()`` or start a new
+    process, or you will keep scoring against the version you already had.
+    """
+    if not CHAMPION_FILE.exists():
+        return {}
+    rows = {}
+    for line in CHAMPION_FILE.open():
+        if line.strip():
+            row = json.loads(line)
+            rows[row["event_id"]] = row["prediction"]
+    return rows
 
 
 def load_all(quarters: Sequence[str] = DEV_QUARTERS) -> pd.DataFrame:
@@ -172,10 +206,17 @@ def events_for(quarter: str) -> list[dict]:
     """Model inputs for one quarter — **outcomes stripped**.
 
     Each dict carries only what a live webhook would: ``event_id``, ``ticker``,
-    ``facts``, ``event_datetime``. Deliberately excludes ``surprise``: it is
-    computed from the market's own reaction window and is the benchmark's
-    regressor, not yours. If you want it as a feature, take it from
-    :func:`training_data` knowing what you are doing.
+    ``facts``, ``event_datetime``, plus ``knowledge_cutoff``. Deliberately
+    excludes ``surprise``: it is computed from the market's own reaction window
+    and is the benchmark's regressor, not yours. If you want it as a feature,
+    take it from :func:`training_data` knowing what you are doing.
+
+    ⚠️ ``knowledge_cutoff`` is in the archive record but **not** in the live
+    webhook body, which carries only id / event_id / event_type /
+    timing_category / event_datetime / focal_assets / information_url /
+    prediction_deadline. Any feature that needs the cutoff live must get it from
+    ``GET /v1/events`` or derive it — an open deployability item, and a reason
+    to check it before building anything that depends on it.
     """
     f = load(quarter)
     return [
@@ -184,6 +225,7 @@ def events_for(quarter: str) -> list[dict]:
             "ticker": r.identifier_value,
             "facts": r.facts,
             "event_datetime": r.event_datetime,
+            "knowledge_cutoff": r.knowledge_cutoff,
         }
         for r in f.itertuples()
     ]
