@@ -1,0 +1,36 @@
+{
+  "predict": {
+    "traces": [],
+    "train": [],
+    "demos": [],
+    "signature": {
+      "instructions": "Predict where a stock's post-earnings unexpected return will land.\n\nDeliberately terse. The point of the exercise is that the optimiser writes the\ninstructions; seeding it with our own hand-written prompt would be measuring\nour prompt again.",
+      "fields": [
+        {
+          "prefix": "Facts:",
+          "description": "Facts extracted from the company's earnings call."
+        },
+        {
+          "prefix": "Ticker:",
+          "description": "${ticker}"
+        },
+        {
+          "prefix": "Reasoning:",
+          "description": "${reasoning}"
+        },
+        {
+          "prefix": "Predicted Percentile:",
+          "description": "Percentile in [0,1] of this stock's next-day unexpected return relative to all other earnings announcements this quarter. 0 = most negative, 0.5 = typical, 1 = most positive."
+        }
+      ]
+    },
+    "lm": null
+  },
+  "metadata": {
+    "dependency_versions": {
+      "python": "3.11",
+      "dspy": "3.3.0",
+      "cloudpickle": "3.1"
+    }
+  }
+}
