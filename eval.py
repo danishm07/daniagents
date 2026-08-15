@@ -77,6 +77,12 @@ from harness import GEMINI, GPT, QUARTERS, load, training_data  # noqa: F401  (r
 #: counting it as an independent view inflates every ceiling in the table.
 DERIVED_VIEWS = {"combined"}
 
+#: The champion joins every correlation matrix under this key. It is a
+#: reference point, not a candidate: it gets no ceiling row of its own and is
+#: kept out of peer ρ_b, but ρ_b *against it* is the number that says whether a
+#: candidate is a new channel or a paraphrase of what we already run.
+CHAMPION_KEY = "champion"
+
 #: Never evaluated until the final model is chosen. One shot, at the end.
 HOLDOUT = "2026Q3"
 
@@ -85,9 +91,25 @@ DEV_QUARTERS = [q for q in QUARTERS if q != HOLDOUT]
 
 RUN_LOG = Path(__file__).parent / "runs" / "eval_runs.jsonl"
 
-#: Bootstrap sd of ΔR² at n≈1,900. Two of these is the "believe it" bar for a
-#: mean improvement; below that, only sign consistency across quarters counts.
-SE_DELTA_R2 = 0.010
+#: Offline stand-in for the deployed submission. Our champion is a single
+#: OpenAI nano call over the ten facts, so the GPT baseline is the nearest
+#: column the archive carries. It is a *proxy*, not the champion: the deployed
+#: model is ``gpt-5.4-nano`` against the archive's ``gpt-5-nano-2025-08-07``,
+#: and the prompts differ. Generating a true champion column by running the
+#: deployed prompt over the archive is cheap and worth doing before any
+#: promotion decision is taken seriously.
+CHAMPION = GPT
+
+#: Single-test one-sided 95% bar. The best-of-K term below overtakes it around
+#: K≈13; until then this is what keeps the floor off the ground.
+Z_SINGLE_TEST = 1.645
+
+#: Configurations tried before this log existed. The 2026-08-11 signal study
+#: swept seven candidate signals plus blend weights, rank transforms, isotonic
+#: variants, a dispersion battery and five surprise transforms — order 40 looks
+#: at the same data. Starting K at zero would pretend those looks were free and
+#: set the promotion floor too low for every candidate that follows them.
+K_PRIOR = 40
 
 #: A view function takes the leakage-safe event list plus the quarter it is
 #: predicting, and returns one float per event, in order. Single-argument
@@ -159,6 +181,116 @@ def combination_ceiling(rho: float, rho_b: float) -> float:
 
 
 # --------------------------------------------------------------------------
+# How big a gain has to be before it means anything
+# --------------------------------------------------------------------------
+#
+# The old bar — "2 SE, where SE = 0.010" — was wrong twice over. 0.010 is the
+# bootstrap sd of Gemini's ΔR² *level*, and promotion is a paired comparison:
+# challenger and champion are scored on the same events, so quarter difficulty
+# cancels out of the difference. Most of the 0.0114 spread in Gemini's levels is
+# real difficulty drift (the benchmark's own R² climbs 0.049 → 0.078), not noise
+# in the comparison. The sd of the *difference* is a different and much smaller
+# quantity, it depends on how correlated the challenger is with the champion,
+# and there is no reason to guess it when it can be measured per candidate.
+
+
+def _delta_r2_fast(pred: np.ndarray, surprise: np.ndarray, y: np.ndarray) -> float:
+    """ΔR² by closed-form OLS — the scorer's number, fast enough to bootstrap.
+
+    Verified against :func:`harness.evaluate` to 1e-9 in ``__main__``. The
+    scorer stays the source of truth for anything reported; this exists only so
+    the inner loop of a few thousand resamples finishes in seconds.
+    """
+    ok = np.isfinite(pred) & np.isfinite(surprise) & np.isfinite(y)
+    pred, surprise, y = pred[ok], surprise[ok], y[ok]
+    if len(y) < 3:
+        return float("nan")
+    tss = float(((y - y.mean()) ** 2).sum())
+    if tss == 0:
+        return float("nan")
+
+    def rss(*columns: np.ndarray) -> float:
+        design = np.column_stack([*columns, np.ones(len(y))])
+        residual = y - design @ np.linalg.lstsq(design, y, rcond=None)[0]
+        return float(residual @ residual)
+
+    return (rss(surprise) - rss(surprise, pred)) / tss
+
+
+def bootstrap_diff(
+    challenger: Mapping[str, np.ndarray],
+    champion: Mapping[str, np.ndarray],
+    frames: Mapping[str, pd.DataFrame],
+    n_boot: int = 2000,
+    seed: int = 0,
+) -> dict:
+    """Resample events to get the sampling distribution of ``vs_champion``.
+
+    Both models are rescored on the *same* resampled events every replicate —
+    that pairing is the whole point, and it is what removes quarter difficulty
+    from the comparison.
+
+    Returns per-quarter sds plus ``se_mean``, the sd of the dev-quarter mean
+    difference, which is the quantity the promotion floor is stated in.
+    """
+    rng = np.random.default_rng(seed)
+    quarters = list(frames)
+    draws = np.empty((n_boot, len(quarters)))
+
+    for j, quarter in enumerate(quarters):
+        frame = frames[quarter]
+        surprise = frame["surprise_pct"].to_numpy(dtype=float)
+        y = frame["y"].to_numpy(dtype=float)
+        a, b = challenger[quarter], champion[quarter]
+        n = len(y)
+        for i in range(n_boot):
+            idx = rng.integers(0, n, n)
+            draws[i, j] = _delta_r2_fast(a[idx], surprise[idx], y[idx]) - _delta_r2_fast(
+                b[idx], surprise[idx], y[idx]
+            )
+
+    return {
+        "per_quarter_sd": {q: float(draws[:, j].std(ddof=1)) for j, q in enumerate(quarters)},
+        "se_mean": float(draws.mean(axis=1).std(ddof=1)),
+        "n_boot": n_boot,
+    }
+
+
+def expected_best_of_k(k: int) -> float:
+    """E[max] of ``k`` iid standard normals, by quadrature.
+
+    This is the multiple-comparisons correction in its most literal form: run
+    ``k`` worthless configurations and the best of them still looks this good.
+    Sign consistency does not survive it — at k=40 the chance that *something*
+    goes 3/3 by luck is 99.5%, so 3/3 is a gate, not evidence.
+    """
+    if k <= 1:
+        return 0.0
+    grid = np.linspace(-6.0, 8.0, 40_001)
+    cdf = 0.5 * (1.0 + np.vectorize(math.erf)(grid / math.sqrt(2.0)))
+    pdf = np.exp(-0.5 * grid**2) / math.sqrt(2.0 * math.pi)
+    return float(np.trapezoid(grid * k * cdf ** (k - 1) * pdf, grid))
+
+
+def config_count(log: pd.DataFrame | None = None) -> int:
+    """Distinct configurations tried so far — the ``K`` the floor is scaled by.
+
+    Counts distinct ``config_hash`` over *every* logged run, failures included.
+    A configuration that crashed still consumed a look at the data if it had
+    been scored, and pretending otherwise is how K gets quietly understated.
+    """
+    frame = runs() if log is None else log
+    if frame.empty or "config_hash" not in frame:
+        return K_PRIOR
+    return K_PRIOR + int(frame.config_hash.nunique())
+
+
+def promotion_floor(se_mean: float, k: int) -> float:
+    """The gain a challenger must clear: the best draw ``K`` null configs would produce."""
+    return se_mean * max(expected_best_of_k(k), Z_SINGLE_TEST)
+
+
+# --------------------------------------------------------------------------
 # Running an experiment
 # --------------------------------------------------------------------------
 
@@ -209,6 +341,12 @@ class RunResult:
     runtime_s: float = 0.0
     cost_usd: float | None = None
     status: str = "ok"
+    champion: str = ""
+    #: ``{quarter: {view: predictions}}``, kept so a promotion decision can
+    #: bootstrap without re-running the model. For an LLM view that is the
+    #: difference between a free decision and paying for the run twice.
+    predictions: dict[str, dict[str, np.ndarray]] = field(default_factory=dict)
+    frames: dict[str, pd.DataFrame] = field(default_factory=dict)
 
     def report(self) -> None:
         print(f"\n{self.name}   [{self.run_id[:8]}  cfg {self.config_hash[:8]}]")
@@ -233,7 +371,7 @@ def run(
     combine: Callable[[dict[str, np.ndarray]], np.ndarray] | None = None,
     config: Mapping | None = None,
     quarters: Sequence[str] | None = None,
-    baseline: str = GEMINI,
+    champion: str = CHAMPION,
     cost_usd: float | None = None,
     notes: str = "",
     final: bool = False,
@@ -285,14 +423,14 @@ def run(
         "views": sorted(view_map),
         "quarters": quarters,
         "spent_holdout": touching_holdout,
-        "baseline": baseline,
+        "champion": champion,
         "cost_usd": cost_usd,
         "notes": notes,
         "git": _git_commit(),
     }
 
     try:
-        rows, matrices = [], {}
+        rows, matrices, kept_preds, kept_frames = [], {}, {}, {}
         for quarter in quarters:
             frame = load(quarter).copy()
             events = harness.events_for(quarter)
@@ -312,7 +450,7 @@ def run(
             if combine is not None:
                 preds["combined"] = np.asarray(combine(dict(preds)), dtype=float)
 
-            baseline_delta = harness.delta_r2(frame, baseline)
+            champion_delta = harness.delta_r2(frame, champion)
             for view_name, values in preds.items():
                 frame["_pred"] = values
                 scored = harness.evaluate(frame, "_pred")
@@ -325,15 +463,21 @@ def run(
                         "delta_r2": scored["delta_r_squared"],
                         "delta_r2_imp": scored["delta_r_squared_imputed"],
                         "partial_corr": partial_corr(values, y, surprise),
-                        f"vs_{_short(baseline)}": scored["delta_r_squared"] - baseline_delta,
+                        "vs_champion": scored["delta_r_squared"] - champion_delta,
                     }
                 )
 
+            # The champion joins the correlation matrix as a view: ρ_b against
+            # what we actually run is the number that decides whether a
+            # candidate is a new channel or a paraphrase of the current one.
+            preds[CHAMPION_KEY] = frame[champion].to_numpy(dtype=float)
+            kept_preds[quarter] = preds
+            kept_frames[quarter] = frame
             if len(preds) > 1:
                 matrices[quarter] = _correlation_matrix(preds, surprise)
 
         per_quarter = pd.DataFrame(rows)
-        summary = _summarize(per_quarter, baseline)
+        summary = _summarize(per_quarter)
         pooled = _pool(matrices)
         result = RunResult(
             name=name,
@@ -345,6 +489,9 @@ def run(
             ceilings=_ceilings(summary, pooled, float(per_quarter.r2_surprise.mean())),
             runtime_s=time.time() - started,
             cost_usd=cost_usd,
+            champion=champion,
+            predictions=kept_preds,
+            frames=kept_frames,
         )
         record.update(
             status="ok",
@@ -398,31 +545,26 @@ def _pool(matrices: Mapping[str, pd.DataFrame]) -> pd.DataFrame | None:
     return sum(matrices.values()) / len(matrices)
 
 
-def _summarize(per_quarter: pd.DataFrame, baseline: str) -> pd.DataFrame:
-    vs_column = f"vs_{_short(baseline)}"
+def _summarize(per_quarter: pd.DataFrame) -> pd.DataFrame:
+    """Per-view means. Deliberately does **not** render a verdict.
+
+    Whether a gain is real depends on the measured sd of the paired difference
+    and on how many configurations have been tried — neither of which is
+    visible from one run's means. :func:`decide` is the only thing that rules.
+    """
     rows = []
     for view_name, group in per_quarter.groupby("view", sort=False):
-        wins = int((group[vs_column] > 0).sum())
+        wins = int((group.vs_champion > 0).sum())
         rows.append(
             {
                 "view": view_name,
                 "mean_delta_r2": group.delta_r2.mean(),
                 "mean_partial_corr": group.partial_corr.mean(),
-                f"mean_{vs_column}": group[vs_column].mean(),
-                "quarters_won": f"{wins}/{len(group)}",
-                "verdict": _verdict(group[vs_column]),
+                "mean_vs_champion": group.vs_champion.mean(),
+                "signs": f"{wins}/{len(group)}",
             }
         )
     return pd.DataFrame(rows)
-
-
-def _verdict(vs_baseline: pd.Series) -> str:
-    """The promotion rule, applied mechanically so it cannot be argued with."""
-    if len(vs_baseline) >= 3 and (vs_baseline > 0).all():
-        return "sign-consistent"
-    if vs_baseline.mean() > 2 * SE_DELTA_R2:
-        return "mean > 2 SE"
-    return "noise"
 
 
 def _ceilings(
@@ -441,13 +583,21 @@ def _ceilings(
     """
     if pooled is None:
         return None
-    independent = [c for c in pooled.columns if c not in DERIVED_VIEWS]
-    if len(independent) < 2:
+    candidates = [c for c in pooled.columns if c not in DERIVED_VIEWS and c != CHAMPION_KEY]
+    if not candidates:
         return None
+    has_champion = CHAMPION_KEY in pooled.columns
     rows = []
-    for view_name in independent:
-        others = [c for c in independent if c != view_name]
-        rho_b = float(pooled.loc[view_name, others].mean())
+    for view_name in candidates:
+        peers = [c for c in candidates if c != view_name]
+        rho_b_champion = (
+            float(pooled.loc[view_name, CHAMPION_KEY]) if has_champion else float("nan")
+        )
+        rho_b_peers = float(pooled.loc[view_name, peers].mean()) if peers else float("nan")
+        # Against the champion when we have it: the live question is whether
+        # adding this to what we already run buys anything, not whether a
+        # hypothetical fleet of copies of it would.
+        rho_b = rho_b_champion if has_champion else rho_b_peers
         match = summary.loc[summary.view == view_name, "mean_partial_corr"]
         rho = float(match.iloc[0]) if len(match) else float("nan")
         ceiling = combination_ceiling(abs(rho), rho_b)
@@ -455,7 +605,8 @@ def _ceilings(
             {
                 "view": view_name,
                 "rho": rho,
-                "rho_b": rho_b,
+                "rho_b_champion": rho_b_champion,
+                "rho_b_peers": rho_b_peers,
                 "corr_ceiling": ceiling,
                 "implied_delta_r2": (
                     ceiling**2 * (1 - r2_surprise) if math.isfinite(ceiling) else float("inf")
@@ -490,6 +641,81 @@ def _append(record: Mapping) -> None:
     RUN_LOG.parent.mkdir(parents=True, exist_ok=True)
     with RUN_LOG.open("a") as fh:
         fh.write(json.dumps(record, default=str) + "\n")
+
+
+def decide(
+    result: RunResult,
+    view: str = "model",
+    *,
+    n_boot: int = 2000,
+    k: int | None = None,
+    seed: int = 0,
+    log: bool = True,
+) -> dict:
+    """Should this view replace the champion? Measured, logged, and K-aware.
+
+    Three numbers decide it, and all three are recorded:
+
+    ``se_mean``   sd of the mean paired difference, bootstrapped over events.
+                  Paired, so quarter difficulty cancels — this is much smaller
+                  than the spread in either model's ΔR² *levels*, and it is
+                  specific to this candidate's correlation with the champion.
+    ``k``         distinct configurations tried, read off the run log.
+    ``floor``     ``se_mean × E[max of k null draws]`` — what the luckiest of
+                  ``k`` worthless candidates would score.
+
+    Sign consistency is reported but carries almost no weight: at k=40 the
+    probability that *something* goes 3/3 on three dev quarters is 99.5%.
+    """
+    if not result.predictions:
+        raise ValueError("run() kept no predictions — cannot decide without them")
+    quarters = list(result.frames)
+    challenger = {q: result.predictions[q][view] for q in quarters}
+    incumbent = {q: result.predictions[q][CHAMPION_KEY] for q in quarters}
+
+    boot = bootstrap_diff(challenger, incumbent, result.frames, n_boot=n_boot, seed=seed)
+    k = config_count() if k is None else k
+    floor = promotion_floor(boot["se_mean"], k)
+
+    rows = result.per_quarter[result.per_quarter.view == view]
+    mean_gain = float(rows.vs_champion.mean())
+    wins = int((rows.vs_champion > 0).sum())
+    ship = mean_gain > floor
+
+    decision = {
+        "run_id": result.run_id,
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "kind": "promotion_decision",
+        "name": result.name,
+        "view": view,
+        "champion": result.champion,
+        "config_hash": result.config_hash,
+        "quarters": quarters,
+        "mean_vs_champion": mean_gain,
+        "per_quarter_vs_champion": dict(zip(rows.quarter, rows.vs_champion, strict=True)),
+        "signs": f"{wins}/{len(rows)}",
+        "sign_gate_passed": wins == len(rows),
+        "se_mean": boot["se_mean"],
+        "per_quarter_sd": boot["per_quarter_sd"],
+        "n_boot": boot["n_boot"],
+        "k_configs": k,
+        "best_of_k_multiplier": max(expected_best_of_k(k), Z_SINGLE_TEST),
+        "floor": floor,
+        "ship": ship,
+    }
+    if log:
+        _append(decision)
+
+    print(
+        f"\npromotion: {result.name} [{view}] vs {result.champion}\n"
+        f"  mean vs champion  {mean_gain:+.4f}   signs {wins}/{len(rows)}\n"
+        f"  bootstrapped se   {boot['se_mean']:.4f}  ({n_boot} resamples, paired)\n"
+        f"  configs tried K   {k}  ->  best-of-K multiplier "
+        f"{decision['best_of_k_multiplier']:.2f}\n"
+        f"  floor             {floor:+.4f}\n"
+        f"  => {'SHIP' if ship else 'DO NOT SHIP'}"
+    )
+    return decision
 
 
 def runs(status: str | None = None) -> pd.DataFrame:
@@ -527,6 +753,22 @@ if __name__ == "__main__":
         )
     print(f"\nidentity check passed on {DEV_QUARTERS}: delta_r2 == pc^2 * (1 - r2_surprise)")
 
+    # The bootstrap's fast ΔR² must agree with the scorer, or every promotion
+    # decision is made against a number the competition does not compute.
+    for quarter in DEV_QUARTERS:
+        frame = load(quarter)
+        fast = _delta_r2_fast(
+            frame[GEMINI].to_numpy(dtype=float),
+            frame["surprise_pct"].to_numpy(dtype=float),
+            frame["y"].to_numpy(dtype=float),
+        )
+        exact = harness.evaluate(frame, GEMINI)["delta_r_squared"]
+        assert abs(fast - exact) < 1e-9, f"{quarter}: fast {fast} vs scorer {exact}"
+    print("fast delta_r2 agrees with the scorer to 1e-9 — safe to bootstrap with")
+
+    for k in (1, 3, 10, 40, 100):
+        print(f"  K={k:<4} best-of-K multiplier {max(expected_best_of_k(k), Z_SINGLE_TEST):.3f}")
+
     # Two views, one of them deliberately redundant, to exercise the matrix and
     # the ceiling arithmetic.
     def gemini_view(events, quarter):
@@ -546,6 +788,21 @@ if __name__ == "__main__":
         log=False,
     )
     both.report()
+
+    # Measure the paired sd rather than assuming one. Gemini-vs-champion is a
+    # real candidate (a different vendor's read of the same facts); the noise
+    # pair is the champion perturbed just enough to look like a pipeline tweak,
+    # which is what most logged configurations actually are.
+    decide(both, "gemini", n_boot=2000, log=False)
+
+    rng = np.random.default_rng(0)
+
+    def near_null(events, quarter):
+        base = load(quarter)[GPT].to_numpy(dtype=float)
+        return base + rng.normal(0, 0.15 * np.nanstd(base), len(base))
+
+    noise = run(near_null, "champion + noise (true effect zero)", log=False)
+    decide(noise, "model", n_boot=2000, log=False)
 
     try:
         run(lambda events: [0.5] * len(events), "holdout guard", quarters=[HOLDOUT], log=False)

@@ -301,6 +301,12 @@ def _print_table(name: str, out: pd.DataFrame) -> None:
         print("=> NOT sign-consistent and gain < 2 SE (0.02). Treat as noise.")
 
 
+#: 2026Q3 is the sealed holdout. The demos below run on the dev quarters only —
+#: a smoke test is not a reason to spend it, and quoting a toy model's score as
+#: "positive on 4/4 quarters" when one of the four is sealed overstates the
+#: evidence by a whole quarter.
+DEV_QUARTERS = QUARTERS[:-1]
+
 if __name__ == "__main__":
     # Reproducing the published baselines is the harness's own correctness test.
     compare()
@@ -308,9 +314,9 @@ if __name__ == "__main__":
     def constant(events):
         return [0.5] * len(events)
 
-    backtest(constant, "constant 0.5 (true null — must be exactly 0.0000)")
+    backtest(constant, "constant 0.5 (true null — must be exactly 0.0000)", DEV_QUARTERS)
 
     def facts_length(events):
         return [len(" ".join(e["facts"])) for e in events]
 
-    backtest(facts_length, "toy: total length of the facts")
+    backtest(facts_length, "toy: total length of the facts", DEV_QUARTERS)
