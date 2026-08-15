@@ -79,13 +79,23 @@ def predict(event: dict) -> list[dict]:
         print(f"[SHAPE] information_url payload: {_describe_shape(summary_json)}")
         _shape_logged = True
 
+    # No facts, no call. The official baselines return 0.5 when the bundle
+    # carries no usable facts; we were dumping the raw JSON into the prompt and
+    # asking anyway. It is 5 events in the whole 8,020-event archive, so the
+    # scoring impact is nil — but it made our system differ from the baselines
+    # on those rows, which means any comparison against them was measuring two
+    # things at once. Matching the contract costs nothing and removes that.
     predictions = [
         {
             "identifier_value": asset["identifier_value"],
-            "predicted_percentile": _ask_llm(
-                summary=summary_json,
-                ticker=asset["identifier_value"],
-                event_type=event["event_type"],
+            "predicted_percentile": (
+                _ask_llm(
+                    summary=summary_json,
+                    ticker=asset["identifier_value"],
+                    event_type=event["event_type"],
+                )
+                if n_facts
+                else 0.5
             ),
         }
         for asset in event["focal_assets"]
