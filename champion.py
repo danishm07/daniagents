@@ -153,12 +153,22 @@ def already_done() -> dict[str, dict]:
 
 def one(event: dict, fingerprint: str, model: str) -> dict:
     started = time.time()
-    _throttle.wait()
-    value = predict._ask_llm(
-        summary=live_payload(event["facts"]),
-        ticker=event["ticker"],
-        event_type=EVENT_TYPE,
-    )
+    payload = live_payload(event["facts"])
+    # Mirror predict()'s no-facts contract exactly. predict() returns 0.5
+    # without calling the model when the bundle carries no usable facts, and
+    # this file calls _ask_llm directly — so without this branch the champion
+    # column would disagree with the champion on precisely the rows where the
+    # champion does something special. Five events in the archive, and the
+    # point of this column is that it is a faithful replay.
+    if not predict._extract_facts(payload):
+        value = 0.5
+    else:
+        _throttle.wait()
+        value = predict._ask_llm(
+            summary=payload,
+            ticker=event["ticker"],
+            event_type=EVENT_TYPE,
+        )
     return {
         "event_id": event["event_id"],
         "ticker": event["ticker"],
@@ -227,8 +237,56 @@ def generate(quarters: list[str], workers: int = 10, limit: int | None = None) -
         print("rerun to fill the gaps — completed events are cached and will be skipped")
 
 
+def validate(quarters: list[str] | None = None) -> bool:
+    """Is the column complete, self-consistent, and actually varying?
+
+    Checks worth having because each corresponds to a way this file could be
+    quietly wrong: gaps (a rate-limited run that was never resumed), duplicates
+    (two runs appending), mixed fingerprints (a prompt change mid-run), and a
+    degenerate spread (an all-0.5 column from a missing API key, which scores
+    exactly zero while looking like a real submission).
+    """
+    quarters = quarters or harness.DEV_QUARTERS
+    rows = already_done()
+    if not rows:
+        print("no champion column")
+        return False
+
+    import collections
+
+    seen = collections.Counter()
+    for line in OUT.open():
+        if line.strip():
+            seen[json.loads(line)["event_id"]] += 1
+    duplicates = {e: n for e, n in seen.items() if n > 1}
+
+    wanted = {e["event_id"] for q in quarters for e in harness.events_for(q)}
+    missing = wanted - set(rows)
+    values = [r["prediction"] for e, r in rows.items() if e in wanted]
+    fingerprints = {r["prompt_fingerprint"] for r in rows.values()}
+    out_of_range = [v for v in values if not 0.0 <= v <= 1.0]
+
+    import statistics
+
+    ok = not missing and not duplicates and len(fingerprints) == 1 and not out_of_range
+    print(
+        f"champion column: {len(values)}/{len(wanted)} events over {quarters}\n"
+        f"  missing            {len(missing)}\n"
+        f"  duplicate rows     {len(duplicates)}\n"
+        f"  prompt fingerprint {sorted(fingerprints)}\n"
+        f"  out of [0,1]       {len(out_of_range)}\n"
+        f"  mean {statistics.mean(values):.4f}  sd {statistics.pstdev(values):.4f}  "
+        f"distinct {len(set(values))}\n"
+        f"  => {'OK' if ok else 'NOT USABLE'}"
+    )
+    if len(set(values)) < 10:
+        print("  !! fewer than 10 distinct values — check the API key and the model")
+    return ok
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--validate", action="store_true", help="check the column, fetch nothing")
     parser.add_argument("--quarters", nargs="*", default=harness.DEV_QUARTERS)
     parser.add_argument("--workers", type=int, default=10)
     parser.add_argument("--rpm", type=int, default=DEFAULT_RPM,
@@ -239,5 +297,9 @@ if __name__ == "__main__":
     if harness.QUARTERS[-1] in args.quarters:
         print(f"!! {harness.QUARTERS[-1]} is the sealed holdout — generating it is fine, "
               f"scoring on it is not")
+    if args.validate:
+        raise SystemExit(0 if validate(list(args.quarters)) else 1)
+
     _throttle = _Throttle(args.rpm)
     generate(args.quarters, workers=args.workers, limit=args.limit)
+    validate(list(args.quarters))

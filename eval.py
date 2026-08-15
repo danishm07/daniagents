@@ -177,6 +177,33 @@ def _degenerate(values: np.ndarray) -> bool:
     return no_spread(float(centred @ centred), len(values))
 
 
+def obtainable(quarter: str) -> float:
+    """How much ΔR² is on the table at all: ``1 − R²_surprise`` for the quarter.
+
+    Feed ``y`` back in as the prediction and the scorer returns exactly this
+    (asserted in ``__main__``), so it is the ceiling in the literal sense —
+    perfect foresight scores it and nothing scores more. Dev-quarter values are
+    0.9506 / 0.9422 / 0.9311, mean **0.9413**.
+
+    Reporting a result as a fraction of it is what makes a number legible:
+    ΔR² 0.06 is 6% of what is obtainable, the LLM-read family's ceiling of 0.077
+    is 8%, and the leaders' 0.378 is 40%. "8% of what is available" settles
+    whether a family is worth pursuing in a way that "0.077" does not.
+
+    The fraction is also not merely rhetorical — it is an identity. Since
+    ``ΔR² = pc² · (1 − R²_surprise)``, the fraction of obtainable **is the
+    squared partial correlation**. The two headline numbers are one number.
+    """
+    frame = load(quarter)
+    return 1.0 - harness.evaluate(frame, GEMINI)["r_squared_surprise"]
+
+
+def as_pct_obtainable(delta_r2: float, r2_surprise: float) -> float:
+    """``delta_r2`` as a fraction of what perfect foresight would score."""
+    room = 1.0 - r2_surprise
+    return delta_r2 / room if room else float("nan")
+
+
 def combination_ceiling(rho: float, rho_b: float) -> float:
     """Best correlation reachable by combining infinitely many views.
 
@@ -513,6 +540,9 @@ def run(
                         "n_paired": len(paired),
                         "r2_surprise": scored["r_squared_surprise"],
                         "delta_r2": scored["delta_r_squared"],
+                        "pct_obtainable": as_pct_obtainable(
+                            scored["delta_r_squared"], scored["r_squared_surprise"]
+                        ),
                         "delta_r2_imp": scored["delta_r_squared_imputed"],
                         "partial_corr": partial_corr(values, y, surprise),
                         "vs_champion": vs_champion,
@@ -621,6 +651,7 @@ def _summarize(per_quarter: pd.DataFrame) -> pd.DataFrame:
             {
                 "view": view_name,
                 "mean_delta_r2": group.delta_r2.mean(),
+                "pct_obtainable": group.pct_obtainable.mean(),
                 "mean_partial_corr": group.partial_corr.mean(),
                 "mean_vs_champion": group.vs_champion.mean(),
                 "signs": f"{wins}/{len(group)}",
@@ -673,6 +704,8 @@ def _ceilings(
                 "implied_delta_r2": (
                     ceiling**2 * (1 - r2_surprise) if math.isfinite(ceiling) else float("inf")
                 ),
+                # ceiling**2 IS the fraction of obtainable — see obtainable()
+                "implied_pct": ceiling**2 if math.isfinite(ceiling) else float("inf"),
             }
         )
     return pd.DataFrame(rows)
@@ -758,6 +791,7 @@ def decide(
         "mean_vs_champion": mean_gain,
         "per_quarter_vs_champion": dict(zip(rows.quarter, rows.vs_champion, strict=True)),
         "mean_delta_r2": float(rows.delta_r2.mean()),
+        "mean_pct_obtainable": float(rows.pct_obtainable.mean()),
         "mean_delta_r2_imputed": float(rows.delta_r2_imp.mean()),
         "signs": f"{wins}/{len(rows)}",
         "sign_gate_passed": wins == len(rows),
@@ -780,6 +814,8 @@ def decide(
         f"  configs tried K   {k}  ->  best-of-K multiplier "
         f"{decision['best_of_k_multiplier']:.2f}\n"
         f"  floor             {floor:+.4f}\n"
+        f"  own score         {rows.delta_r2.mean():+.4f} = "
+        f"{rows.pct_obtainable.mean():.1%} of obtainable (0.9413)\n"
         f"  => {'SHIP' if ship else 'DO NOT SHIP'}"
     )
     return decision
@@ -832,6 +868,21 @@ if __name__ == "__main__":
         exact = harness.evaluate(frame, GEMINI)["delta_r_squared"]
         assert abs(fast - exact) < 1e-9, f"{quarter}: fast {fast} vs scorer {exact}"
     print("fast delta_r2 agrees with the scorer to 1e-9 — safe to bootstrap with")
+
+    # Perfect foresight: feed y back in as the prediction. R^2 must be exactly 1
+    # and delta_r2 exactly 1 - r2_surprise. This is the cleanest end-to-end check
+    # available — it exercises ranking, alignment, the benchmark fit and the
+    # subtraction in one line, and if it drifts, every number this module has
+    # ever produced is suspect.
+    for quarter in DEV_QUARTERS:
+        frame = load(quarter).copy()
+        frame["_perfect"] = frame["y"]
+        scored = harness.evaluate(frame, "_perfect")
+        assert abs(scored["r_squared"] - 1.0) < 1e-9, f"{quarter}: perfect R2 {scored['r_squared']}"
+        assert (
+            abs(scored["delta_r_squared"] - (1 - scored["r_squared_surprise"])) < 1e-9
+        ), quarter
+    print("perfect foresight scores exactly 1 - r2_surprise (mean ceiling ~0.941)")
 
     for k in (1, 3, 10, 40, 100):
         print(f"  K={k:<4} best-of-K multiplier {max(expected_best_of_k(k), Z_SINGLE_TEST):.3f}")
