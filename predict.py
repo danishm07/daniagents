@@ -221,9 +221,18 @@ def _extract_facts(summary: object) -> list[str]:
         if known:
             return known
 
+        # The live shape, confirmed from production on 2026-08-14: the archive's
+        # disclosure object, unwrapped. ``items`` sits at the top level beside
+        # schema_version / event_id / generated_at, with no ``disclosure`` key.
+        # Handled explicitly so the depth-first fallback below stops being
+        # load-bearing for every single event — a rescue path that always runs
+        # is not a rescue path, and it would keep finding *something* even if
+        # the facts moved somewhere they should not be.
         disclosure = summary.get("disclosure")
-        if isinstance(disclosure, dict):
-            for item in disclosure.get("items") or []:
+        containers = [disclosure] if isinstance(disclosure, dict) else []
+        containers.append(summary)
+        for container in containers:
+            for item in container.get("items") or []:
                 if isinstance(item, dict) and item.get("kind") == "facts":
                     known = _as_fact_list(item.get("content"))
                     if known:
