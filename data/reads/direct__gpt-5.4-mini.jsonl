@@ -34,3 +34,6 @@
 {"event_id": "ea_MP_Q1_2026", "prediction": 0.67, "prompt_tokens": 974, "completion_tokens": 16}
 {"event_id": "ea_SOUN_Q1_2026", "prediction": 0.69, "prompt_tokens": 800, "completion_tokens": 16}
 {"event_id": "ea_UGI_Q2_2026", "prediction": 0.36, "prompt_tokens": 976, "completion_tokens": 16}
+{"event_id": "ea_FUBO_Q3_2025", "prediction": 0.5, "no_facts": true}
+{"event_id": "ea_FWONK_Q3_2025", "prediction": 0.5, "no_facts": true}
+{"event_id": "ea_HOG_Q3_2025", "prediction": 0.5, "no_facts": true}
