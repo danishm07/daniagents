@@ -28,10 +28,15 @@ Typical use::
     import harness
 
     def my_model(events):
-        return [0.5 + 0.1 * ("raised" in " ".join(e["facts"])) for e in events]
+        # one float per event, same order; fit on harness.training_data(quarter)
+        ...
 
-    harness.backtest(my_model, "keyword toy")
+    harness.backtest(my_model, "what this run is")
     harness.compare()          # the official baselines, for reference
+
+Scores land in ``eval.run``/``eval.decide`` for anything that has to be
+believed — this module deliberately has no opinion about whether a difference
+is real.
 """
 
 from __future__ import annotations
@@ -51,6 +56,12 @@ ARCHIVE_DIR = Path(__file__).parent / "data" / "archive"
 
 #: Chronological. Order matters — the temporal split slices this list.
 QUARTERS = ["2025Q4", "2026Q1", "2026Q2", "2026Q3"]
+
+#: 2026Q3 is the sealed holdout: one evaluation, after the final model is
+#: chosen. Everything that defaults to a quarter list defaults to these three.
+#: ``QUARTERS`` stays available for the final run and for ``training_data``,
+#: which needs the full chronology to slice on.
+DEV_QUARTERS = QUARTERS[:-1]
 
 GEMINI = "Gemini 2.5 Flash-Lite"
 GPT = "GPT-5 nano"
@@ -148,7 +159,7 @@ def load(quarter: str) -> pd.DataFrame:
     return frame.dropna(subset=["y", "surprise_pct"]).reset_index(drop=True)
 
 
-def load_all(quarters: Sequence[str] = QUARTERS) -> pd.DataFrame:
+def load_all(quarters: Sequence[str] = DEV_QUARTERS) -> pd.DataFrame:
     return pd.concat([load(q) for q in quarters], ignore_index=True)
 
 
@@ -222,7 +233,7 @@ def delta_r2(frame: pd.DataFrame, column: str) -> float:
 def backtest(
     predict_fn: Callable[[list[dict]], Sequence[float]],
     name: str = "model",
-    quarters: Sequence[str] = QUARTERS,
+    quarters: Sequence[str] = DEV_QUARTERS,
     verbose: bool = True,
 ) -> pd.DataFrame:
     """Score ``predict_fn`` on every quarter and print the table.
@@ -261,7 +272,7 @@ def backtest(
     return out
 
 
-def compare(quarters: Sequence[str] = QUARTERS) -> pd.DataFrame:
+def compare(quarters: Sequence[str] = DEV_QUARTERS) -> pd.DataFrame:
     """The reference points: both official baselines, per quarter.
 
     Run this first. If these numbers don't match the ones in the strategy note,
@@ -293,30 +304,38 @@ def _print_table(name: str, out: pd.DataFrame) -> None:
         f"vs gemini = {out.vs_gemini.mean():+.4f}   "
         f"beats gemini on {wins}/{len(out)} quarters"
     )
-    if wins == len(out):
-        print("=> sign-consistent across all quarters. Worth taking seriously.")
-    elif out.vs_gemini.mean() > 0.02:
-        print("=> mean gain > 2 SE. Worth taking seriously.")
-    else:
-        print("=> NOT sign-consistent and gain < 2 SE (0.02). Treat as noise.")
+    # No verdict here, deliberately. Whether a gain is real depends on the
+    # bootstrapped sd of the *paired* difference and on how many configurations
+    # have been tried — neither is visible from this table. The rule this line
+    # used to print ("2 SE, SE = 0.010") was measured on ΔR² *levels*, where
+    # most of the spread is quarter difficulty that cancels in a comparison.
+    print("=> eval.decide() rules on this; see its floor and K.")
 
-
-#: 2026Q3 is the sealed holdout. The demos below run on the dev quarters only —
-#: a smoke test is not a reason to spend it, and quoting a toy model's score as
-#: "positive on 4/4 quarters" when one of the four is sealed overstates the
-#: evidence by a whole quarter.
-DEV_QUARTERS = QUARTERS[:-1]
 
 if __name__ == "__main__":
-    # Reproducing the published baselines is the harness's own correctness test.
-    compare()
+    # Two checks with known answers, and nothing else. A demo model invented to
+    # look interesting teaches nothing and gets quoted later as if it meant
+    # something.
+    reference = compare()
 
     def constant(events):
         return [0.5] * len(events)
 
-    backtest(constant, "constant 0.5 (true null — must be exactly 0.0000)", DEV_QUARTERS)
+    null = backtest(constant, "constant 0.5 — a true null, must be exactly 0.0000")
+    assert abs(null.delta_r2).max() < 1e-12, "constant prediction must score exactly zero"
 
-    def facts_length(events):
-        return [len(" ".join(e["facts"])) for e in events]
+    # Replaying a real submission's own predictions through predict_fn must
+    # reproduce the number compare() prints. This is the end-to-end check on
+    # event ordering and alignment: if the harness shuffled rows anywhere, the
+    # score would drift and nothing downstream would be trustworthy.
+    scored = load_all()
+    by_event = dict(zip(scored.event_id, scored[GEMINI], strict=True))
 
-    backtest(facts_length, "toy: total length of the facts", DEV_QUARTERS)
+    def replay_gemini(events):
+        return [by_event[e["event_id"]] for e in events]
+
+    replayed = backtest(replay_gemini, "replay of the Gemini baseline — must match compare()")
+    for quarter, delta in zip(replayed.quarter, replayed.delta_r2, strict=True):
+        expected = float(reference.loc[reference.quarter == quarter, "gemini_flash_lite"].iloc[0])
+        assert abs(delta - expected) < 1e-12, f"{quarter}: replay {delta} != compare {expected}"
+    print("\nreplay matches compare() exactly — event ordering and alignment are sound")

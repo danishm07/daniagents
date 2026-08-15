@@ -236,12 +236,19 @@ def bootstrap_diff(
     rng = np.random.default_rng(seed)
     quarters = list(frames)
     draws = np.empty((n_boot, len(quarters)))
+    paired_n = {}
 
     for j, quarter in enumerate(quarters):
         frame = frames[quarter]
         surprise = frame["surprise_pct"].to_numpy(dtype=float)
         y = frame["y"].to_numpy(dtype=float)
         a, b = challenger[quarter], champion[quarter]
+        # Same rows for both, or the "difference" partly measures coverage
+        # rather than quality. The official baselines are NaN on ~5% of events
+        # in two quarters, so this is not hypothetical.
+        keep = np.isfinite(a) & np.isfinite(b) & np.isfinite(surprise) & np.isfinite(y)
+        a, b, surprise, y = a[keep], b[keep], surprise[keep], y[keep]
+        paired_n[quarter] = int(keep.sum())
         n = len(y)
         for i in range(n_boot):
             idx = rng.integers(0, n, n)
@@ -252,6 +259,7 @@ def bootstrap_diff(
     return {
         "per_quarter_sd": {q: float(draws[:, j].std(ddof=1)) for j, q in enumerate(quarters)},
         "se_mean": float(draws.mean(axis=1).std(ddof=1)),
+        "paired_n": paired_n,
         "n_boot": n_boot,
     }
 
@@ -275,18 +283,28 @@ def expected_best_of_k(k: int) -> float:
 def config_count(log: pd.DataFrame | None = None) -> int:
     """Distinct configurations tried so far — the ``K`` the floor is scaled by.
 
-    Counts distinct ``config_hash`` over *every* logged run, failures included.
-    A configuration that crashed still consumed a look at the data if it had
+    Counts distinct ``config_hash`` over every logged *run*, failures included —
+    a configuration that crashed still consumed a look at the data if it had
     been scored, and pretending otherwise is how K gets quietly understated.
+    Promotion decisions are excluded: they re-state a config that was already
+    counted when it ran.
     """
     frame = runs() if log is None else log
     if frame.empty or "config_hash" not in frame:
         return K_PRIOR
+    if "kind" in frame:
+        frame = frame[frame.kind != "promotion_decision"]
     return K_PRIOR + int(frame.config_hash.nunique())
 
 
 def promotion_floor(se_mean: float, k: int) -> float:
-    """The gain a challenger must clear: the best draw ``K`` null configs would produce."""
+    """The gain a challenger must clear: the best draw ``K`` null configs would produce.
+
+    Treats the ``K`` configurations as independent, which they are not — most
+    are variants of each other, and correlated draws have a lower expected
+    maximum. The floor is therefore conservative. That is the right direction to
+    err, but it means a rejected candidate is "not proven", not "disproven".
+    """
     return se_mean * max(expected_best_of_k(k), Z_SINGLE_TEST)
 
 
@@ -406,9 +424,18 @@ def run(
     view_map: dict[str, ViewFn] = (
         dict(views) if isinstance(views, Mapping) else {"model": views}
     )
+    if CHAMPION_KEY in view_map:
+        raise ValueError(f"{CHAMPION_KEY!r} is reserved — the champion joins every run under it")
     config = dict(config or {})
+    # ``name`` is part of the hash. Without it, two different candidate
+    # functions run with the same empty config collapse to one hash, and K —
+    # the whole point of the log — silently undercounts.
     config_hash = hashlib.sha256(
-        json.dumps({"views": sorted(view_map), "config": config}, sort_keys=True, default=str).encode()
+        json.dumps(
+            {"name": name, "views": sorted(view_map), "config": config},
+            sort_keys=True,
+            default=str,
+        ).encode()
     ).hexdigest()
     run_id = uuid.uuid4().hex
     started = time.time()
@@ -416,6 +443,7 @@ def run(
     record = {
         "run_id": run_id,
         "timestamp": datetime.now(timezone.utc).isoformat(),
+        "kind": "run",
         "name": name,
         "status": "running",
         "config_hash": config_hash,
@@ -450,20 +478,30 @@ def run(
             if combine is not None:
                 preds["combined"] = np.asarray(combine(dict(preds)), dtype=float)
 
-            champion_delta = harness.delta_r2(frame, champion)
+            champion_values = frame[champion].to_numpy(dtype=float)
             for view_name, values in preds.items():
                 frame["_pred"] = values
                 scored = harness.evaluate(frame, "_pred")
+                # vs_champion is scored on the rows *both* models predicted.
+                # Comparing each on its own rows would fold coverage into the
+                # difference, and the archive's baselines are NaN on ~5% of
+                # events in 2026Q1 and 2026Q2.
+                paired = frame[np.isfinite(values) & np.isfinite(champion_values)]
+                vs_champion = (
+                    harness.evaluate(paired, "_pred")["delta_r_squared"]
+                    - harness.evaluate(paired, champion)["delta_r_squared"]
+                )
                 rows.append(
                     {
                         "quarter": quarter,
                         "view": view_name,
                         "n": scored["n_obs"],
+                        "n_paired": len(paired),
                         "r2_surprise": scored["r_squared_surprise"],
                         "delta_r2": scored["delta_r_squared"],
                         "delta_r2_imp": scored["delta_r_squared_imputed"],
                         "partial_corr": partial_corr(values, y, surprise),
-                        "vs_champion": scored["delta_r_squared"] - champion_delta,
+                        "vs_champion": vs_champion,
                     }
                 )
 
@@ -539,10 +577,20 @@ def _correlation_matrix(preds: Mapping[str, np.ndarray], surprise: np.ndarray) -
 
 
 def _pool(matrices: Mapping[str, pd.DataFrame]) -> pd.DataFrame | None:
-    """Mean correlation matrix across quarters — the number to design against."""
+    """Mean correlation matrix across quarters, averaged in Fisher-z space.
+
+    Correlations do not average linearly — the arithmetic mean of r is biased
+    toward zero, and at r ≈ 0.7 the bias is large enough to matter for a ρ_b
+    that decides whether a whole family is worth pursuing.
+    """
     if not matrices:
         return None
-    return sum(matrices.values()) / len(matrices)
+    stack = np.stack([m.to_numpy(dtype=float) for m in matrices.values()])
+    z = np.arctanh(np.clip(stack, -0.999999, 0.999999))
+    pooled = np.tanh(z.mean(axis=0))
+    np.fill_diagonal(pooled, 1.0)
+    first = next(iter(matrices.values()))
+    return pd.DataFrame(pooled, index=first.index, columns=first.columns)
 
 
 def _summarize(per_quarter: pd.DataFrame) -> pd.DataFrame:
@@ -678,6 +726,8 @@ def decide(
     floor = promotion_floor(boot["se_mean"], k)
 
     rows = result.per_quarter[result.per_quarter.view == view]
+    if rows.empty:
+        raise ValueError(f"no scored rows for view {view!r} — views are {sorted(result.summary.view)}")
     mean_gain = float(rows.vs_champion.mean())
     wins = int((rows.vs_champion > 0).sum())
     ship = mean_gain > floor
@@ -693,10 +743,13 @@ def decide(
         "quarters": quarters,
         "mean_vs_champion": mean_gain,
         "per_quarter_vs_champion": dict(zip(rows.quarter, rows.vs_champion, strict=True)),
+        "mean_delta_r2": float(rows.delta_r2.mean()),
+        "mean_delta_r2_imputed": float(rows.delta_r2_imp.mean()),
         "signs": f"{wins}/{len(rows)}",
         "sign_gate_passed": wins == len(rows),
         "se_mean": boot["se_mean"],
         "per_quarter_sd": boot["per_quarter_sd"],
+        "paired_n": boot["paired_n"],
         "n_boot": boot["n_boot"],
         "k_configs": k,
         "best_of_k_multiplier": max(expected_best_of_k(k), Z_SINGLE_TEST),
@@ -789,20 +842,20 @@ if __name__ == "__main__":
     )
     both.report()
 
-    # Measure the paired sd rather than assuming one. Gemini-vs-champion is a
-    # real candidate (a different vendor's read of the same facts); the noise
-    # pair is the champion perturbed just enough to look like a pipeline tweak,
-    # which is what most logged configurations actually are.
+    # A real candidate: a different vendor's read of the same ten facts. The sd
+    # of the paired difference is measured here, not assumed — and it is
+    # specific to this pair, because it depends on how correlated the two are.
     decide(both, "gemini", n_boot=2000, log=False)
 
-    rng = np.random.default_rng(0)
+    # The null that needs no invention: replaying the champion's own column.
+    # Gain is exactly zero, so any positive floor must reject it.
+    def replay_champion(events, quarter):
+        return load(quarter)[CHAMPION].tolist()
 
-    def near_null(events, quarter):
-        base = load(quarter)[GPT].to_numpy(dtype=float)
-        return base + rng.normal(0, 0.15 * np.nanstd(base), len(base))
-
-    noise = run(near_null, "champion + noise (true effect zero)", log=False)
-    decide(noise, "model", n_boot=2000, log=False)
+    replayed = run(replay_champion, "replay of the champion — gain must be exactly zero", log=False)
+    assert abs(replayed.per_quarter.vs_champion).max() < 1e-12, "replay must tie with itself"
+    null_decision = decide(replayed, "model", n_boot=500, log=False)
+    assert not null_decision["ship"], "a zero-gain candidate must not ship"
 
     try:
         run(lambda events: [0.5] * len(events), "holdout guard", quarters=[HOLDOUT], log=False)
