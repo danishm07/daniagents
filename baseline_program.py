@@ -153,6 +153,7 @@ if __name__ == "__main__":
     p.add_argument("--model", default="gpt5nano", choices=list(LM_MODELS))
     p.add_argument("--quarter", default="2026Q2")
     p.add_argument("--threads", type=int, default=8)
+    p.add_argument("--tag", default="", help="suffix so repeat samples do not overwrite")
     args = p.parse_args()
 
     screen = {e["event_id"] for e in reads.screen_events(700)}
@@ -161,7 +162,8 @@ if __name__ == "__main__":
           f"{len(events)} {args.quarter} screen events")
 
     preds = run(events, args.model, args.threads)
-    cache = Path(__file__).parent / "data" / "reads" / f"official__{args.model}__{args.quarter}.jsonl"
+    cache = (Path(__file__).parent / "data" / "reads" /
+             f"official__{args.model}__{args.quarter}{args.tag}.jsonl")
     cache.parent.mkdir(parents=True, exist_ok=True)
     with cache.open("w") as fh:
         for event_id, value in preds.items():
