@@ -58,6 +58,21 @@ image = (
 # look handled. This Dict persists across redeploys, so "done" is durable.
 seen_webhooks = modal.Dict.from_name("em-webhook-dedupe", create_if_missing=True)
 
+# Every prediction we submit, keyed by event_id, with the rung of the
+# degradation ladder that produced it. Modal's log retention is a rolling
+# window of minutes, so without this there is no way to answer "how many events
+# have we actually covered, and how many were neutral fallbacks?" — the two
+# questions that decide our rank, since the contest metric mean-fills anything
+# we miss.
+prediction_log = modal.Dict.from_name("em-prediction-log", create_if_missing=True)
+
+#: Submission retries. Duplicates are accepted with 201 and only the first
+#: prediction per event is ever scored, so re-POSTing costs nothing and cannot
+#: overwrite a good submission. Losing a computed prediction to a single failed
+#: POST is the most expensive failure mode available to us.
+SUBMIT_ATTEMPTS = 4
+SUBMIT_BACKOFF_SECONDS = 2.0
+
 # Credentials are read from your local .env at deploy time (see .env.example).
 # Prefer Modal's secret store instead? See docs/advanced.md.
 secrets = [modal.Secret.from_dotenv(__file__)]
@@ -97,34 +112,137 @@ def _release(webhook_id, submitted):
         seen_webhooks.pop(webhook_id, None)
 
 
+def _usable(predictions) -> bool:
+    """Would the scorer accept this? Out-of-range counts as a missed event.
+
+    Checked before submitting rather than trusted, because a malformed
+    prediction and no prediction score the same, and this is the last place we
+    can still substitute something valid.
+    """
+    if not isinstance(predictions, list) or not predictions:
+        return False
+    for row in predictions:
+        if not isinstance(row, dict):
+            return False
+        value = row.get("predicted_percentile")
+        if not isinstance(value, (int, float)) or isinstance(value, bool):
+            return False
+        if not (0.0 <= float(value) <= 1.0):
+            return False
+        if not isinstance(row.get("identifier_value"), str):
+            return False
+    return True
+
+
+def _predict_with_ladder(event: dict):
+    """``(predictions, rung, detail)`` — full pipeline, one retry, then neutral.
+
+    The ladder CLAUDE.md has always specified and this file never implemented:
+    a neutral 0.5 scores zero, but **no prediction scores worse**, because the
+    contest metric mean-fills every event we miss. Until now any exception here
+    submitted nothing at all, and nothing upstream retries a delivery we have
+    already ACKed.
+
+    The neutral rung deliberately depends on nothing but the webhook body:
+    ``neutral_predictions`` reads ``focal_assets``, so it is reachable even when
+    the ``information_url`` fetch is the thing that failed — which is the most
+    likely failure, since it is a network call with a 15s timeout.
+    """
+    from explaining_markets.event_utils import is_test, neutral_predictions
+    from predict import predict
+
+    event_id = event.get("event_id")
+    if is_test(event):
+        return neutral_predictions(event), "test", None
+
+    for rung in ("full", "retry"):
+        try:
+            predictions = predict(event)
+        except Exception as exc:
+            print(f"[DEGRADE] {event_id} rung={rung} failed: {type(exc).__name__}: {exc}")
+            continue
+        if _usable(predictions):
+            return predictions, rung, None
+        print(f"[DEGRADE] {event_id} rung={rung} returned unusable output: {predictions!r}")
+
+    print(f"[DEGRADE] {event_id} rung=neutral — submitting 0.5 rather than nothing")
+    return neutral_predictions(event), "neutral", "predict() failed twice"
+
+
+def _submit_with_retries(event_id: str, predictions: list, config) -> int:
+    """POST until it sticks. Returns the attempt that succeeded.
+
+    Retrying is free: duplicates return 201, only the first prediction per event
+    is scored, and a re-POST cannot overwrite a good one. Before this, a single
+    transient POST failure discarded a prediction we had already paid for.
+    """
+    import time
+
+    from explaining_markets.client import submit_predictions
+
+    last = None
+    for attempt in range(1, SUBMIT_ATTEMPTS + 1):
+        try:
+            submit_predictions(event_id=event_id, predictions=predictions, config=config)
+            return attempt
+        except Exception as exc:
+            last = exc
+            print(f"[SUBMIT] {event_id} attempt {attempt}/{SUBMIT_ATTEMPTS} failed: "
+                  f"{type(exc).__name__}: {exc}")
+            if attempt < SUBMIT_ATTEMPTS:
+                time.sleep(SUBMIT_BACKOFF_SECONDS * 2 ** (attempt - 1))
+    raise last
+
+
 @app.function(image=image, secrets=secrets, timeout=600, retries=0)
 def predict_and_submit(event: dict, webhook_id: str | None = None):
     """Run the model and submit the prediction, off the request path.
 
     Runs in its own container, so it is unaffected by the web endpoint scaling
     down. The delivery has already been ACKed by the time this starts, which
-    means nothing upstream will retry it — the single retry configured on the
-    model call in predict.py is the only one you get.
+    means nothing upstream will retry it — so every failure has to be handled
+    here or the event is lost permanently.
     """
-    from explaining_markets.client import submit_predictions
-    from explaining_markets.config import Config
-    from explaining_markets.event_utils import is_test, neutral_predictions
-    from predict import predict
+    import time
 
+    from explaining_markets.config import Config
+
+    event_id = event.get("event_id")
     submitted = False
+    predictions, rung, detail = _predict_with_ladder(event)
+
     try:
-        predictions = neutral_predictions(event) if is_test(event) else predict(event)
-        submit_predictions(
-            event_id=event["event_id"],
-            predictions=predictions,
-            config=Config.from_env(),
-        )
+        attempts = _submit_with_retries(event_id, predictions, Config.from_env())
         submitted = True
     except Exception as exc:
-        # Log loudly — `modal app logs explaining-markets-starter` finds it.
-        print(f"[ERROR] prediction failed for event {event.get('event_id')}: {exc}")
-    finally:
-        _release(webhook_id, submitted)
+        attempts = SUBMIT_ATTEMPTS
+        detail = f"submit failed after {SUBMIT_ATTEMPTS} attempts: {exc}"
+        print(f"[ERROR] {event_id} not submitted — {detail}")
+
+    for row in predictions:
+        print(
+            # [PREDICT] stays in predict.py (it reports the fact count); this is
+            # the outcome line, and it is the one that says whether the event was
+            # actually covered and on which rung.
+            f"[OUTCOME] event={event_id} ticker={row['identifier_value']} "
+            f"p={row['predicted_percentile']:.3f} rung={rung} "
+            f"submitted={submitted} attempts={attempts}"
+        )
+
+    try:
+        prediction_log[event_id] = {
+            "event_id": event_id,
+            "submitted_at": time.time(),
+            "rung": rung,
+            "submitted": submitted,
+            "attempts": attempts,
+            "detail": detail,
+            "predictions": predictions,
+        }
+    except Exception as exc:  # bookkeeping must never cost a submission
+        print(f"[WARN] {event_id} prediction_log write failed: {exc}")
+
+    _release(webhook_id, submitted)
 
 
 @app.function(image=image, secrets=secrets)
