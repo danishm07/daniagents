@@ -113,9 +113,20 @@ def program() -> dspy.Module:
     return dspy.ChainOfThought(PredictEarningsReturn)
 
 
-def run(events: list[dict], model: str = "gpt5nano", threads: int = 8) -> dict[str, float]:
-    """Predictions keyed by ``event_id``, neutral on any failure."""
-    lm = dspy.LM(LM_MODELS[model], timeout=120, cache=False)
+def run(
+    events: list[dict],
+    model: str = "gpt5nano",
+    threads: int = 8,
+    **lm_kwargs,
+) -> dict[str, float]:
+    """Predictions keyed by ``event_id``, neutral on any failure.
+
+    ``lm_kwargs`` exists to test the parameters the public code leaves unset.
+    DSPy reported ``temperature: None`` and no ``reasoning_effort``, so both fall
+    through to provider defaults — and provider defaults are exactly the kind of
+    thing that differs between the version that generated the archive and ours.
+    """
+    lm = dspy.LM(LM_MODELS[model], timeout=120, cache=False, **lm_kwargs)
     predictor = program()
 
     def one(event: dict) -> tuple[str, float]:
@@ -154,6 +165,9 @@ if __name__ == "__main__":
     p.add_argument("--quarter", default="2026Q2")
     p.add_argument("--threads", type=int, default=8)
     p.add_argument("--tag", default="", help="suffix so repeat samples do not overwrite")
+    p.add_argument("--temperature", type=float)
+    p.add_argument("--reasoning-effort")
+    p.add_argument("--limit", type=int)
     args = p.parse_args()
 
     screen = {e["event_id"] for e in reads.screen_events(700)}
@@ -161,7 +175,15 @@ if __name__ == "__main__":
     print(f"replaying the official program ({LM_MODELS[args.model]}) on "
           f"{len(events)} {args.quarter} screen events")
 
-    preds = run(events, args.model, args.threads)
+    if args.limit:
+        events = events[:: max(1, len(events) // args.limit)][: args.limit]
+    kw = {}
+    if args.temperature is not None:
+        kw["temperature"] = args.temperature
+    if args.reasoning_effort:
+        kw["reasoning_effort"] = args.reasoning_effort
+    print(f"lm kwargs: {kw or 'defaults (as published)'}  events: {len(events)}")
+    preds = run(events, args.model, args.threads, **kw)
     cache = (Path(__file__).parent / "data" / "reads" /
              f"official__{args.model}__{args.quarter}{args.tag}.jsonl")
     cache.parent.mkdir(parents=True, exist_ok=True)
