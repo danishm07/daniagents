@@ -203,6 +203,7 @@ def predict_and_submit(event: dict, webhook_id: str | None = None):
     means nothing upstream will retry it — so every failure has to be handled
     here or the event is lost permanently.
     """
+    import os
     import time
 
     from explaining_markets.config import Config
@@ -229,7 +230,14 @@ def predict_and_submit(event: dict, webhook_id: str | None = None):
             f"submitted={submitted} attempts={attempts}"
         )
 
+    # Only inside Modal. The local test suite calls this function directly, and
+    # without the guard those runs write fake events into the production Dict —
+    # which is exactly what happened: a "test_abc / api down" row appeared and
+    # was briefly mistaken for live verification. Bookkeeping that can be
+    # polluted by a test run is worse than no bookkeeping, because it looks real.
     try:
+        if not os.environ.get("MODAL_TASK_ID"):
+            raise RuntimeError("not running in Modal — skipping prediction_log write")
         prediction_log[event_id] = {
             "event_id": event_id,
             "submitted_at": time.time(),
@@ -240,7 +248,7 @@ def predict_and_submit(event: dict, webhook_id: str | None = None):
             "predictions": predictions,
         }
     except Exception as exc:  # bookkeeping must never cost a submission
-        print(f"[WARN] {event_id} prediction_log write failed: {exc}")
+        print(f"[log] {event_id} prediction_log not written: {exc}")
 
     _release(webhook_id, submitted)
 
