@@ -164,6 +164,27 @@ def _path(model: str, variant: str) -> Path:
     return READS / f"{variant}__{model.replace('/', '_')}.jsonl"
 
 
+def _client():
+    """OpenAI SDK pointed at OpenRouter when a vendor-prefixed id is used.
+
+    OpenRouter is OpenAI-compatible, and strict structured outputs were verified
+    end to end on gpt-5.4-nano, gpt-5-nano, gemini-2.5-flash-lite and
+    gemini-3-flash-preview before any sweep was run — the schema is the part
+    that could silently degrade behind a proxy, so it was checked rather than
+    assumed.
+    """
+    import os
+
+    from openai import OpenAI
+
+    return OpenAI(
+        base_url="https://openrouter.ai/api/v1",
+        api_key=os.environ["OPENROUTER_API_KEY"],
+        timeout=predict.LLM_TIMEOUT_SECONDS,
+        max_retries=champion.BACKFILL_MAX_RETRIES,
+    )
+
+
 def generate(model: str, variant: str, events: list[dict], workers: int = 10) -> Path:
     """One read column for one (model, variant), cached and resumable."""
     from openai import OpenAI
@@ -178,7 +199,13 @@ def generate(model: str, variant: str, events: list[dict], workers: int = 10) ->
     if not todo:
         return path
 
-    client = OpenAI(timeout=predict.LLM_TIMEOUT_SECONDS, max_retries=champion.BACKFILL_MAX_RETRIES)
+    # A vendor-prefixed id ("google/...", "openai/...") routes through
+    # OpenRouter; a bare id keeps the direct OpenAI account, so the champion
+    # column and everything measured against it stay on the same path they were
+    # generated on.
+    client = _client() if "/" in model else OpenAI(
+        timeout=predict.LLM_TIMEOUT_SECONDS, max_retries=champion.BACKFILL_MAX_RETRIES
+    )
     schema = SCHEMAS[variant]
     lock = threading.Lock()
     started, failures, completed = time.time(), 0, 0
@@ -308,6 +335,7 @@ if __name__ == "__main__":
     parser.add_argument("--rpm", type=int, default=150)
     parser.add_argument("--tpm", type=int, default=champion.DEFAULT_TPM)
     parser.add_argument("--score-only", action="store_true")
+    parser.add_argument("--models", help="comma-separated ids to sweep with the deployed prompt")
     args = parser.parse_args()
 
     champion._throttle = champion._Throttle(args.rpm, args.tpm)
@@ -323,6 +351,9 @@ if __name__ == "__main__":
         ("gpt-5-nano", "cot"),
         ("gpt-5.4-mini", "direct"),
     ]
+
+    if args.models:
+        SPECS = [(m.strip(), "direct") for m in args.models.split(",") if m.strip()]
 
     if args.full:
         model, variant = args.full.split(":")

@@ -1,0 +1,66 @@
+{
+  "predict": {
+    "traces": [],
+    "train": [],
+    "demos": [
+      {
+        "augmented": true,
+        "facts": "- XDEMVY generated $118.7 million in net product sales in Q3 2025, with more than 103,000 bottles dispensed to patients, both up double digits from Q2.\n- The company expects Q4 2025 net product sales to be in the range of $140 million to $145 million, representing annual revenue of $440 million to $445 million.\n- More than 20,000 eye care professionals have prescribed XDEMVY, with weekly writers increasing approximately 20% and ECPs prescribing more than once a week increasing approximately 30% quarter-over-quarter.\n- Nearly 400,000 patients have been treated with XDEMVY out of an estimated 25 million Americans living with Demodex blepharitis.\n- The gross-to-net discount was 44.7% in Q3, with Q4 expected to be in the range of 43% to 45%, driven by ongoing Medicare mix dynamics.\n- More than 10% of weekly prescriptions are now refills, climbing to mid-to-high teens among the earliest patient cohorts, with the company expecting retreatments to stabilize around 20% over time.\n- The direct-to-consumer campaign delivered a 90% increase in xdemvy.com website visits and 42% relative growth in unaided awareness since the prior quarter, with positive and growing ROI.\n- Full year DTC investment is expected to reach the top end of the provided range of $70 million to $80 million.\n- The company remains on track to initiate a Phase II study for TP-04 for ocular rosacea by year-end 2025, with top-line data anticipated in 2026.\n- Q3 2025 represented 147% year-over-year revenue growth, marking the eighth consecutive quarter of growth for the company.",
+        "ticker": "TARS",
+        "reasoning": "Strong Q3 growth, firm Q4 guidance, improving prescription/refill dynamics, and positive DTC traction suggest upside vs expectations. However, gross-to-net discount remains elevated and retail/Medicare mix commentary adds uncertainty; pipeline progress is a secondary support since Phase II data is later (2026). Net: likely above-typical positive earnings reaction.",
+        "predicted_percentile": 0.72
+      },
+      {
+        "augmented": true,
+        "facts": "- Year-to-date adjusted EBITDA from continuing operations stands at $87 million, up from $26 million during the same period last year.\n- Fixed cost reduction initiatives are now tracking to around $50 million in savings for the year, exceeding the original estimate of $30 million to $40 million.\n- Net loss from continuing operations was $54 million or $3.34 per diluted share, primarily due to a $48 million noncash impairment of goodwill.\n- The company's net leverage ratio is at 2.7x with available liquidity of $455 million.\n- Q4 2025 adjusted EBITDA guidance is $13 million to $23 million, with expectations of 3% to 4% lower production volume versus Q3.\n- The company expects 2026 revenue of approximately $1.45 billion to $1.55 billion with a capacity utilization rate in the mid-80% range.\n- The potential CUK swing capability project has an estimated capital requirement of approximately $50 million with an expected return of more than 20% at today's prices.\n- RISI is forecasting an approximately 350,000 ton net capacity reduction in the first half of 2026, which would drive utilization rates to above 90%.\n- European imports of paperboard are down approximately 10% July year-to-date.\n- In a normalized utilization environment of 90% to 95%, the company expects cross-cycle adjusted EBITDA margins of 13% to 14% and free cash flow conversion of 40% to 50%, resulting in over $100 million in annual free cash flow.",
+        "ticker": "CLW",
+        "reasoning": "Large YoY EBITDA improvement, better-than-expected fixed cost savings, and upbeat utilization/margin/FCF outlook suggest a positive surprise. Some offset from a net loss driven by a goodwill impairment (noncash) likely not viewed as deteriorating underlying operations. Overall guidance and industry tightness (capacity reductions, imports down) point to an above-median post-earnings move, but not the very top extreme.",
+        "predicted_percentile": 0.7
+      },
+      {
+        "augmented": true,
+        "facts": "- Q3 transaction value was $589 million, up 30% year-over-year, driven by 41% year-over-year growth in the P&C vertical.\n- Q3 adjusted EBITDA was $29.1 million, an increase of 11% year-over-year, with 64% of contribution converting to adjusted EBITDA compared to 63% in the prior year.\n- Excluding under-65 Health, core business delivered transaction value and adjusted EBITDA growth of 38% and 31% year-over-year, respectively.\n- The company expects Q4 transaction value between $620 million and $645 million, representing a 27% year-over-year increase at the midpoint.\n- P&C transaction value is expected to grow approximately 45% year-over-year in Q4, while Health vertical transaction value is expected to decline approximately 45% year-over-year.\n- Q4 adjusted EBITDA is expected to be between $27.5 million and $29.5 million, including $8 million to $9 million of negative impact from year-over-year decline in under-65 contribution.\n- The company generated $23.6 million of free cash flow in Q3 and ended the quarter with a net debt to adjusted EBITDA ratio below 1x.\n- During Q3, the company repurchased approximately 5% of outstanding shares for $32.9 million and announced a new share repurchase authorization of up to $50 million.\n- A record 13 carriers spent more than $1 million per month in Q3, the greatest number in company history.\n- Q4 take rate is expected to be approximately 7%, with private marketplace transactions representing approximately 54% of total transaction value, up from 41% in Q4 of last year.",
+        "ticker": "MAX",
+        "reasoning": "Moderately strong beat/positive signal: transaction value up 30% YoY with core (ex under-65 health) accelerating; Q4 guide implies solid top-line growth at midpoint (27% YoY) and EBITDA in line-to-slightly-up range despite expected under-65 headwinds. Margin conversion slightly improved and liquidity/FCF plus net debt/EBITDA <1x supports sentiment, with active buybacks (5% repurchased; new $50m authorization) adding upside. Key risk is large Health decline (~-45% YoY) and under-65 drag (-$8m to -$9m impact), which could cap the surprise. Overall likely slightly above-typical positive surprise vs other earnings in the quarter.",
+        "predicted_percentile": 0.62
+      },
+      {
+        "facts": "- BlackSky was awarded more than $60 million in new contracts in Q3 2025, primarily with international customers.\n- Revenue was negatively impacted by approximately $4 million in August and September 2025 due to reductions made in the EOCL contract.\n- International customer revenues now represent about half of total revenues, up from 40% a year ago when U.S. government was 60%.\n- Over 90% of BlackSky's backlog is related to international contracts for Gen-3 capabilities.\n- BlackSky ended Q3 2025 with $147.6 million of cash, restricted cash, and short-term investments, more than double the cash balance from a year ago.\n- Total liquidity position reached over $200 million, an increase of $85 million or 71% growth over Q3 2024.\n- Total revenue for the first nine months of 2025 was $71.4 million, consistent with the prior year period.\n- Adjusted EBITDA for the first nine months of 2025 was a loss of $7.9 million compared to positive adjusted EBITDA of $4.3 million in the prior year period.\n- BlackSky currently has 2 Gen-3 and 11 Gen-2 satellites on orbit, with a goal of at least 12 Gen-3 satellites operational by the end of 2026.\n- BlackSky received approximately $30 million in total orders under the NGA Luno contract this year, including a seven-figure delivery order in Q3.",
+        "ticker": "BKSY",
+        "event_id": "ea_BKSY_Q3_2025",
+        "y": 0.13744588744588745,
+        "y_resid": -0.2831592050262963,
+        "y_resid_pct": 0.20010816657652786
+      }
+    ],
+    "signature": {
+      "instructions": "- `ticker`: a stock symbol\n- `facts`: bullet-style, finance-centric earnings-call notes (GAAP/non-GAAP metrics, guidance, catalysts, balance-sheet/capital actions, risks/timing issues)\n\nTask: output **both**:\n1) `reasoning` (1–3 short sentences, no bullets): infer the net direction and likely magnitude of the **earnings-to-expectations surprise** implied by the facts for **next-day** trading. Explicitly weigh (a) upside drivers (results vs expectations, raised guidance, margin/cash improvements, strong demand/scale) against (b) downside drivers (misses, lowered guidance, margin compression, delays/shipments timing vs demand loss, financing/dilution/leverage concerns, regulatory setbacks).\n2) `predicted_percentile` (float in **[0,1]**): your calibrated estimate of where this ticker’s **next-day unexpected return** will rank versus other earnings announcements **in the same quarter**.\n- Use: `0.0` = among the worst, `0.5` = typical/median surprise, `1.0` = among the best.\n- Convert your qualitative net assessment into a number: strong beat/raise + clear de-risking → >0.6; mixed/near-miss or offsetting items → ~0.45–0.6; weak guidance/miss + overhangs → <0.45.\n- If the main issues are **timing delays** (e.g., shipments pushed to next quarter) with no demand impairment, treat downside as smaller/moderate vs a true fundamental miss.\n\nOutput strictly in the signature fields:",
+      "fields": [
+        {
+          "prefix": "Facts:",
+          "description": "Facts extracted from the company's earnings call."
+        },
+        {
+          "prefix": "Ticker:",
+          "description": "${ticker}"
+        },
+        {
+          "prefix": "Reasoning:",
+          "description": "${reasoning}"
+        },
+        {
+          "prefix": "Predicted Percentile:",
+          "description": "Percentile in [0,1] of this stock's next-day unexpected return relative to all other earnings announcements this quarter. 0 = most negative, 0.5 = typical, 1 = most positive."
+        }
+      ]
+    },
+    "lm": null
+  },
+  "metadata": {
+    "dependency_versions": {
+      "python": "3.11",
+      "dspy": "3.3.0",
+      "cloudpickle": "3.1"
+    }
+  }
+}

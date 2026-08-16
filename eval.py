@@ -204,6 +204,95 @@ def as_pct_obtainable(delta_r2: float, r2_surprise: float) -> float:
     return delta_r2 / room if room else float("nan")
 
 
+def check_surrogate(
+    score_fn: Callable[[np.ndarray, np.ndarray], float],
+    labels: np.ndarray,
+    weak_rho: float = 0.20,
+    batch_size: int = 35,
+) -> dict:
+    """Score an oracle, a *weak but real* predictor, a constant and noise.
+
+    **Run this before optimising against any surrogate.** The decisive comparison
+    is **weak vs constant**, not oracle vs constant — an oracle beats a constant
+    on almost any metric, including the one that wasted a run here.
+
+    The regime we actually operate in is ρ ≈ 0.15–0.25. If a predictor with real
+    but modest skill and full spread scores *worse* than predicting the middle,
+    then every gradient step the optimiser takes points toward shrinkage, and it
+    will converge on a constant — which scores ΔR² of exactly zero.
+
+    Two failure modes, both already paid for here:
+
+    ``inverted``      weak loses to constant. What ``1 − |p − pct(ỹ)|`` does: MAE
+                      is minimised by the conditional median, so with weak skill
+                      the best move is to stop predicting. A constant 0.5 scores
+                      0.7500 on it and MIPRO's best trial reached 0.7475 — it had
+                      successfully learned to predict the middle.
+    ``no resolution`` oracle and weak are indistinguishable, so no candidate can
+                      be told from another. What ``(p − 0.5)·ỹ`` does: every
+                      candidate landed at 50.4%.
+
+    Same shape as the harness's constant-0.5 null test, one level up: there we
+    check the *scorer* pays nothing for no information; here we check the
+    *surrogate* does not actively pay for it.
+    """
+    labels = np.asarray(labels, dtype=float)
+    rng = np.random.default_rng(0)
+    n = len(labels)
+
+    standardized = (labels - labels.mean()) / (labels.std() or 1.0)
+
+    def weak_predictor(seed: int) -> np.ndarray:
+        noise = np.random.default_rng(seed).standard_normal(n)
+        mixed = weak_rho * standardized + np.sqrt(max(1 - weak_rho**2, 0.0)) * noise
+        return pd.Series(mixed).rank(pct=True).to_numpy()  # full spread, in [0,1]
+
+    oracle = float(score_fn(labels.copy(), labels))
+    constant = float(score_fn(np.full(n, 0.5), labels))
+    weak = float(np.mean([score_fn(weak_predictor(s), labels) for s in range(5)]))
+    random_mean = float(np.mean([score_fn(rng.random(n), labels) for _ in range(5)]))
+
+    # Can it tell two *candidates* apart at the batch size the optimiser scores
+    # on? Candidate prompts differ by maybe 0.05 in rho, not by oracle-vs-random,
+    # and a minibatch of 35 has its own sampling noise. This is the check that
+    # would have caught the first failed run, whose metric separates oracle from
+    # weak perfectly well at full size and still left every candidate at 50.4%.
+    better, worse = weak_predictor(101), weak_predictor(202)
+    hi = 0.25 * standardized + np.sqrt(1 - 0.25**2) * np.random.default_rng(11).standard_normal(n)
+    lo = 0.15 * standardized + np.sqrt(1 - 0.15**2) * np.random.default_rng(12).standard_normal(n)
+    better = pd.Series(hi).rank(pct=True).to_numpy()
+    worse = pd.Series(lo).rank(pct=True).to_numpy()
+    candidate_gap = float(score_fn(better, labels) - score_fn(worse, labels))
+    idx = [rng.integers(0, n, batch_size) for _ in range(40)]
+    batch_noise = float(
+        np.std([score_fn(better[i], labels[i]) - score_fn(worse[i], labels[i]) for i in idx], ddof=1)
+    )
+
+    if weak <= constant:
+        verdict = "INVERTED — a weak-but-real predictor loses to a constant; this rewards shrinkage"
+    elif abs(oracle - weak) < 1e-3:
+        verdict = "NO RESOLUTION — oracle and a weak predictor are indistinguishable"
+    elif abs(candidate_gap) < 2 * batch_noise:
+        verdict = (
+            f"NO RESOLUTION at batch {batch_size} — a rho 0.25 vs 0.15 candidate gap of "
+            f"{candidate_gap:+.4f} is inside the batch noise of {batch_noise:.4f}"
+        )
+    else:
+        verdict = "usable"
+    return {
+        "oracle": oracle,
+        "weak": weak,
+        "constant": constant,
+        "random": random_mean,
+        "weak_minus_constant": weak - constant,
+        "oracle_minus_weak": oracle - weak,
+        "candidate_gap": candidate_gap,
+        "batch_noise": batch_noise,
+        "verdict": verdict,
+        "usable": verdict == "usable",
+    }
+
+
 def combination_ceiling(rho: float, rho_b: float) -> float:
     """Best correlation reachable by combining infinitely many views.
 
@@ -883,6 +972,49 @@ if __name__ == "__main__":
             abs(scored["delta_r_squared"] - (1 - scored["r_squared_surprise"])) < 1e-9
         ), quarter
     print("perfect foresight scores exactly 1 - r2_surprise (mean ceiling ~0.941)")
+
+    # The surrogate rule, as a standing test rather than a habit. Both metrics
+    # that have wasted an optimisation run here are checked explicitly, so a
+    # regression cannot reintroduce either failure mode silently.
+    frame = load("2026Q1").copy()
+    frame["y_resid"] = harness.residualize(frame, "y")
+    resid_pct = frame.y_resid.rank(pct=True).to_numpy()
+    resid = frame.y_resid.to_numpy()
+
+    inverted = check_surrogate(lambda p, t: float(np.mean(1 - np.abs(p - t))), resid_pct)
+    assert not inverted["usable"] and "INVERTED" in inverted["verdict"], inverted
+    print(f"surrogate check catches the inverted metric: weak {inverted['weak']:.4f} "
+          f"<= constant {inverted['constant']:.4f}  ({inverted['verdict'][:40]})")
+
+    flat = check_surrogate(
+        lambda p, t: float(np.mean(np.clip(0.5 + 2.0 * (p - 0.5) * (t - 0.5), 0, 1))), resid_pct
+    )
+    assert not flat["usable"], flat
+    print(f"  low-resolution metric: candidate gap {flat['candidate_gap']:+.5f} vs batch noise "
+          f"{flat['batch_noise']:.5f} -> NO RESOLUTION at batch 35")
+
+    # The correlation surrogate has the right optimum, but resolution is a
+    # property of the metric AND the batch size. At MIPRO's default minibatch of
+    # 35 even this cannot separate a rho 0.25 candidate from a rho 0.15 one —
+    # correlation's own se at n=35 is ~0.17 against a gap of ~0.10. So the first
+    # run's failure was never going to be fixed by a better metric alone; the
+    # batch was too small for any metric. That is the design constraint for the
+    # optimiser rebuild, and it is asserted here rather than remembered.
+    corr_fn = lambda p, t: float(np.corrcoef(p, t)[0, 1]) if np.std(p) and np.std(t) else 0.0
+    sizes = {b: check_surrogate(corr_fn, resid_pct, batch_size=b) for b in (35, 250, 1000, 2000)}
+    small = sizes[35]
+    assert not small["usable"], small
+    assert small["weak"] > small["constant"], "correlation must at least have the right optimum"
+    usable_at = [b for b, r in sizes.items() if r["usable"]]
+    assert usable_at, {b: r["verdict"] for b, r in sizes.items()}
+    print(f"  correlation surrogate: right optimum (weak {small['weak']:+.3f} > constant "
+          f"{small['constant']:.3f}), and resolution depends on batch size:")
+    for b, r in sizes.items():
+        print(f"    n={b:<5} gap {r['candidate_gap']:+.4f} vs noise {r['batch_noise']:.4f}  "
+              f"{'usable' if r['usable'] else 'no resolution'}")
+    print(f"  -> separating candidates that differ by rho 0.10 needs n>={min(usable_at)}, "
+          f"not MIPRO's default 35. The optimiser rebuild has to score candidates on "
+          f"thousands of events, which is only affordable on a cheap model.")
 
     for k in (1, 3, 10, 40, 100):
         print(f"  K={k:<4} best-of-K multiplier {max(expected_best_of_k(k), Z_SINGLE_TEST):.3f}")
