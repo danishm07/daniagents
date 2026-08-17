@@ -20,7 +20,7 @@ import httpx
 from openai import OpenAI
 from pydantic import BaseModel, Field
 
-from explaining_markets.config import openai_model
+from explaining_markets.config import openai_client_kwargs, openai_model
 
 _openai: OpenAI | None = None  # lazy: importing this file must not require a key
 _openai_warned = False         # one-shot warning when no key is configured
@@ -309,10 +309,10 @@ def _ask_llm(*, summary: dict, ticker: str, event_type: str) -> float:
     enforced by the JSON schema, not by us.
     """
     global _openai, _openai_warned
-    if not os.environ.get("OPENAI_API_KEY"):
+    if not (os.environ.get("OPENROUTER_API_KEY") or os.environ.get("OPENAI_API_KEY")):
         if not _openai_warned:
             print(
-                "[WARN] OPENAI_API_KEY not set — submitting 0.5 placeholder. "
+                "[WARN] no OPENROUTER_API_KEY or OPENAI_API_KEY — submitting 0.5 placeholder. "
                 "Set the key (or edit predict.py) for real predictions."
             )
             _openai_warned = True
@@ -320,7 +320,9 @@ def _ask_llm(*, summary: dict, ticker: str, event_type: str) -> float:
     if _openai is None:
         # picks up OPENAI_API_KEY from env
         _openai = OpenAI(
-            timeout=LLM_TIMEOUT_SECONDS, max_retries=LLM_MAX_RETRIES
+            timeout=LLM_TIMEOUT_SECONDS,
+            max_retries=LLM_MAX_RETRIES,
+            **openai_client_kwargs(),
         )
 
     summary_text = _facts_text(summary)

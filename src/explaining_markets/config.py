@@ -20,7 +20,17 @@ import os
 from dataclasses import dataclass
 
 DEFAULT_API_BASE_URL = "https://api.explainingmarkets.ai/v1"
-DEFAULT_OPENAI_MODEL = "gpt-5.4-nano"
+#: The deployed read. Measured 2026-08-16 over 2,093 archive events: 4.66% of
+#: obtainable against gpt-5.4-nano's 3.52%, +0.0134 vs champion on 3/3 quarters
+#: with a CI excluding zero. Routed through OpenRouter, which is where the
+#: comparison was run and where strict structured outputs were verified.
+DEFAULT_OPENAI_MODEL = "google/gemini-2.5-flash"
+
+#: Fallback for a direct OpenAI key, kept so the starter still works without
+#: OpenRouter configured.
+FALLBACK_OPENAI_MODEL = "gpt-5.4-nano"
+
+OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1"
 
 
 @dataclass(frozen=True)
@@ -50,4 +60,27 @@ def _require(name: str) -> str:
 
 
 def openai_model() -> str:
-    return os.environ.get("OPENAI_MODEL", DEFAULT_OPENAI_MODEL)
+    """The model id to call.
+
+    ``OPENAI_MODEL`` overrides. Otherwise the OpenRouter default when an
+    OpenRouter key is present, and the direct-OpenAI model when it is not — so a
+    missing key degrades to a working configuration rather than a 404 on a
+    vendor-prefixed id.
+    """
+    override = os.environ.get("OPENAI_MODEL")
+    if override:
+        return override
+    return DEFAULT_OPENAI_MODEL if os.environ.get("OPENROUTER_API_KEY") else FALLBACK_OPENAI_MODEL
+
+
+def openai_client_kwargs() -> dict:
+    """Base URL and key for the LLM client.
+
+    Prefers OpenRouter because that is where the model sweep ran: six models
+    across four vendors, and the deployed choice was measured there. Falls back
+    to the direct OpenAI account when no OpenRouter key is configured.
+    """
+    key = os.environ.get("OPENROUTER_API_KEY")
+    if key:
+        return {"base_url": OPENROUTER_BASE_URL, "api_key": key}
+    return {}
