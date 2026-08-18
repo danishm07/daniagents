@@ -147,17 +147,25 @@ def remaining() -> float:
 
 
 def record(model: str, prompt_tokens: int, completion_tokens: int, *,
-           source: str, note: str = "") -> float:
+           source: str, note: str = "", usd: float | None = None) -> float:
     """Log one metered call and return its cost. **Every caller uses this.**
 
-    Priced from the local table for an immediate per-call figure; the provider
-    remains authoritative for the total, and :func:`reconcile` reports the gap
-    between the two rather than assuming they agree.
-    """
-    import frontier
+    ``usd`` is the provider's own reported cost, and callers should pass it
+    whenever it is available — OpenRouter returns it per call in
+    ``usage["cost"]``. It is strictly better than the local price table, which
+    silently falls back to a guessed ``(1.0, 5.0)`` for any model not listed and
+    cannot know about reasoning-token surcharges. Measured on the H1 smoke test:
+    ``gpt-5-nano`` emitted **2,496 reasoning tokens** against 202 visible ones,
+    so a table priced on visible completion tokens understates by an order of
+    magnitude.
 
-    price_in, price_out = frontier.PRICES.get(model, (1.0, 5.0))
-    usd = (prompt_tokens or 0) * price_in / 1e6 + (completion_tokens or 0) * price_out / 1e6
+    Falls back to the table only when the provider reports nothing.
+    """
+    if usd is None:
+        import frontier
+
+        price_in, price_out = frontier.PRICES.get(model, (1.0, 5.0))
+        usd = (prompt_tokens or 0) * price_in / 1e6 + (completion_tokens or 0) * price_out / 1e6
     LOG.parent.mkdir(parents=True, exist_ok=True)
     with _lock, LOG.open("a") as fh:
         fh.write(

@@ -1,0 +1,856 @@
+{
+  "batch": 12,
+  "n": 50,
+  "events": [
+    {
+      "ticker": "BARK",
+      "predicted": 0.25,
+      "actual_residual_rank": 0.602,
+      "facts": [
+        "BARK guided FY2027 revenue of $325\u2013340 million (down from $394.8M in FY26) and adjusted EBITDA of $7\u201310 million, a meaningful step-up from FY26's $0.2M, with Q1 FY27 revenue guided to $77\u201379M and EBITDA of $0\u20131M.",
+        "The Board authorized a $40 million share repurchase program to be funded by ongoing free cash flow, the first such program signaling confidence at current stock levels.",
+        "Full-year FY26 revenue declined to $394.8M from $484.2M, with Q4 revenue of $86.6M versus $115.4M prior year, reflecting a deliberate $24M+ year-over-year cut in marketing spend (FY26 marketing was $59.2M).",
+        "Management is sunsetting the Kibble and toppers product lines due to inadequate returns, reallocating capital to higher-return categories to simplify the business and improve profitability.",
+        "D2C revenue is expected to decline year-over-year in 1H FY27 before stabilizing in 2H and returning to growth, as the company enters FY27 with a smaller but higher-quality subscriber base showing improved retention and AOV (D2C gross margin rose 200+ bps to 68%).",
+        "Commerce and BARK Air are expected to collectively exceed $100M in FY27 revenue, with Commerce alone projected to grow to roughly 25% of total revenue versus 18% in FY26.",
+        "BARK Air revenue more than doubled to over $12.4M in FY26 with 90% utilization, but management is prioritizing unit economics over growth and does not expect significant revenue growth in FY27.",
+        "Q4 Commerce revenue fell 18.3% year-over-year to $12.5M due to timing of retail shipments, though full-year Commerce grew modestly to $59.9M (Matt cited $70M including a different segmentation).",
+        "The company ended FY26 debt-free with $19M cash and $75.5M inventory (down ~$13M YoY), and expects an additional $12.1M in IEEPA tariff refunds ($7.1M tied to FY26 COGS, $5M to FY27) to be recognized once eligible.",
+        "BARK diversified its toy supply chain away from near-total China reliance into multiple Southeast Asian countries and South America, enabling rapid failover if new China tariffs emerge."
+      ]
+    },
+    {
+      "ticker": "KOP",
+      "predicted": 0.45,
+      "actual_residual_rank": 0.706,
+      "facts": [
+        "Koppers conditionally decided to wind down production at its Stickney, Illinois CM&C facility (impacting ~85 employees), targeting ceased distillation by end of 2026 and shifting production to Nyborg, Denmark in Q4 2026.",
+        "The Stickney closure is expected to generate annualized adjusted EBITDA savings of $15M-$20M starting in 2027 (a 75-100 bps margin uplift), translating to a $1.00-$1.20 increase in adjusted EPS, plus $8M-$15M in reduced annual capex.",
+        "The closure will result in pretax charges of $227M-$262M through 2029, including $170M-$195M of non-cash charges in Q2/Q3 2026 and $57M-$67M in cash closure costs over three years, partially offset by $15M-$25M in annualized operating capital cash benefits.",
+        "Q1 2026 consolidated sales were $455M (flat YoY), with adjusted EBITDA of $49.3M (10.8% margin) versus $56M (12.2%) prior year, and adjusted EPS of $0.57.",
+        "Q1 operating cash flow of $46.3M and free cash flow of $34.9M were both first-quarter records, with trailing-12-month operating cash flow of $192M and free cash flow of $139M also at new highs.",
+        "Performance Chemicals Q1 sales rose 18% to $142M with EBITDA up to $26M (18% margin), driven by a 15% volume increase including ~9% market share growth and ~6% customer inventory build.",
+        "CM&C Q1 sales fell 7% to $93M with EBITDA collapsing to $1M (1% margin) from $10M, as average pricing fell 11% (carbon pitch down 9% globally) amid the lowest quarterly results since the 2016 restructuring began.",
+        "RUPS Q1 sales declined to $220M from $235M (with ~$10M from the divested Railroad Structures business) and EBITDA fell to $23M from $26M, though commercial backlog remains strong.",
+        "Full-year 2026 guidance was revised: sales maintained at $1.9B-$2.0B, but adjusted EBITDA lowered by $10M to $240M-$260M and adjusted EPS set at $3.80-$4.60, primarily due to a ~$10M unmitigated impact from higher oil prices tied to the Middle East conflict.",
+        "Q1 capital allocation included $11.4M of capex, $29M in share repurchases (leaving ~$45M on the $100M authorization), and a 12.5% dividend increase to $0.09/quarter, with net debt of $877M and net leverage of 3.5x versus a 2x-3x long-term target."
+      ]
+    },
+    {
+      "ticker": "IMDX",
+      "predicted": 0.75,
+      "actual_residual_rank": 0.977,
+      "facts": [
+        "The company finished Q3 2025 with $20 million in cash and equivalents and no debt.",
+        "Q3 cash burn was kept below the stated goal of $6 million per quarter, with Q4 expected to tick up due to FDA submission and clinical trial expenses.",
+        "The company plans to submit GraftAssureDx to the FDA in December 2025, with the FDA review process listed as 150 days.",
+        "The company's total addressable market (TAM) for kitted transplant testing is stated as greater than $1 billion, based on 1.5 million patients under management and 3 million testing opportunities per year.",
+        "The laboratory version of the kidney test is reimbursed by Medicare at $2,753 per result.",
+        "The registry study has 10 centers lined up, including 3 of the top 10 transplant programs in the U.S., working through legal agreements.",
+        "Five clinical trial sites are actively enrolling patients as of the call date.",
+        "The company expects FDA authorization of GraftAssureDx and commercial launch in mid-2026, assuming no further government shutdown delays.",
+        "Lab services revenue is expected to be sequentially flat in Q4, with approximately $100,000 billed so far in Q4.",
+        "The company plans to submit for heart transplant reimbursement in 2026 and lung transplant reimbursement in 2027."
+      ]
+    },
+    {
+      "ticker": "DPZ",
+      "predicted": 0.55,
+      "actual_residual_rank": 0.776,
+      "facts": [
+        "Income from operations increased 11.8% in Q3, excluding the impact of foreign currency.",
+        "U.S. same-store sales accelerated to 5.2% for the quarter, driven by the Best Deal Ever promotion and Parmesan Stuffed Crust.",
+        "U.S. carryout comps were up 8.7% while delivery was positive 2.5% for the quarter.",
+        "Global retail sales grew 6.3% in the quarter, excluding the impact of foreign currency.",
+        "The company added 29 net new stores in the U.S., bringing the system store count to 7,090.",
+        "International retail sales grew 5.7% excluding foreign currency, with same-store sales of 1.7% and net store growth of 185.",
+        "The company refinanced $1 billion in debt at a blended rate of approximately 5.1%, up from the prior blended rate of approximately 4.3%.",
+        "The company repurchased approximately 166,000 shares at an average price of $450 per share for a total of $75 million in Q3, with approximately $540 million remaining on the share repurchase authorization.",
+        "Management reiterated expectations for U.S. full-year comp of 3% and operating income growth of approximately 8% excluding foreign currency and one-time items.",
+        "Management indicated they have seen a slowing across the restaurant industry at the start of the fourth quarter, which could pressure the full year same-store sales outlook."
+      ]
+    },
+    {
+      "ticker": "CARR",
+      "predicted": 0.65,
+      "actual_residual_rank": 0.837,
+      "facts": [
+        "Q1 2026 reported sales were $5.3 billion with adjusted operating profit of $594 million and adjusted EPS of $0.57, which declined 12% year-over-year but exceeded internal guidance.",
+        "Total company orders rose 11% in Q1, led by global commercial HVAC up 35% (CSA commercial HVAC up over 80%) and global data center orders up over 500%.",
+        "Data center backlog now fully covers the company's expected $1.5 billion of data center sales for 2026, with management targeting to exceed that figure.",
+        "Carrier reaffirmed full-year 2026 guidance of approximately $22 billion in sales (flat to low-single-digit organic growth) and adjusted EPS of approximately $2.80, up high single digits versus 2025.",
+        "Management expects 2 points of incremental global pricing (~$400-$450 million) to offset dollar-for-dollar input cost headwinds, with ~75% tied to Section 232 tariffs and 25% to fuel and commodities.",
+        "CSA Residential sales fell 12% in Q1 with movement down ~8% and field inventories down approximately 35% year-over-year, though Q1 movement was better than the expected ~20% decline.",
+        "CSA Light Commercial grew nearly 10% in Q1 driven by share gains in large retail national accounts, with field inventories down about 25% year-over-year.",
+        "Q2 2026 guidance calls for revenue just below $6 billion, operating margin of ~17%, a 24% tax rate, and adjusted EPS of approximately $0.80, with CSA margins expected near 24%.",
+        "CSAME full-year segment margins are now expected to decline ~50 bps due to the Middle East conflict (region generated ~$400 million of 2025 sales), offset by CST margin expansion of ~50 bps.",
+        "Global CHVAC sales are up 80% since spin with backlog up 130%, 500 bps of share gains, and margins up 3x, with data center sales accretive to overall CHVAC margins."
+      ]
+    },
+    {
+      "ticker": "HQI",
+      "predicted": 0.75,
+      "actual_residual_rank": 0.873,
+      "facts": [
+        "Total revenue was $8.5 million compared with $9.4 million in the prior year, a decrease of 9.8%.",
+        "Net income was $2.3 million or $0.16 per diluted share compared to a net loss of $2.2 million or $0.16 loss per diluted share last year.",
+        "System-wide sales were $133.6 million compared with $148.6 million last year, but increased 6.1% sequentially from Q2 versus only 1.7% sequential growth last year.",
+        "Adjusted net income was $3.4 million or $0.24 per diluted share compared to $2.8 million or $0.20 per diluted share last year.",
+        "Adjusted EBITDA margin rose to 55% from 52% last year, while adjusted EBITDA was $4.7 million compared to $4.9 million last year.",
+        "Net debt decreased to approximately $1.1 million at quarter end, down about $11 million compared to September 30, 2024.",
+        "The company has approximately $42.5 million in credit facility availability, assuming continued covenant compliance.",
+        "HireQuest Direct and Snelling both saw double-digit sequential growth in Q3 compared to only mid-single-digit growth in Q3 last year.",
+        "Workers' compensation program improvements resulted in a benefit of just under $100,000 in Q3 compared to a $500,000 expense in Q3 2024.",
+        "Of the first 5 weeks in Q4, half of those weeks exceeded prior year-over-year comparisons for Snelling and HireQuest Direct divisions."
+      ]
+    },
+    {
+      "ticker": "TSN",
+      "predicted": 0.45,
+      "actual_residual_rank": 0.562,
+      "facts": [
+        "Q1 FY2026 total company sales grew 6.2% year-over-year to $14.3 billion, led by Beef with contributions from Prepared Foods, Chicken, and Pork.",
+        "Q1 adjusted earnings per share were $0.97, down 15% compared to the prior year, partially driven by a higher tax rate.",
+        "Q1 free cash flow was approximately $700 million, with operating cash flow of $942 million and capital expenditures of $252 million.",
+        "Tyson reduced gross debt by $1.4 billion over the last 12 months, with net leverage declining to 2.0x.",
+        "The Chicken segment delivered $459 million in Q1 segment operating income at a 10.9% margin, with volume up 3.8% reaching an all-time quarterly record.",
+        "Prepared Foods Q1 segment operating income was $338 million, up $16 million versus prior year, with sales increasing 8.1%.",
+        "Pork segment operating income margin increased 220 basis points year-over-year to 6.7%, driven by network optimization and operational efficiencies.",
+        "Full year FY2026 adjusted operating income guidance was maintained at $2.1 billion to $2.3 billion, with sales expected to grow 2% to 4%.",
+        "Beef segment full year outlook is a loss of $500 million to $250 million due to tight cattle supply, with the company closing its Lexington, Nebraska facility and reducing Amarillo, Texas operations to a single shift.",
+        "Full year free cash flow guidance was improved to $1.1 billion to $1.7 billion, primarily due to expected improvements in working capital."
+      ]
+    },
+    {
+      "ticker": "OBK",
+      "predicted": 0.7,
+      "actual_residual_rank": 0.808,
+      "facts": [
+        "Q1 2026 ROA was 1.11%, with management on pace to achieve its target run rate ROA of at least 1.15% by Q4 2026 and a pretax pre-provision run rate ROA in excess of 1.72%.",
+        "Diluted EPS was $0.89 in Q1, with notable items creating $0.01 of EPS pressure, and pretax pre-provision earnings ex-notables were $40.8 million (1.61% annualized PTPP ROA).",
+        "Loans held for investment ex-mortgage warehouse grew $200 million or 2.8% sequentially, with $184 million of growth in CNI driven primarily by Texas (~$160M) and the Southeast.",
+        "Total deposits grew 5.4% sequentially (2.8% excluding the $215 million year-end deposit sale that was repurchased two days later), with noninterest-bearing deposits up 4.2% and ending at 23.6% of total deposits.",
+        "Management is now tracking toward the higher end of its mid- to high single-digit full-year loan and deposit growth guidance.",
+        "Net interest margin contracted 2 basis points to 3.71% in Q1, but is expected to rebound by ~10 bps in Q2 and reach 3.7%-3.8% by Q4, with new loans pricing at 6.30%-6.50% versus ~5% on $350M of maturing loans.",
+        "The Board approved an increase in the quarterly dividend from $0.15 to $0.25, and the company repurchased 165,500 shares during Q1 while maintaining a TCE ratio of 11%.",
+        "Tangible book value grew sequentially to $35.61, marking the 14th consecutive quarter of growth.",
+        "Credit metrics remained sound with net charge-offs of $2.8 million (0.15% annualized), NPAs rising to 1.12% of loans, classified assets at 1.97%, and the allowance stable at 1.34% of loans ex-warehouse.",
+        "The company hired 15 new bankers in Q1 (6 in Houston, 6 in North Texas) amid 'generational dislocation,' with management stating M&A is not on the table and that Q2 loan pipeline stands at $150-$160 million."
+      ]
+    },
+    {
+      "ticker": "PESI",
+      "predicted": 0.85,
+      "actual_residual_rank": 0.948,
+      "facts": [
+        "Revenue increased to $17.5 million in Q3 2025 compared to $16.8 million in Q3 2024, a 4% year-over-year increase.",
+        "Gross profit more than doubled to $2.6 million (14.6% margin) from $1.3 million (7.9% margin) in the prior year period.",
+        "Treatment segment revenue increased 45% year-over-year to $13.1 million, with segment gross margin improving to 17.3% from 4.5%.",
+        "Treatment backlog ended the quarter at $15.4 million, up from $7.9 million a year ago, nearly doubling year-over-year.",
+        "The company expects DFLAW at Hanford to generate $1 million to $2 million in revenue per month beginning in early Q1 2026.",
+        "PFAS backlog includes 20,000 gallons under contract with anticipated commitments for another 25,000 gallons expected before year-end.",
+        "Services segment revenue declined to $4.3 million from $7.7 million in Q3 2024 due to DOE and DoD project delays.",
+        "The company ended the quarter with $16.4 million in cash, $18.4 million in working capital, and total debt of approximately $1.9 million.",
+        "EBITDA loss improved to $1.5 million from a $2.1 million loss in the prior year quarter, an improvement of approximately $600,000.",
+        "The second-generation PFAS unit near Oak Ridge is expected to commission in Q1 2026 with capacity of 1,000 gallons per shift, scalable to 2,000 gallons per shift."
+      ]
+    },
+    {
+      "ticker": "MOV",
+      "predicted": 0.78,
+      "actual_residual_rank": 0.832,
+      "facts": [
+        "Q1 FY27 net sales rose 8.1% reported (4.5% constant currency) to $142.4 million, with U.S. up 8.7% and international up 7.6% (1.6% constant currency).",
+        "Adjusted operating profit jumped to $7.5 million from $0.9 million, and adjusted EPS surged to $0.32 from $0.08 year-over-year.",
+        "Gross margin expanded 320 bps to 57.3%, aided by favorable channel/product mix, cost leverage, and a temporary benefit from elimination of IEEPA tariffs on residual U.S. inventory.",
+        "Management expects gross margin improvement to continue for the full year but at a more moderate level than Q1, roughly midway between last year's rate and the Q1 print.",
+        "The Board raised the quarterly dividend by $0.05 (14%) to $0.40 per share, supported by $225.3 million in cash, no debt, and $7 million of operating cash flow in Q1.",
+        "Management guided to moderating Q2 sales growth, particularly on a constant currency basis, as Q1 benefited from outsized retailer replenishment following a stronger-than-expected Q4.",
+        "The Middle East was a significant drag due to ongoing conflict; excluding the region, licensed brand sales grew 9.2% constant currency vs. the reported 6.5%.",
+        "Direct-to-consumer was a key growth driver, with movado.com up 12.8% and company store sales up 10.2%.",
+        "The company has not recognized a gain on $10 million of previously paid IEEPA tariffs, electing to wait until cash refunds are received.",
+        "Movado is experiencing inventory shortages on key Movado-brand bestsellers (expected to be replenished by summer) and is not providing FY27 guidance due to economic and geopolitical uncertainty; $44.6 million remains under the share repurchase authorization after buying ~61,000 shares in Q1."
+      ]
+    },
+    {
+      "ticker": "LMND",
+      "predicted": 0.92,
+      "actual_residual_rank": 0.966,
+      "facts": [
+        "In-force premium grew 30% year-on-year to $1.16 billion, marking the eighth consecutive quarter of accelerating growth.",
+        "Revenue increased 42% year-on-year to $195 million, outpacing in-force premium growth by 12 percentage points.",
+        "Gross profit more than doubled year-on-year to $80 million, with gross margin reaching 41%.",
+        "Car insurance achieved 40% growth with more than half of new car customers being existing Lemonade customers, representing essentially CAC-less acquisition.",
+        "Company-wide gross loss ratio reached a record low of 62% in Q3, while trailing 12-month gross loss ratio improved to 67%.",
+        "Car insurance loss ratio improved 16 percentage points year-on-year to 76%.",
+        "Loss adjustment expense (LAE) ratio declined to 7%, having been cut in half over the past three years despite claim volume growing 2.5-fold.",
+        "The company added a record 176,000-plus net new customers in Q3, with total customer growth of 24% year-on-year.",
+        "Adjusted free cash flow was positive for the second consecutive quarter at $18 million, with the company ending the quarter with approximately $1.1 billion in cash and investments.",
+        "The company reaffirmed expectations for positive adjusted EBITDA for the full quarter of Q4 2026, with Q4 2025 adjusted EBITDA loss guidance of $16 million to $13 million."
+      ]
+    },
+    {
+      "ticker": "MEI",
+      "predicted": 0.2,
+      "actual_residual_rank": 0.24,
+      "facts": [
+        "Methode Electronics generated $233.7 million in Q3 FY2026 sales, a 3% decrease from $239.9 million in the prior year quarter.",
+        "Q3 FY2026 adjusted EBITDA was $7.3 million, down $5 million year-over-year, while adjusted loss per diluted share was $0.37 compared to a loss of $0.21 in the prior year.",
+        "The company lowered its full-year FY2026 adjusted EBITDA guidance to $58 million to $62 million, down from the prior range of $70 million to $80 million, primarily due to North American auto program delays and higher Mexico transformation costs.",
+        "The Industrial segment sales increased 9.5% year-over-year, driven by strength in off-road lighting and power distribution solutions supporting data center applications.",
+        "Based on Q4 order patterns backed by EDI data, the company now has line of sight to a $120 million annualized run rate for data center business, with trajectory suggesting a 50% increase in run rate year-over-year in the near term.",
+        "The dataMate business, which contributed roughly $18 million in annual revenue and approximately $3 million in profitability, was divested to redeploy capital toward higher-growth power solutions opportunities.",
+        "FY2026 net sales guidance was narrowed to $950 million to $1 billion (low end raised by $50 million), with approximately $30 million of the increase driven by favorable foreign currency translation.",
+        "Year-to-date free cash flow was $16.5 million, and the company remains on track to achieve positive free cash flow for the full fiscal year compared to an outflow of $15 million in the previous fiscal year.",
+        "EVs represent 41% of the Automotive segment and 18% of total Methode revenue, with only 14% of auto EV exposure in North America, where program delays and cancellations have been concentrated.",
+        "The company had 29 program launches planned for FY2026 (part of 56 over FY2025-FY2026), but spent launch capital before several programs were delayed or canceled, contributing to the EBITDA guidance reduction."
+      ]
+    },
+    {
+      "ticker": "ARAY",
+      "predicted": 0.15,
+      "actual_residual_rank": 0.166,
+      "facts": [
+        "Q1 FY2026 net revenue was $94 million, down 7% year-over-year and down 9% on a constant currency basis.",
+        "Product revenue was $37 million, down 23% year-over-year, mainly due to slower performance in EIMEA and China regions.",
+        "Service revenue was $57 million, up 7% year-over-year, with contract revenue growth of 10% outpacing installed base growth of 2%.",
+        "Product gross margin declined to 20.3% from 32.9% in the prior year, impacted by geographic/product mix ($2.9 million), tariffs ($1.1 million), and a onetime obsolescence charge ($0.7 million).",
+        "Adjusted EBITDA was a loss of $4.1 million compared to income of $3.1 million in the prior year.",
+        "Product orders for Q1 were approximately $40 million with a book-to-bill ratio of 1.1 and a trailing 12-month ratio of 1.2.",
+        "Order backlog was approximately $396 million, representing over 18 months of product revenue visibility.",
+        "Company reiterated FY2026 guidance with revenue in the range of $471 million to $485 million and adjusted EBITDA of $31 million to $35 million.",
+        "Management expects first half revenue to be approximately 40% of full year guidance and second half to be approximately 60%, reflecting product demand shifting to H2.",
+        "The company expects to reach a high single-digit adjusted EBITDA margin as a percentage of revenue on a run rate basis within 12 months and double-digit margins over the medium to long term."
+      ]
+    },
+    {
+      "ticker": "BLK",
+      "predicted": 0.75,
+      "actual_residual_rank": 0.757,
+      "facts": [
+        "BlackRock achieved record AUM of $13.5 trillion and generated $205 billion of net inflows in Q3, reflecting 10% annualized organic base fee growth\u2014the highest quarter since 2021.",
+        "Q3 revenue of $6.5 billion increased 25% year-over-year, while operating income of $2.6 billion rose 23% year-over-year.",
+        "Earnings per share of $11.55 increased only 1% year-over-year due to higher share count from 6.9 million shares issued for GIP and 8.5 million SubCo units issued for HPS.",
+        "iShares ETFs generated a record $153 billion of net inflows in Q3, with the franchise crossing $5 trillion in total assets.",
+        "Digital assets ETPs raised $17 billion in Q3, with the flagship IBIT product surpassing $100 billion in AUM.",
+        "HPS contributed approximately $225 million in base fees and $270 million in performance fees in its first full quarter after closing.",
+        "The cash management platform crossed $1 trillion in AUM with $34 billion of Q3 net inflows, having grown 45% over the last 3 years.",
+        "BlackRock's Circle reserve fund mandate surpassed $64 billion, and the tokenized liquidity fund BUIDL has grown to nearly $3 billion in AUM.",
+        "GIP Fund V closed above its $25 billion target in July, representing the largest ever client capital raise in a private infrastructure fund.",
+        "As-adjusted operating margin of 44.6% declined 120 basis points year-over-year due to higher performance fees, but excluding performance fees and related compensation, margin expanded 110 basis points to 46.3%."
+      ]
+    },
+    {
+      "ticker": "GFF",
+      "predicted": 0.8,
+      "actual_residual_rank": 0.796,
+      "facts": [
+        "Griffon generated free cash flow of $99 million in the first quarter of fiscal 2026.",
+        "Since April 2023 through December, Griffon repurchased $578 million of stock or 11.1 million shares at an average price of $52.27 per share, reducing outstanding shares by 19.3%.",
+        "Home and Building Products revenue increased 3% year-over-year, with 7% benefit from price and mix partially offset by a 4% reduction in residential volume.",
+        "Consumer and Professional Products EBITDA increased 19% year-over-year to $22 million despite persistently weak U.S. consumer demand.",
+        "Griffon will receive $100 million in cash proceeds at closing of the ONCAP joint venture, along with $160 million of second lien debt at a 10% PIK rate, while retaining a 43% ownership stake.",
+        "Net debt-to-EBITDA leverage improved to 2.3x as of December 31, 2025, down from 2.4x at both the prior year quarter-end and fiscal year 2025 end, with $60 million of term loan B paid down during the quarter.",
+        "The expected fiscal year 2026 EBITDA for discontinued businesses (AMES North America, Australia, and U.K.) is $60 million, comprised of $25 million for AMES North America, $40 million for Australia, and negative EBITDA for the U.K.",
+        "Updated full year fiscal 2026 guidance for continuing operations calls for revenue of $1.8 billion, adjusted EBITDA of $520 million (excluding $62 million of unallocated costs), and interest expense of $93 million.",
+        "Hunter Fan contributed $211 million of revenue in fiscal 2025 and will be combined into the Home and Building Products segment, which is expected to remain a 30%-plus EBITDA margin business going forward.",
+        "The ONCAP joint venture is expected to close by the end of June 2026, and $280 million remained under Griffon's share repurchase authorization as of December 31."
+      ]
+    },
+    {
+      "ticker": "ORCL",
+      "predicted": 0.85,
+      "actual_residual_rank": 0.843,
+      "facts": [
+        "Q3 FY2026 was the first quarter in over 15 years where both organic total revenue and organic non-GAAP EPS grew at 20% or better in USD.",
+        "Oracle now holds a 15% equity stake and a board seat in the new independent TikTok U.S. data operations company, with its share of earnings to be recognized starting in Q4.",
+        "In February, Oracle announced intent to raise up to $50 billion in debt and equity financing and within days raised $30 billion through investment-grade bonds and mandatory convertible preferred stock with a substantially oversubscribed order book.",
+        "Multicloud Database revenue grew 531% year-over-year and AI infrastructure revenue grew 243% year-over-year in Q3.",
+        "Oracle's remaining performance obligation (RPO) stands at $553 billion, driven by large-scale AI contracts.",
+        "Oracle has secured more than 10 gigawatts of power and data center capacity coming online over the next 3 years, with greater than 90% of that capacity fully funded through partners.",
+        "Since the last earnings call, Oracle has signed more than $29 billion of contracts using a new bring-your-own-hardware and upfront customer payment model that requires no negative cash flow from Oracle.",
+        "In Q3, Oracle delivered more than 400 megawatts of capacity to customers, with 90% delivered on or ahead of schedule, achieving a 32% gross margin on AI capacity versus the 30% guidance.",
+        "Cloud applications revenue in constant currency was up 11% in Q3, reaching an annualized run rate of $16.1 billion, with cloud applications deferred revenue up 14% supporting acceleration.",
+        "Time from rack delivery to revenue has reduced by 60% in recent months, while Oracle has tripled manufacturing sites and increased rack output by 4x in the last year."
+      ]
+    },
+    {
+      "ticker": "COCO",
+      "predicted": 0.85,
+      "actual_residual_rank": 0.819,
+      "facts": [
+        "Q3 2025 net sales increased 37% year-over-year to $182 million, with Vita Coco Coconut Water growing 42%.",
+        "The company raised full year net sales guidance to between $580 million and $595 million, and adjusted EBITDA guidance to $90 million to $95 million.",
+        "The coconut water category is growing 22% year-to-date in the U.S., 32% in the U.K., and over 100% in Germany based on tracking data.",
+        "Q3 gross margin was 38%, down approximately 110 basis points from 39% in Q3 2024, with tariffs creating a $6 million impact in the quarter.",
+        "The company's current weighted average tariff rate on coconut water shipping to the U.S. is approximately 23%, with tariffs applied to approximately 60% of global cost of goods.",
+        "Full year tariff impact on cost of goods is expected to be between $14 million and $16 million versus the prior year.",
+        "The international segment delivered net sales growth of 48% in Q3, with Vita Coco Coconut Water growing 47% internationally.",
+        "The company has $204 million in cash with no debt under its revolving credit facility and has generated $39 million of cash year-to-date.",
+        "Q3 adjusted EBITDA was $32 million or 18% of net sales compared to $23 million or 17% of net sales in the prior year.",
+        "The company expects improved distribution at Walmart in the mid-November reset, with total points of distribution growing significantly compared to current levels and above levels before the move to the juice aisle."
+      ]
+    },
+    {
+      "ticker": "RGR",
+      "predicted": 0.15,
+      "actual_residual_rank": 0.103,
+      "facts": [
+        "Q3 2025 net sales were $126.8 million compared to $122.3 million in Q3 2024, representing year-over-year sales growth despite market headwinds.",
+        "Q3 2025 diluted earnings were $0.10 per share compared to $0.28 per share in Q3 2024.",
+        "The company lost $2.1 million on a pretax basis in Q3 2025, driven by $1.9 million of acquisition and operating costs at the new Hebron, Kentucky facility.",
+        "A $3 million increase to the year-to-date income tax benefit increased Q3 net income by $0.19 per share; without this adjustment, EPS would have been a loss of $0.09 per share.",
+        "Cash and short-term investments totaled $81 million as of September 27, 2025, with a current ratio of 3.5:1 and no debt.",
+        "The company generated $13 million of cash from operations in Q3 and $39 million year-to-date through the first nine months of 2025.",
+        "Year-to-date, the company returned $36 million to shareholders through $10 million of dividends and $26 million in share repurchases (731,000 shares at an average cost of $35.60).",
+        "New product sales accounted for $41 million or 34% of net firearms sales in Q3 2025.",
+        "The overall firearms market is trending down 10% to 15% this year, while NICS checks are down approximately 4% year-to-date versus 2024.",
+        "The Hebron, Kentucky facility is on pace to begin firearms production by year-end, with approximately $1.4 million in costs incurred in Q3 without any revenue contribution."
+      ]
+    },
+    {
+      "ticker": "LFUS",
+      "predicted": 0.85,
+      "actual_residual_rank": 0.797,
+      "facts": [
+        "Q4 2025 revenue was $594 million, up 12% year-over-year and 7% organically, exceeding the high end of guidance.",
+        "Q4 adjusted EBITDA margin was 20.5%, up 480 basis points year-over-year.",
+        "Q4 bookings increased more than 20% versus the prior year, supporting expectations for double-digit Q1 revenue growth.",
+        "The company recorded a $301 million noncash goodwill impairment charge related to the IXYS and Dortmund acquisitions due to weaker sales and profitability than original expectations.",
+        "The Basler Electric acquisition is expected to contribute $130-135 million in revenue and $0.10-0.15 of adjusted EPS in 2026 with a high teens adjusted EBITDA margin.",
+        "Q1 2026 guidance calls for sales of $625-645 million (7% organic growth at midpoint plus 5% from Basler) and EPS of $2.70-$2.90.",
+        "Full year 2025 free cash flow expanded 26%, and the company targets free cash flow conversion of more than 100% in 2026.",
+        "Data center design wins more than doubled in 2025 relative to 2024, and data center content opportunity on next-generation high-voltage architectures is expected to be more than double current levels.",
+        "The company ended Q4 with $563 million of cash on hand and net debt-to-EBITDA leverage of 1.2x.",
+        "Full year 2025 revenue grew 9% while adjusted EBITDA margin expanded 260 basis points to 20.9%."
+      ]
+    },
+    {
+      "ticker": "NWPX",
+      "predicted": 0.91,
+      "actual_residual_rank": 0.823,
+      "facts": [
+        "Q1 2026 net sales rose 19% year-over-year to $138.3 million, with record Q1 consolidated gross profit of $26.7 million (up 38%) and gross margin expanding 260 bps to 19.3%.",
+        "Record Q1 EPS of $1.08 (up from $0.39) and free cash flow of $25.7 million ($2.62/share) versus just $1.2 million in the prior-year quarter.",
+        "WTS backlog including confirmed orders reached a record $430 million, up from $346 million at year-end 2025 and $289 million a year ago, supporting visibility into 2026.",
+        "WTS revenue grew 19% to $93.5 million with gross margin expanding 300 bps to 18.5%, driven by an 18% increase in tons produced and 1% higher selling prices from mix.",
+        "Management disclosed a significant previously unplanned NDA government-related WTS project worth approximately $50 million, to be produced from late Q2 through mid-Q4 2026, with potential additional phases extending into future years.",
+        "Precast revenue rose 19% to a record $44.8 million with gross margin up 180 bps to 20.9%, driven by a 14% increase in selling prices (mix) and 4% higher volume shipped.",
+        "Full year 2026 free cash flow guidance was raised to $50\u2013$56 million from $40\u2013$46 million, with management noting potential upside to $60 million or more depending on billing timing.",
+        "The company completed the $8.9 million acquisition of Boughton Precast in Colorado, repurchased ~33,000 shares at an average $67.17 (totaling $2.2 million), and repaid $1 million of debt during the quarter.",
+        "Balance sheet strengthened to a net cash position of $3.5 million (cash of $14.3 million vs. $2.3 million at year-end; debt of $10.7 million with no credit facility borrowings).",
+        "WTS capacity utilization is running around 70\u201372%, leaving substantial room to absorb additional work, while the Precast order book of $55 million was modestly below $57 million at year-end and $64 million a year ago."
+      ]
+    },
+    {
+      "ticker": "BTM",
+      "predicted": 0.15,
+      "actual_residual_rank": 0.06,
+      "facts": [
+        "Revenue in Q4 2025 was $116 million compared to $136.8 million in Q4 2024, reflecting the impact of recently enacted state regulations and enhanced compliance standards.",
+        "Full year 2025 revenue increased 7% to $615 million, driven by kiosk expansion and continued growth in median transaction size.",
+        "Bitcoin Depot ended 2025 with 9,721 installed kiosks, up 15% from the end of 2024, and median transaction size grew to $400, up 43% year-over-year.",
+        "Full year 2025 adjusted EBITDA increased 42% to $56.4 million, while Q4 2025 adjusted EBITDA fell to $1.6 million from $13 million in Q4 2024.",
+        "Q4 2025 GAAP net loss was $24.9 million, which included an $18.5 million accrual for an arbitration judgment liability, compared to net income of $5.4 million in Q4 2024.",
+        "Management guided for 2026 revenue to decline between 30% and 40% year-over-year due to the dynamic regulatory environment affecting the core BTM business.",
+        "Cash, cash equivalents and cryptocurrencies increased to $76.6 million at year-end 2025 from $31.0 million at end of 2024, aided by a $15 million registered direct offering completed in Q4.",
+        "Cash from operating activities in 2025 was $34.0 million, an increase of 51% compared to $22.5 million in 2024.",
+        "Full year gross margin expanded 300 basis points to 17.2%, while Q4 gross margin contracted to 13.2% from 17.2% in the prior year quarter.",
+        "Management expects Kutt (the acquired P2P social betting platform) to generate revenue below $5 million in 2026, and neither Kutt nor the newly launched ReadyBucks merchant cash advance product are expected to have a material impact on overall 2026 revenue."
+      ]
+    },
+    {
+      "ticker": "FULT",
+      "predicted": 0.65,
+      "actual_residual_rank": 0.553,
+      "facts": [
+        "Q1 2026 operating EPS was $0.55 per diluted share (GAAP EPS $0.51), with operating ROA of 1.30% and operating ROTCE of 14.76%.",
+        "Net interest income totaled $262 million, down approximately $4 million linked quarter, with NIM declining just 1 basis point to 3.58%.",
+        "Pre-provision net revenue increased $9.2 million linked quarter to $141 million and the efficiency ratio improved to 56.7%.",
+        "Loan balances grew $121 million in the quarter, aided by an opportunistic purchase of an ~$200 million in-market commercial portfolio with ~$1.2 million average loan size.",
+        "Deposit ending balances increased $179 million, driven by higher savings and noninterest-bearing demand, while total cost of funds fell 9 basis points.",
+        "The provision for credit losses was $14.4 million, ACL stood at $367.5 million or 1.51% of loans, NPAs improved to 55 bps of assets, and net charge-offs were 25 bps annualized.",
+        "CET1 ratio rose to ~11.9% and TCE to 8.6%, while the company repurchased approximately $24.5 million of stock with $125 million remaining on the 2026 authorization.",
+        "Full year 2026 operating guidance was reaffirmed, with the only change being a rate assumption shift to a 25 bp cut in July rather than March, and mid-single-digit annualized loan growth maintained.",
+        "The Blue Foundry Bancorp acquisition closed April 1, 2026, is expected to be immediately EPS and TBV accretive, with $27 million of combined Q2-Q4 expense impact and a 50% cost-save run rate targeted by end of Q4.",
+        "Approximately $4.4 billion of loans are scheduled to reprice within the next 12 months at an estimated 50-60 basis point yield uplift, supporting NIM expansion alongside Blue Foundry purchase accounting accretion."
+      ]
+    },
+    {
+      "ticker": "SBUX",
+      "predicted": 0.65,
+      "actual_residual_rank": 0.542,
+      "facts": [
+        "Q1 global revenue grew 5% to $9.9 billion with global comparable store sales accelerating to 4% growth, driven by 3 percentage points of comp transaction growth in North America.",
+        "U.S. company-operated transaction comps grew year-over-year for the first time in 8 quarters, with both rewards and non-rewards transactions growing simultaneously for the first time since Q2 fiscal 2022.",
+        "Starbucks Rewards 90-day active members reached a record 35.5 million customers, up 3% year-over-year.",
+        "Q1 EPS was $0.56, down 19% from the prior year, with consolidated operating margin of 10.1% contracting 180 basis points year-over-year.",
+        "North America operating margins declined approximately 420 basis points year-over-year, with roughly one-third driven by product and distribution cost inflation from tariffs and elevated coffee pricing.",
+        "The company has identified approximately $2 billion in cost reduction opportunities to be realized over the next 2-3 years across the entire P&L.",
+        "Fiscal 2026 EPS guidance is $2.15 to $2.40, with expectations for 3% or better global comp sales growth and consolidated operating margins to grow slightly year-over-year.",
+        "China comparable store sales accelerated to 7% in Q1, marking the third consecutive quarter of comp sales growth, with Boyu Capital acquiring up to 60% interest in Starbucks China retail operations expected to close in spring 2026.",
+        "The 650 pilot stores with Green Apron Service continue to outperform the broader fleet by approximately 200 basis points in comparable sales, driven primarily by transactions.",
+        "The company expects 600 to 650 net new coffeehouses globally in fiscal 2026, including 150 to 175 net new U.S. company-operated stores and approximately half of the 450-500 international openings in China."
+      ]
+    },
+    {
+      "ticker": "HRTX",
+      "predicted": 0.65,
+      "actual_residual_rank": 0.517,
+      "facts": [
+        "Total net revenues were $38.2 million for Q3 2025 and $114.3 million year-to-date.",
+        "Adjusted EBITDA was $1.5 million for Q3 2025 and $9.5 million year-to-date, compared to losses in the same periods of 2024.",
+        "ZYNRELEF net sales grew 49% year-over-year to $9.3 million in Q3 2025, up from $6.2 million in Q3 2024.",
+        "APONVIE net sales grew 173% year-over-year to $3 million in Q3 2025, up from $1.1 million in Q3 2024.",
+        "Gross margin was 68.8% in Q3 2025, down from 71.2% in Q3 2024, primarily due to a onetime write-off of SUSTOL polymer inventory.",
+        "CINVANTI net sales were approximately $24 million in Q3 2025, up about 6% year-over-year, while SUSTOL net sales declined 32% year-over-year to $1.9 million.",
+        "October ZYNRELEF demand was approximately 17-18% higher month-over-month compared to September, representing the highest weekly unit demand ever recorded.",
+        "Net loss was $17.5 million in Q3 2025 compared to $4.8 million in Q3 2024, primarily due to an $11.3 million loss on debt extinguishment.",
+        "Cash and short-term investments at September 30, 2025 was $55.5 million, with $13.1 million added from debt and equity transactions completed in Q3.",
+        "The company reaffirmed full-year 2025 guidance for net revenue of $153 million to $163 million and adjusted EBITDA of $9 million to $13 million."
+      ]
+    },
+    {
+      "ticker": "ATMU",
+      "predicted": 0.8,
+      "actual_residual_rank": 0.665,
+      "facts": [
+        "Q3 2025 sales were $448 million compared to $404 million in Q3 2024, an increase of 10.9%, driven by higher volumes of 6%, pricing of 4%, and favorable foreign exchange of 1%.",
+        "Adjusted EBITDA for Q3 2025 was $92 million or 20.4% of sales compared to $79 million or 19.6% in the prior year period.",
+        "The company raised full year 2025 revenue guidance to a range of $1.72 billion to $1.745 billion, representing an increase of 3% to 4.5% compared to the prior year.",
+        "Full year adjusted EBITDA margin expectations were raised to a range of 19.5% to 20%, with adjusted EPS expected to be $2.50 to $2.65.",
+        "Year-to-date share repurchases totaled $61 million, including $30 million in Q3, bringing total repurchases since program announcement to $81 million.",
+        "The company expects full year share repurchases to be in a range of approximately 1.5% to 3% of current market capitalization.",
+        "The company completed its full operational separation from former parent Cummins in Q3 and does not anticipate incurring additional onetime separation costs in Q4.",
+        "The company increased its expected share gain contribution from 2% to 3% of revenue growth for the full year, driven by additional content in first-fit applications and increased aftermarket share.",
+        "U.S. heavy and medium-duty truck markets are expected to be down 20% to 25% for the year.",
+        "The company ended Q3 with $218 million of cash on hand and $618 million of total available liquidity, with a net debt to adjusted EBITDA ratio of 1.0x."
+      ]
+    },
+    {
+      "ticker": "ALLY",
+      "predicted": 0.8,
+      "actual_residual_rank": 0.653,
+      "facts": [
+        "Adjusted EPS increased 166% year-over-year to $1.15 per share, with core ROTCE of 15% on a headline basis and approximately 12% excluding AOCI.",
+        "Net interest margin, excluding core OID, expanded to 3.55%, up 10 basis points quarter-over-quarter, with management confident in achieving a medium-term target in the upper 3% range.",
+        "CET1 ratio of 10.1% represents approximately $4.5 billion of excess capital above the company's SCB regulatory minimum.",
+        "Consumer auto originations of $11.7 billion were driven by a record 4 million applications, up 25% year-over-year, with 42% from the highest credit quality tier at an originated yield of 9.7%.",
+        "Retail auto net charge-off rate declined 36 basis points year-over-year to 1.88%, marking the third consecutive quarter of year-over-year improvement.",
+        "30-plus day all-in delinquencies of 4.9% decreased 30 basis points from the prior year, marking the second consecutive quarter of year-over-year improvement.",
+        "Corporate Finance delivered a 30% return on equity with 10% growth in the loan portfolio to $11.3 billion, with no new nonperforming loans or charge-offs in the quarter.",
+        "Full year net charge-off guidance was revised to approximately 2%, at the low end of the prior 2% to 2.25% range, based on continued constructive trends.",
+        "The company executed a $5 billion retail auto credit risk transfer transaction in August that generated approximately 20 basis points of CET1 at issuance at the tightest spread to date.",
+        "Adjusted tangible book value per share of $39 increased over 11% from the prior year, with the quarterly common dividend maintained at $0.30 per share."
+      ]
+    },
+    {
+      "ticker": "OGE",
+      "predicted": 0.65,
+      "actual_residual_rank": 0.482,
+      "facts": [
+        "OGE Energy reported Q3 2025 consolidated earnings of $1.14 per share, compared to $1.09 per share in the prior year period.",
+        "The electric company achieved Q3 net income of $243 million or $1.20 per diluted share compared to $225 million or $1.20 per share last year.",
+        "The company has approximately 550 megawatts of combustion turbines under construction that will be operational next year, on time and on budget.",
+        "OGE is seeking preapproval to build 450 megawatts of natural gas generation expected to be operational by 2029.",
+        "Weather-normalized load growth was 6.5% through Q3 2025 compared to the same period last year, with full-year 2025 expected at approximately 7.5%.",
+        "The company updated its capital plan to include a $250 million Fort Smith to Muskogee transmission line project planned in three phases for 2027, 2028, and 2029.",
+        "Over the past decade, OGE has delivered a 6% EPS CAGR while nonfuel rates increased at less than half the rate of inflation.",
+        "Year-over-year customer growth continued at just under 1% in the third quarter.",
+        "Management remains confident in achieving a consolidated earnings growth rate of 5% to 7% based on the midpoint of 2025 guidance.",
+        "If the preapproval settlement is approved, OGE will move its planned Oklahoma rate review from the end of 2025 to the second half of 2026."
+      ]
+    },
+    {
+      "ticker": "HOPE",
+      "predicted": 0.85,
+      "actual_residual_rank": 0.67,
+      "facts": [
+        "Net income for Q3 2025 totaled $31 million, up 28% year-over-year from $24 million in the year-ago quarter.",
+        "Net interest margin expanded 20 basis points quarter-over-quarter to 2.89%, the best linked quarter expansion since 2012.",
+        "Net charge-offs totaled $5 million (14 basis points annualized) in Q3, down 57% from $12 million (33 basis points annualized) in Q2.",
+        "Criticized loans declined $42 million or 10% quarter-over-quarter to $373 million, including a 17% reduction in C&I criticized loans.",
+        "Gross loans totaled $14.6 billion at September 30, 2025, up 1.2% quarter-over-quarter (5% annualized) with growth across all major loan segments.",
+        "Net interest income totaled $127 million for Q3 2025, an increase of 8% from the prior quarter and up 21% from Q3 2024.",
+        "The efficiency ratio improved to 67.5% in Q3 2025 from 69.1% in Q2 2025, excluding notable items.",
+        "Management expects approximately 10% net interest income growth and high single-digit loan growth for full year 2025.",
+        "CDs totaling $2.3 billion are maturing in Q4 at an average rate of 4.08%, providing a tailwind for continued cost reductions.",
+        "The company realized an approximate 85% spot beta in reducing money market deposit rates following the September Fed funds rate cut of 25 basis points."
+      ]
+    },
+    {
+      "ticker": "BIO",
+      "predicted": 0.55,
+      "actual_residual_rank": 0.363,
+      "facts": [
+        "Q3 2025 net sales were approximately $653 million, representing a 0.5% increase on a reported basis but a 1.7% decrease on a currency-neutral basis year-over-year.",
+        "Process chromatography delivered strong double-digit year-over-year growth in Q3, and full year 2025 is now expected to show high teens growth versus the prior low double-digit growth outlook.",
+        "Excluding process chromatography, core Life Science segment revenue decreased 6% year-over-year and 7.8% on a currency-neutral basis.",
+        "Non-GAAP operating margin improved to 11.8% in Q3 2025 compared to 11.3% in Q3 2024.",
+        "Non-GAAP diluted earnings per share was $2.26 in Q3 2025 versus $2.02 in Q3 2024.",
+        "Year-to-date free cash flow was $256 million with a 126% free cash flow to non-GAAP net income conversion ratio, and full year free cash flow guidance remains at $310 million to $330 million.",
+        "The company repurchased 1.2 million shares year-to-date for approximately $296 million, with approximately $285 million remaining under the current authorized buyback program.",
+        "The company maintained its 2025 full year outlook with currency-neutral revenue growth of flat to 1% and non-GAAP operating margin of 12% to 13%.",
+        "Q4 operating margins are expected to improve sequentially by at least 80 basis points versus Q3.",
+        "The change in fair market value of Sartorius AG equity holdings contributed $398 million to the reported net loss of $342 million or $12.70 per diluted share."
+      ]
+    },
+    {
+      "ticker": "ENSG",
+      "predicted": 0.85,
+      "actual_residual_rank": 0.643,
+      "facts": [
+        "The company raised its 2025 earnings guidance to $6.48-$6.54 per diluted share, up from $6.34-$6.46, with the new midpoint representing an 18.4% increase over 2024 results.",
+        "Q3 adjusted diluted earnings per share was $1.64, an increase of 18% year-over-year.",
+        "Same-store and transitioning occupancy reached all-time highs of 83% and 84.4%, respectively, during the quarter.",
+        "Annual revenue guidance was increased to $5.05-$5.07 billion, up from $4.99-$5.02 billion.",
+        "The company added 22 new operations including 1,857 skilled nursing beds and 109 senior living units across 6 states during and since the quarter, bringing 2025 acquisitions to 45 operations.",
+        "Same-store skilled days increased 5.1% and transitioning skilled days increased 10.9% over the prior year quarter.",
+        "Managed care revenue increased 7.1% for same-store operations and 24.3% for transitioning operations year-over-year.",
+        "The company has over $1 billion in dry powder for future investments, including $443.7 million in cash and $593 million available under its credit line.",
+        "Lease adjusted net debt-to-EBITDA ratio stood at 1.86x after spending more than $240 million on strategic growth during the first nine months of 2025.",
+        "River Park Post Acute in Arizona increased occupancy from 76.3% to 97.1% year-over-year with EBIT up 376%, demonstrating the company's transitioning portfolio potential."
+      ]
+    },
+    {
+      "ticker": "APLS",
+      "predicted": 0.7,
+      "actual_residual_rank": 0.483,
+      "facts": [
+        "Total revenue for Q4 2025 was $200 million and $1 billion for full year 2025, with full year revenue including a onetime $275 million upfront payment from the Sobi royalty repurchase agreement.",
+        "SYFOVRE net product revenue was $155 million for Q4 and $587 million for full year 2025, with total injections growing approximately 17% year-over-year despite full year revenue being modestly down compared to 2024 due to elevated free goods usage.",
+        "In Q4, approximately 102,000 SYFOVRE doses were delivered to physician offices, including approximately 89,000 commercial doses and 13,000 free goods doses, with free goods fluctuating between 12% and 14% on a quarterly basis throughout 2025.",
+        "EMPAVELI reported U.S. net product revenue of $35 million for Q4 and $102 million for full year 2025, achieving more than 5% market penetration after its first full quarter post-launch, significantly outpacing other rare nephrology launches.",
+        "As of year-end 2025, Apellis received 267 cumulative EMPAVELI patient start forms, with 95% of published payer policies reimbursing to label or with minimal restrictions.",
+        "The company believes EMPAVELI has the potential to be used by up to 50% of the estimated 5,000 U.S. C3G and primary IC-MPGN patient population and is on a clear trajectory to blockbuster status.",
+        "Apellis ended 2025 with $466 million in cash and cash equivalents, with approximately $94 million of convertible debt maturing in September 2026, and received a $25 million milestone payment from Sobi in Q1 2026 triggered by European Commission approval of Aspaveli.",
+        "SYFOVRE gross-to-net adjustments in Q4 trended just above the mid-20% range, with 2026 expected to be in the high 20% range, and the company expects a modest inventory reduction in Q1 2026 alongside typical seasonal dynamics.",
+        "The company expects 2026 operating expenses to be modestly higher than 2025 due to incremental investment in pivotal trials for FSGS and DGF and certain milestone payments, largely offset by decreased SG&A from operating efficiencies.",
+        "Five-year GALE extension study data showed SYFOVRE delayed progression of geographic atrophy by approximately 1.5 years in patients with nonsubfoveal GA compared to sham, with the prefilled syringe regulatory submission targeted for the first half of 2026."
+      ]
+    },
+    {
+      "ticker": "AVNW",
+      "predicted": 0.35,
+      "actual_residual_rank": 0.096,
+      "facts": [
+        "Q3 FY2026 total revenues were $100.0 million with adjusted EBITDA of $4.4 million (4.4% margin) and non-GAAP EPS of $0.06, down from $112.6 million revenue in the prior-year quarter.",
+        "Approximately $9 million in revenue was pushed out of Q3 due to the Middle East conflict and end-of-quarter demand shifts from several Tier 1 customers, with some already shipped in the first two weeks of Q4.",
+        "Full-year FY2026 guidance was updated to revenues of $428\u2013$440 million and adjusted EBITDA of $35\u2013$40 million, implying a wide Q4 revenue range of roughly $109\u2013$121 million.",
+        "Q3 gross margins fell to 29.3% GAAP / 29.4% non-GAAP from 34.9% / 35.8% a year ago due to volume, regional, and product mix, though management attributed none of the decline to price compression and expects a return to ~32% normalized levels in Q4.",
+        "The MDU opportunity with a Tier 1 customer has live deployments in more than five markets and is expected to generate an 8-figure revenue contribution (somewhere between $10M and $99M) in FY2027.",
+        "Utilities now approach 10% of Aviat's overall business, supported by industry forecasts of $1.4 trillion in utility capex over the next 5 years (up over 20% YoY), with roughly half going to transmission and distribution.",
+        "BEAD-related purchase orders are expected to begin mid- to late calendar 2026 with the largest ramp in calendar 2027, with 46 of 56 states/territories having signed final award agreements totaling ~$20 billion, of which Aviat estimates 10\u201315% goes to fixed wireless access.",
+        "The Aprisa business is on track to exceed 50% bookings growth this fiscal year, with traction expanding across utilities, oil and gas, and public safety in North America, Europe, and Latin America.",
+        "The company expects to release a significant portion of its foreign deferred tax valuation allowance within the next four quarters, creating a one-time GAAP income benefit, and retains over $450 million in NOLs supporting minimal cash taxes.",
+        "Balance sheet improvements included cash and marketable securities of $78.1 million, net debt of $26.1 million, inventories down $4.0 million sequentially, unbilled receivables down $5.4 million sequentially to $85.3 million, and approximately 20,000 shares repurchased for $0.5 million."
+      ]
+    },
+    {
+      "ticker": "AZTA",
+      "predicted": 0.35,
+      "actual_residual_rank": 0.068,
+      "facts": [
+        "Total Q1 2026 revenue was $149 million, up 1% reported but down 1% organically with a 2% foreign exchange headwind.",
+        "Adjusted EBITDA margin was 8.5% in Q1, down approximately 230 basis points year-over-year due to gross margin pressures.",
+        "Q1 gross margin was 44.1%, down 360 basis points versus prior year, primarily driven by underutilized North America lab capacity and rework costs on automated storage projects.",
+        "The company ended Q1 with $571 million in cash, cash equivalents, and marketable securities, an increase of $25 million quarter-to-quarter, with no debt outstanding.",
+        "Quality issues in automated stores are expected to have a full-year impact of $3 million to $5 million, with remediation efforts expected to be completed by end of Q2.",
+        "China delivered 26% organic growth in multiomics, driven by strong biotech and pharma momentum.",
+        "The company reaffirmed full-year fiscal 2026 guidance of 3% to 5% organic revenue growth and approximately 300 basis points of adjusted EBITDA margin expansion.",
+        "B Medical Systems sale is expected to close on or before March 31, 2026, with an additional $10 million noncash loss recorded related to assets held for sale.",
+        "The Board approved a $250 million share repurchase authorization in December 2025.",
+        "The company hired over 25 new sales representatives who typically take 3 to 6 months to ramp, with North America commercial improvements expected in the second half of fiscal 2026."
+      ]
+    },
+    {
+      "ticker": "LMT",
+      "predicted": 0.65,
+      "actual_residual_rank": 0.364,
+      "facts": [
+        "Q1 2026 sales were $18 billion, roughly flat versus Q1 2025, with segment operating profit declining to $1.8 billion and EPS down 12% to $6.44, while management reaffirmed full-year 2026 guidance of mid-single-digit sales growth, $8.4\u2013$8.7 billion segment profit, and $6.5\u2013$6.8 billion free cash flow.",
+        "Free cash flow was a use of $291 million in Q1 driven by working capital timing including an ERP implementation, but favorable IRS guidance on the corporate AMT strengthens confidence in reaching the upper end of the full-year cash flow range.",
+        "Lockheed signed a $1.5 billion contract with the Peruvian Air Force for 12 Block 70 F-16s with an option for an additional 12, marking the first F-16 direct commercial sale in decades.",
+        "MFC was awarded $7 billion in PAC-3 orders, including a $4.8 billion fully funded undefinitized contract advancing the first of the multi-year munitions acceleration agreements, with PAC-3 production already up more than 60% from two years ago and targeted to triple to roughly 2,000 missiles per year over 3\u20134 years.",
+        "Lockheed plans to quadruple PrSM production and triple/quadruple PAC-3 and THAAD output respectively, supported by construction/modernization of more than 20 facilities, with 7-year framework agreements that include inflation-indexed escalators, cash-flow-neutral advance payments, and clawback provisions to protect the company if production rates are cut.",
+        "Aeronautics segment profit fell 14% year-over-year due to unfavorable adjustments on F-16 (Taiwan/Morocco configuration rework after flight test issues) and C-130 (integration and supplier constraints), partially offset by favorable F-35 production margins.",
+        "RMS sales declined 8% and operating profit fell 19% year-over-year on lower radar and Sikorsky volume and the absence of a prior-year IP license recovery, while Space sales rose 7% but operating profit declined 26% due to absence of a prior-year commercial civil space completion benefit.",
+        "The Pentagon's FY27 budget request includes 85 F-35s, up from 47 the prior year, and Lockheed secured a $700 million contract for F-35 Lots 20\u201321 long-lead materials for international partners.",
+        "Management stated no charges were taken in Q1 on the classified Aeronautics program (last charge taken on classified MFC program was Q4 2024 with no change in estimate since), and expects classified program cash burn of roughly $500\u2013$700 million per year in 2026 and 2027 before a sizable drawdown.",
+        "Capital expenditures were $511 million and R&D spend was $458 million (up ~15% YoY) in Q1, with full-year CapEx guided to $2.5\u2013$2.8 billion (roughly half of the ~$1 billion YoY increase tied to munitions agreements with cash-flow protection); Lockheed also paid $816 million in dividends and retired $1 billion of long-term debt, and is expanding its Venture Fund capacity to $1 billion."
+      ]
+    },
+    {
+      "ticker": "RL",
+      "predicted": 0.88,
+      "actual_residual_rank": 0.587,
+      "facts": [
+        "Total company second quarter revenue growth of 14% exceeded the high single-digit outlook, with Asia up 16%, Europe up 15%, and North America up 13%.",
+        "Global retail comps increased 13%, with double-digit growth in both digital sites and physical stores across all three regions.",
+        "Adjusted gross margin expanded 70 basis points to 67.7%, driven by AUR growth, favorable mix shift toward full-price businesses, and lower cotton costs.",
+        "Average unit retail (AUR) increased 12% in the second quarter, with high single-digit AUR growth expected for the second half of fiscal 2026.",
+        "Adjusted operating margin expanded 210 basis points to 13.5%, with adjusted operating income increasing 34%.",
+        "China sales grew more than 30% in the quarter, ahead of outlook, driven by robust comps and new customer recruitment.",
+        "The company added 1.5 million new consumers to its DTC businesses in Q2, a mid-single-digit increase versus last year.",
+        "Full year constant currency revenue guidance was raised to approximately 5% to 7% growth, up from low to mid-single digits previously.",
+        "Full year operating margin guidance was raised to expand approximately 60 to 80 basis points in constant currency, up from prior guidance of 40 to 60 basis points.",
+        "The company repurchased $313 million in shares fiscal year-to-date, returning a combined total of approximately $420 million to shareholders, and ended the period with $1.6 billion in cash and short-term investments."
+      ]
+    },
+    {
+      "ticker": "LUV",
+      "predicted": 0.72,
+      "actual_residual_rank": 0.393,
+      "facts": [
+        "Q1 2026 EPS came in at $0.45, in line with January guidance and a significant improvement from a prior-year loss of $0.26 ($0.13 adjusted loss), despite a $0.22 EPS headwind from higher fuel costs.",
+        "Q1 operating margin was 4.6%, an 8.1-point year-over-year improvement (6.6 points adjusted), with operating cash flow of $1.4 billion, up 65% year-over-year.",
+        "Q1 RASM grew 11.2% year-over-year, well above the guidance of at least 9.5%, and Q2 unit revenue is guided to grow 16.5%\u201318.5%, which management expects to be industry-leading by a wide margin.",
+        "Q2 2026 EPS guidance is $0.35\u2013$0.65 based on a fuel price range of $4.10\u2013$4.15/gallon; the full-year $4 adjusted EPS guide was effectively suspended due to a ~$1 billion (10-point margin) fuel headwind in Q2.",
+        "The mix of customers buying up from the base product jumped from approximately 20% in 2025 to roughly 60% in Q1 2026, contributing to an 11.6% year-over-year yield increase (at least half from voluntary buy-up).",
+        "Managed corporate revenue increased 16% in Q1 and 25% in March (a record month), while Rapid Rewards enrollments rose 37% and tier-status earners increased 62% year-over-year.",
+        "Q1 CASM-X rose only 2.3% on 1.5% capacity growth (vs. 3.5% guide), absorbing a 1.2-point headwind from removing 6 seats per 737-700; Q2 CASM-X is guided up 3.5%\u20134% on ~0.5% capacity growth.",
+        "Full-year 2026 capacity growth is now expected at approximately 2% (low end of prior 2%\u20133% range), with announced suspension of operations at Chicago O'Hare and Washington Dulles to redeploy to higher-performing markets.",
+        "Southwest ended Q1 with $4.8 billion in liquidity and a 2.2x leverage ratio, returned $1.25 billion via share repurchases plus $93 million in dividends, with $450 million remaining on the buyback authorization, and took a $500 million secured term loan to repay PSP debt before its rate stepped up.",
+        "Fuel averaged $2.73/gallon in Q1 versus a forecast of $2.40, adding ~$164 million in fuel expense; management noted 5 industry-wide fare increases since March 1 (with a 6th underway) and Southwest is fully unhedged."
+      ]
+    },
+    {
+      "ticker": "M",
+      "predicted": 0.85,
+      "actual_residual_rank": 0.519,
+      "facts": [
+        "Macy's Inc. delivered Q1 comparable sales growth of 3% (go-forward +3.1%), its strongest first quarter in four years, with all three nameplates and channels positive and beating guidance of 0.5%-1.5%.",
+        "Bloomingdale's posted a +10.2% comp and its highest Q1 sales volume in its 154-year history, while Bluemercury accelerated to +6.4% and Macy's nameplate grew +1.6% (Reimagine 200 stores +2.4%).",
+        "Adjusted EPS of $0.13 exceeded guidance of -$0.01 to +$0.01, absorbing a ~$0.04 tariff headwind, while net sales of $4.7B beat the $4.575-$4.625B guide.",
+        "Full-year guidance was raised to net sales of $21.5-$21.75B, comps of +0.5% to +1.2%, EBITDA margin of 7.7%-7.9%, and adjusted EPS of $2.00-$2.20, including a $0.10-$0.20 combined tariff/fuel EPS headwind.",
+        "Lower current tariff rates and higher fuel costs are net neutral to the full-year outlook, with fuel now expected to be a 10-20 bps gross margin headwind ($0.05-$0.15 EPS impact); any potential tariff refunds are excluded from guidance.",
+        "Q1 gross margin compressed 30 bps to 38.9% entirely due to tariffs (flat ex-tariffs), and Q2 guidance implies 20-40 bps of tariff/fuel pressure with management expecting underlying gross margin expansion in the back half.",
+        "Comp growth is being driven by AUR up ~8.3% (Macy's ~5%, Bloomingdale's ~9-10%) with consistent traffic and higher basket size, partially offset by slightly lower conversion.",
+        "Q1 free cash flow swung to a $140M inflow versus a $203M outflow last year, with $100M returned to shareholders ($50M dividend, $50M buyback) and ~$1.1B remaining on the buyback authorization; cash ended at $1.3B vs. $932M.",
+        "The Reimagine 200 stores represent ~60% of go-forward Macy's stores and ~75% of FY25 go-forward Macy's sales, and have posted positive comps in 8 of the last 9 quarters with record Net Promoter Scores.",
+        "Softer categories included big-ticket home (especially furniture, hurt by tariffs and rates) and plus-size apparel, while watches, dresses, women's career, kids, handbags, fragrances, and shoes outperformed, and Macy's Media Network revenue declined 5% in Q1 on advertising timing."
+      ]
+    },
+    {
+      "ticker": "ICE",
+      "predicted": 0.92,
+      "actual_residual_rank": 0.562,
+      "facts": [
+        "Q1 2026 adjusted EPS was $2.35, up 37% year-over-year, with record net revenues of $3.0 billion (up 18%) and record adjusted operating income of $1.9 billion (up 26%).",
+        "Adjusted free cash flow reached a Q1 record of $1.2 billion, and ICE returned nearly $850 million to shareholders, including approximately $550 million in buybacks (with an incremental $200 million executed in mid-February).",
+        "Exchange segment net revenues hit a record $1.8 billion (up 27%), with transaction revenues up 33%, interest rate complex revenues up nearly 70%, global oil up 47%, and natural gas/environmental products up 37% year-over-year.",
+        "Total futures and options open interest reached a new record this week (up 23% YoY), with energy OI up 6% through April and interest rate OI up 63% versus year-ago levels.",
+        "March 2026 was the highest monthly volume month in ICE's history, exceeding the prior record set two months earlier by more than 70%, while Q1 total ADV rose 45% YoY.",
+        "SONIA futures ADV rose more than 120% YoY with OI more than doubling, and Euribor traded over 9 million lots on March 3 alone amid shifting ECB expectations.",
+        "Fixed Income and Data Services posted record revenues of $657 million (up 9%), with CDS clearing revenues up ~18%, ETF AUM benchmarked to ICE indices reaching a record $829 billion (up 21%), and ~$2 trillion in total assets benchmarked to ICE indices.",
+        "Mortgage Technology revenues grew 6% YoY to $539 million\u2014the strongest pro forma quarterly performance since Q4 2022\u2014with transaction revenues up 22% and legacy Encompass closing transaction revenues up ~30%.",
+        "Q2 2026 adjusted operating expense guidance was set at $1.030\u2013$1.040 billion, consistent with Q1's $1.035 billion, with management reiterating high-end mid-single-digit recurring revenue growth targets for FIDS for the full year.",
+        "ICE announced strategic AI/tokenization initiatives including a tokenized securities platform at NYSE (with Securitize as first digital transfer agent), an MCP server for AI data access, the launch of ICE Private Credit Intelligence anchored by Apollo, and partnerships with Polymarket and OKX (which serves 120+ million users)."
+      ]
+    },
+    {
+      "ticker": "PFGC",
+      "predicted": 0.65,
+      "actual_residual_rank": 0.286,
+      "facts": [
+        "PFG's Q2 fiscal 2026 net sales grew 5.2% year-over-year, with adjusted EBITDA increasing 6.7% to $451 million.",
+        "Organic independent restaurant case growth was 5.3% in Q2, driven by 5.8% independent account growth.",
+        "The Convenience segment onboarded over 500 Love's stores and over 600 RaceTrac locations during the quarter, contributing to 6.1% net sales growth and 13.4% adjusted EBITDA growth.",
+        "The Specialty segment's theater business was down over 30% in Q2, representing an approximately $50 million drag on overall sales.",
+        "PFG's sales force headcount increased nearly 6% year-over-year by the end of calendar 2024.",
+        "Total company cost inflation was approximately 4.5% for Q2, with cheese and poultry categories experiencing deflation that negatively impacted margins.",
+        "PFG generated $264 million of free cash flow in the first half of fiscal 2026, up nearly $89 million compared to the prior year.",
+        "Full year fiscal 2026 guidance was updated to net sales of $67.25 billion to $68.25 billion and adjusted EBITDA of $1.875 billion to $1.975 billion.",
+        "Q3 fiscal 2026 guidance calls for net sales of $16 billion to $16.3 billion and adjusted EBITDA of $390 million to $410 million, reflecting continued cheese and poultry deflation, Cheney integration costs, and winter storm impacts.",
+        "Management reaffirmed its 3-year targets of $73 billion to $75 billion in sales and $2.3 billion to $2.5 billion in adjusted EBITDA by fiscal 2028."
+      ]
+    },
+    {
+      "ticker": "AFRM",
+      "predicted": 0.7,
+      "actual_residual_rank": 0.331,
+      "facts": [
+        "Affirm Card GMV grew approximately 160% year-over-year in Q2 FY2026, with active cardholders up 121% and 0% deals on the Card up 190% year-over-year.",
+        "Affirm's latest ABS deal was priced with a spread of under 100 basis points and a weighted-average yield below 4.6%, the best funding cost levels since 2021.",
+        "Q2 FY2026 GMV grew 36% year-over-year despite a headwind from the transition of a large retail partner.",
+        "The company expects RLTC take rates to be slightly above 4% in both Q3 and Q4, with the RLTC number just shy of the upper side of the long-term goal.",
+        "The 'other' GMV category has grown to 15% of total GMV (approximately the second largest vertical), growing at triple-digit rates and reflecting broad merchant diversification.",
+        "Active merchant growth accelerated to 42%, driven in part by wallet partnerships contributing active merchants to the count.",
+        "The company's GMV growth guidance implies a deceleration to approximately 30% in Q3 and 25% in Q4 of FY2026, partly due to comps from the large retail partner transition.",
+        "Affirm has applied for an industrial loan company bank charter, though the timeline to approval and full operation is measured in years and is not expected to impact near-term financials.",
+        "Boost AI is a new product in early stages with very few merchant adopters that allows merchants to deploy incremental promotional dollars via automated A/B testing, functioning more like an advertising model than a cost-of-acceptance model.",
+        "The company announced partnerships with Fiserv (following FIS), Intuit QuickBooks Payments, and Wayfair U.K., while noting approximately 0.5 billion debit cards in the U.S. represent a platform opportunity for white-label BNPL."
+      ]
+    },
+    {
+      "ticker": "NMIH",
+      "predicted": 0.65,
+      "actual_residual_rank": 0.276,
+      "facts": [
+        "NMI generated $12.3 billion of NIW volume in Q1 2026, up 33% year-over-year, roughly in line with estimated market growth of approximately 35%.",
+        "Primary insurance-in-force reached a record $222.3 billion, while total revenue hit a record $183.5 million, up 6% year-over-year.",
+        "Adjusted net income was $99.4 million, or $1.28 per diluted share, with an adjusted return on equity of 15.2%.",
+        "12-month persistency declined to 82.2% in Q1 from 83.4% in Q4, while net yield held steady at 28 basis points and core yield at 34 basis points.",
+        "Defaults increased to 8,044 at March 31 from 7,661 at December 31, with the default rate at 1.17%, and management said nothing in the quarter suggested credit normalization is accelerating.",
+        "Claims expense rose to $20.7 million versus $4.5 million in Q1 2025, with reserve per new notice at $14,200 (down from $14,500 prior quarter) and the cure rate at 28% versus 31% a year ago.",
+        "Book value per share excluding net unrealized investment losses was $35.46, up 3% sequentially and 15% year-over-year.",
+        "The company repurchased $27.7 million of stock (716,000 shares at an average $38.65) in Q1, with $198 million of buyback capacity remaining.",
+        "PMIERs excess available assets stood at $1.5 billion ($3.6 billion total available assets versus $2.2 billion required).",
+        "Management noted mortgage rates touched a multiyear low near 5.99% in late February but have since sold off to roughly 6.5%, slowing refinancing activity, and guided that 2026 market volume should look similar to 2025."
+      ]
+    },
+    {
+      "ticker": "DOV",
+      "predicted": 0.85,
+      "actual_residual_rank": 0.474,
+      "facts": [
+        "Adjusted EPS was $9.61 for Q4 2025, up 14% in the quarter and 16% for the full year.",
+        "The company is guiding for adjusted EPS of $10.45 to $10.65 per share in 2026, representing double-digit growth at the midpoint.",
+        "Q4 2025 organic revenue growth was 5%, the highest level of the year, with bookings up 10% in the quarter and 6% for the full year.",
+        "The company initiated a $500 million accelerated share repurchase program in November 2025.",
+        "Q4 free cash flow was $487 million or 23% of revenue, with full year 2025 free cash flow at 14% of revenue, an increase of nearly $200 million over the prior year.",
+        "The company deployed $700 million across 4 strategic acquisitions in 2025, with all performing above their underwriting cases.",
+        "Climate & Sustainability Technology posted a book-to-bill of 1.21 in Q4 and segment margins expanded 250 basis points on volume leverage and positive mix.",
+        "Pumps & Process Solutions grew 11% organically in Q4, driven by single-use biopharma, thermal connectors for data center liquid cooling, and natural gas infrastructure components.",
+        "Management expects approximately $40 million of carryover profit from previously announced productivity actions in 2026.",
+        "The 2026 guidance embeds 1.5% to 2% price increases to offset potential commodity cost inflation, particularly in steel and copper."
+      ]
+    },
+    {
+      "ticker": "APG",
+      "predicted": 0.82,
+      "actual_residual_rank": 0.408,
+      "facts": [
+        "APi Group grew full year 2025 net revenues by 13% (approximately 8% organically) to $7.9 billion, up from $3.9 billion in 2021.",
+        "Full year 2025 adjusted EBITDA margin reached a record 13.2%, up 50 basis points year-over-year and above the company's 13% long-term target, compared to 10.3% in 2021.",
+        "Record full year 2025 adjusted free cash flow was $836 million, up $168 million versus the prior year, representing 80% conversion on adjusted EBITDA.",
+        "Inspection, service and monitoring revenues grew to 54% of total revenue in 2025, up from 40% in 2021, with inspection revenues continuing to grow at double-digit rates.",
+        "Data center revenue grew from approximately 5% of total revenue in 2024 to approximately 8% in 2025, and is expected to reach approximately 10% of total revenue in 2026.",
+        "Net debt to adjusted EBITDA ratio was approximately 1.6x at year-end, significantly below the long-term target of 2.5x to 3.0x, providing substantial capital deployment flexibility.",
+        "Q4 2025 net revenues increased 13.8% year-over-year to $2.12 billion with 11.1% organic growth, while adjusted EBITDA margin expanded 90 basis points to 13.9%.",
+        "Full year 2026 guidance calls for reported net revenues of $8.4 billion to $8.6 billion (5% organic growth at midpoint) and adjusted EBITDA of $1.14 billion to $1.20 billion, implying approximately 60 basis points of margin expansion.",
+        "The company completed 14 acquisitions in 2025 and closed the CertaSite acquisition on February 2, 2026, with management signaling expectations for chunky M&A deals in life safety, security, and elevator/escalator spaces in 2026.",
+        "Backlog exceeded $4 billion entering 2026, described as healthy with good margins, supported by strong demand in data centers, advanced manufacturing, semiconductors, healthcare, and critical infrastructure end markets."
+      ]
+    },
+    {
+      "ticker": "INBK",
+      "predicted": 0.65,
+      "actual_residual_rank": 0.227,
+      "facts": [
+        "Adjusted total revenues reached $43.5 million in Q3 2025, an increase of 30% over the second quarter.",
+        "Net interest income increased over 8% compared to Q2 2025 and was up 40% compared to Q3 2024, marking the eighth consecutive quarter of growth.",
+        "The company completed the sale of $837 million of single-tenant lease financing loans with a net loss of $37.8 million.",
+        "The company recognized a $34.8 million provision for credit losses, which included $21 million of net charge-offs.",
+        "Total delinquencies declined to 35 basis points as of September 30th, down from 62 basis points in Q2 and 77 basis points in Q1.",
+        "Net interest margin on a fully tax equivalent basis increased 8 basis points from Q2 to 2.12%, with Q4 2025 guidance of 2.4% to 2.5%.",
+        "The allowance for credit losses increased to $59.9 million (1.65% of total loans), up $13.4 million or nearly 30% from Q2's 1.07%.",
+        "Gain on sale of SBA loans generated $10.6 million in revenue, with $104 million in held-for-sale loans and a $260 million pipeline.",
+        "Total revenue from fintech initiatives was up 14% compared to Q2 and up 130% from Q3 2024.",
+        "At quarter end, $1.3 billion or 27% of deposits were indexed to the Fed funds rate, with each 25 basis point rate cut expected to increase annualized net interest income by approximately $1.4 million."
+      ]
+    },
+    {
+      "ticker": "RDNW",
+      "predicted": 0.6,
+      "actual_residual_rank": 0.164,
+      "facts": [
+        "Q4 2025 adjusted EBITDA increased 341% year-over-year to $9.7 million, up from $2.2 million in Q4 2024, representing a $7.5 million improvement.",
+        "Q4 2025 total revenue was $256.9 million compared to $269.6 million in the prior year quarter, with the decrease driven by the wind-down of Wholesale Express; excluding Wholesale Express, revenue was flat year-over-year.",
+        "Full year 2025 adjusted EBITDA was $46.2 million, 40.4% higher than the prior year, on revenue of $1.08 billion and gross profit of $298 million.",
+        "Same-store revenue increased 6.3% year-over-year to $256.9 million in Q4 2025, same-store gross profit rose 13.8% to $66.8 million, and same-store unit sales grew to 15,420 from 14,320.",
+        "New unit gross margins improved to 13.2% in Q4 2025 from 10.8% in Q4 2024, while pre-owned gross margins improved to 14.4% from 12.3% in the same period.",
+        "Adjusted SG&A expenses declined to $59.9 million (84.5% of gross profit) in Q4 2025 from $62.3 million (92.3% of gross profit) in Q4 2024, with full year adjusted SG&A reduced by $26.2 million or 9.7% year-over-year to $243.8 million.",
+        "Free cash flow for the full year 2025 was $10.3 million compared to $97.4 million in the prior year, with last year's figure benefiting from the sale of a finance receivable portfolio and excess inventory reduction.",
+        "Total available liquidity at year-end was $152.6 million, consisting of unrestricted cash plus floor plan credit facility availability, with nonvehicle net debt of $189.3 million.",
+        "Finance and insurance GPU increased to $1,715 in Q4 2025 from $1,598 in Q4 2024, and fixed operations GPU rose to $1,615, up $60 year-over-year.",
+        "Management stated the company is well positioned to return to growth through acquisition in 2026 and is exploring a potential refinancing of its term loan in the near future, while continued cost reduction efforts will shift focus to back-office operations."
+      ]
+    },
+    {
+      "ticker": "SMP",
+      "predicted": 0.65,
+      "actual_residual_rank": 0.152,
+      "facts": [
+        "Standard Motor Products' total revenue grew over 12% in Q4 2025 and over 22% for the full year, with organic growth (excluding Nissens) of approximately 4% for both the quarter and the year.",
+        "The Nissens Automotive segment contributed $64 million in Q4 and $305 million for the full year 2025, posting mid-single-digit increases from 2024 in local currency in its first full calendar year of ownership.",
+        "Non-GAAP diluted earnings per share increased 19.1% in Q4 and 26.8% for the full year 2025, with bottom-line results coming in above the previously provided guidance range.",
+        "Full year 2025 adjusted EBITDA margin expanded by 160 basis points, with Q4 consolidated adjusted EBITDA reaching 9.7% of net sales.",
+        "Management expects 2026 sales growth in the low to mid-single-digit percentage range and adjusted EBITDA margin of 11% to 12% of net sales, excluding the impact of recent U.S. tariff changes.",
+        "Wire sets sales declined 27% in Q4 2025, dragging the Vehicle Control segment down by 2 percentage points, though underlying POS for wire sets was only down mid-single digits.",
+        "The company's net debt stood at $546.7 million with a leverage ratio of 2.7x EBITDA at quarter-end, and management believes it is on track to reach its 2x target by the end of 2026.",
+        "Temperature Control segment full year sales grew more than 12%, with full year adjusted EBITDA margin reaching 15.7%, driven by an elongating AC season and increased adoption of AC kit programs.",
+        "The company identified a material weakness in internal controls over financial reporting at its Nissens segment related to general information technology controls, though it did not result in errors in financial statements.",
+        "Management stated it is comfortable with and likely ahead of the $8 million to $12 million annualized Nissens synergy run-rate savings target expected by the end of 2026, with benefits spread across the entire enterprise."
+      ]
+    },
+    {
+      "ticker": "GTN",
+      "predicted": 0.65,
+      "actual_residual_rank": 0.145,
+      "facts": [
+        "Q1 2026 total revenue was $768 million at the high end of guidance, with adjusted EBITDA of $154 million and a net loss attributable to common stockholders of $33 million.",
+        "Q1 2026 political advertising revenue came in at the high end of guidance at $30 million, compared to $26 million in Q1 2022 (the last midterm cycle), and Q2 2026 political revenue is guided to $60\u2013$70 million.",
+        "Q1 2026 core advertising rose 2% year-over-year (beating flat guidance) aided by the Winter Olympics, but Q2 2026 core ad revenue is guided down mid-single digits versus Q2 2025 due to Middle East-related volatility and the NCAA Final Four rotating off CBS (worth $5 million last April).",
+        "Gray resolved its first extended distribution blackout in company history with DISH via a multiyear deal consistent with internal expectations, after Kevin Latek described DISH's demand as an unprecedented attempt to exert control over the broadcaster.",
+        "Gray has completed retrans renewals representing approximately 39% of its traditional MVPD footprint plus two vMVPD expansions, with no further retrans negotiations remaining for 2026.",
+        "Net retransmission revenue declined $4 million year-over-year in Q1 2026, but full-year 2026 net retrans is expected to be in the same range as Q1, implying low-single-digit organic growth plus additional contribution from acquisitions.",
+        "Q1 2026 broadcasting station operating expenses (ex-network fees) were up 4% year-over-year, but Q2 2026 broadcasting expenses are guided down 3% at the midpoint versus Q2 2025.",
+        "Gray closed acquisitions of WBBJ (Bahakel), 10-market Allen Media stations, and 3-market Block Communications stations, with remaining E.W. Scripps and Sagamore Hill transactions expected to close in the next few weeks, contributing an estimated quarter-turn of deleveraging.",
+        "At March 31, 2026, leverage was 2.56x first lien, 3.79x secured, and 5.94x total net leverage, with over $1 billion of liquidity and an undrawn revolver after the Block closing; the company amended its credit agreement to facilitate potential refinancing.",
+        "Q1 2026 CapEx was $19 million with full-year 2026 CapEx maintained at $140 million (back-end weighted), and the full-year cash tax guide was lowered by $25 million to a range of $90\u2013$110 million."
+      ]
+    },
+    {
+      "ticker": "CNNE",
+      "predicted": 0.8,
+      "actual_residual_rank": 0.222,
+      "facts": [
+        "The closing of the Dun & Bradstreet acquisition by Clearlake Capital generated $630 million in proceeds to Cannae.",
+        "Since announcing the strategic plan, Cannae has sold $1.1 billion of public company securities and transitioned the portfolio from 70% public investments to 20% public investments.",
+        "Year-to-date, Cannae has repurchased $275 million of its stock, representing 23% of shares outstanding at the start of the year.",
+        "Since announcing the strategic plan in 2024, Cannae has returned over $500 million to shareholders, representing 35% of shares outstanding at the plan's announcement.",
+        "Cannae acquired an additional 30% stake in JANA Partners for $67.5 million, bringing its ownership position to 50%.",
+        "The company expects potential tax benefits of up to $55 million in cash tax refunds from selling certain noncore assets to take advantage of expiring tax benefits.",
+        "Since the start of Q3, Cannae repurchased $163 million of stock at an average discount to NAV of 31%.",
+        "Alight reported total revenue of $533 million in Q3, down 4% year-over-year, and management reduced 2025 forecast ranges for revenue, adjusted EBITDA, and free cash flow to the lower end of prior forecasts.",
+        "Cannae's operating revenue was $107 million for Q3 2025, down $7 million from Q3 2024, driven by reduced guest counts and 10 fewer restaurant locations.",
+        "The margin loan was fully repaid, amended to reflect Alight as sole collateral with interest rate spread lowered by 35 basis points and maturity extended to 2028, leaving only a $47.5 million fixed rate term loan maturing in 2030."
+      ]
+    },
+    {
+      "ticker": "CMTL",
+      "predicted": 0.78,
+      "actual_residual_rank": 0.004,
+      "facts": [
+        "Comtech delivered its fourth consecutive quarter of positive operating cash flow and ended Q2 FY2026 with approximately $50 million of total liquidity.",
+        "Net bookings of $175 million in Q2 resulted in a book-to-bill ratio of 1.64x, increasing backlog to $732 million and maintaining revenue visibility at approximately $1.1 billion.",
+        "Consolidated net sales decreased from $127 million in Q2 FY2025 to $107 million in Q2 FY2026 due to deliberate phase-out of low-margin business and the U.S. government shutdown impact.",
+        "Gross profit percentage increased from 26.7% to 33.9% year-over-year, with gross profit rising from $33.7 million to $36.2 million.",
+        "Adjusted EBITDA increased over 200% year-over-year, from $2.9 million in Q2 FY2025 to $9.1 million in Q2 FY2026.",
+        "Allerium segment net sales grew 6.2% year-over-year to $56.2 million with operating income rising from $3.4 million to $5.5 million.",
+        "Allerium received over $107 million of incremental funding toward a multiyear contract extension valued in excess of $130 million from a leading U.S. telecommunications company.",
+        "Total outstanding borrowings under the credit facility were approximately $125 million and under the subordinated credit facility were $102.8 million, with the convertible preferred stock liquidation preference at $213.4 million.",
+        "The company repaid $10 million against the revolver loan during Q2, reducing the revolver balance to $7.6 million, with $19.6 million remaining available on the revolver.",
+        "The EDIM modem program, successor to Viasat's EBEM modem which sold tens of thousands of units over a 10-year period, is expected to begin production deliveries toward the tail end of FY2026."
+      ]
+    },
+    {
+      "ticker": "HUT",
+      "predicted": 0.85,
+      "actual_residual_rank": 0.042,
+      "facts": [
+        "Q3 2025 revenue was $83.5 million, up 91% year-over-year, driven primarily by the expansion of Bitcoin mining revenue through American Bitcoin.",
+        "Net income was $50.6 million versus $0.9 million in the prior year period, while adjusted EBITDA was $109 million versus $5.6 million in the prior year period.",
+        "The company launched a 1,530-megawatt expansion initiative spanning 4 U.S. locations, with the potential to more than double the scale of the platform.",
+        "At quarter end, the company held 13,696 Bitcoin in reserve with a market value of approximately $1.6 billion, of which 10,278 Bitcoin were held by Hut 8 and 3,418 Bitcoin by American Bitcoin.",
+        "Since February 2024, the company has benefited from $689 million in contributions from Bitcoin price appreciation and secured $265 million in new Bitcoin-backed credit facilities with Coinbase and Two Prime at a blended cost of capital of 8.2%.",
+        "Compute segment revenue increased more than fivefold year-over-year from $13.7 million to $70 million, with segment gross margin expanding by 33.5 percentage points to 68.6%.",
+        "American Bitcoin deployed approximately 14.9 exahash of additional installed mining capacity at Vega during the quarter, increasing Hut 8's total hash rate from approximately 12 exahash to approximately 26.8 exahash.",
+        "More than 85% of the company's energy capacity under management is commercialized under executed agreements with terms of 1 year or longer.",
+        "The company added a $200 million revolving credit facility with Two Prime and launched a new $1 billion at-the-market equity program during the quarter.",
+        "The broader development pipeline stood at 8,650 megawatts at quarter end, with the Riverbend site expected to deliver 216 to 224 megawatts of IT capacity by end of 2026."
+      ]
+    }
+  ]
+}

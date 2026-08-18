@@ -213,6 +213,57 @@ fires on almost every event, or that moves everything the same way, is useless
 however true it is.
 """
 
+#: The objective, stated from the measured decomposition rather than in the
+#: abstract. Every event contributes e_p * e_y to the score, where e_p is our
+#: prediction net of the benchmark and e_y is the outcome net of the benchmark.
+#: Measured over 6,144 dev events:
+#:
+#:     44.0% of events contribute NEGATIVELY, totalling -0.233
+#:     56.0% contribute positively,           totalling +0.437
+#:     net rho = +0.204
+#:
+#: So the score is the small residue of two large opposing flows, and the
+#: reachable win is shrinking the negative side rather than growing the positive
+#: one. A rule that stops us being confidently wrong on 200 events is worth more
+#: than a rule that makes us slightly righter on 2,000.
+OBJECTIVE = """\
+WHAT WE ARE ACTUALLY TRYING TO FIX — read this before proposing anything.
+
+Every event adds (our prediction, net of the benchmark) x (the outcome, net of the
+benchmark) to the score. Measured across 6,144 past events:
+
+  44% of events contribute NEGATIVELY, totalling  -0.233
+  56% contribute positively,            totalling +0.437
+  net                                             +0.204
+
+The score is the small residue of two large opposing flows. **The win is shrinking
+the negative flow, not growing the positive one.** A rule that stops the model
+being confidently wrong on a few hundred events is worth far more than a rule that
+makes it slightly more right on thousands.
+
+THE SPECIFIC FAILURE, measured. The most damaging events are ones the model ranked
+far TOO LOW that then ripped:
+
+    predicted 0.18 -> actual 0.90      predicted 0.23 -> actual 0.93
+    predicted 0.28 -> actual 0.97      predicted 0.12 -> actual 0.89
+
+These are mostly quarters that LOOK bad — weak or declining revenue, guidance
+trimmed, a loss — where the market nonetheless marked the stock up hard. Something
+in the facts of a bad-looking quarter is being read as straightforwardly bearish
+when the market reads it as a turn.
+
+An independent analysis of one batch found the mechanism: among events with
+declining year-over-year revenue, those whose call showed a REALIZED TURN
+(sequential revenue or EBITDA growth, book-to-bill above 1x, a rising or record
+backlog, a destocking target met, a named drag with a completion date) landed at
+0.79 on average, while those without landed at 0.32 — and the model predicted 0.49
+and 0.42 respectively. It discriminated on the LEVEL of the decline when it should
+have discriminated on the SECOND DERIVATIVE.
+
+Aim there first. Rules that rescue wrongly-pessimistic events are the highest-value
+thing you can produce.
+"""
+
 GENERATOR_SYSTEM = """\
 You are an equity analyst predicting how the market will react to an earnings announcement.
 
@@ -238,7 +289,7 @@ noise — even a perfect model correlates only about 0.25 with the outcome. A pa
 from one event is a pattern you inferred from noise. Only propose something you can see
 ACROSS events in this batch.
 
-""" + AFFINE_WARNING + """
+""" + AFFINE_WARNING + OBJECTIVE + """
 Your job:
 - Compare the events where the model ranked TOO HIGH against those where it ranked TOO LOW.
 - Find what distinguishes them: a fact pattern, a phrasing, a combination of conditions.
@@ -253,7 +304,7 @@ You are given the current playbook and a reflection over a batch of recent predi
 job is to identify ONLY the NEW insights that are MISSING from the playbook, and emit them as
 additions.
 
-""" + AFFINE_WARNING + """
+""" + AFFINE_WARNING + OBJECTIVE + """
 Instructions:
 - Do NOT regenerate the playbook. Emit additions only.
 - Avoid redundancy: if similar advice exists, add nothing unless yours is a genuine complement.

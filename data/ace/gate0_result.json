@@ -1,0 +1,53 @@
+{
+  "mean_rules_real": 2.0,
+  "mean_rules_shuffled": 0.0,
+  "ratio": 0.0,
+  "null_acknowledgement_rate": 1.0,
+  "primary_pass": true,
+  "secondary_pass": true,
+  "verdict": "PASS \u2014 proceed",
+  "per_batch": [
+    {
+      "batch": "2f5fcf3c",
+      "kind": "shuffled",
+      "n_rules": 0,
+      "confidence": "none",
+      "declined": true
+    },
+    {
+      "batch": "b4c493d4",
+      "kind": "shuffled",
+      "n_rules": 0,
+      "confidence": "none",
+      "declined": true
+    },
+    {
+      "batch": "6631c8cc",
+      "kind": "shuffled",
+      "n_rules": 0,
+      "confidence": "none",
+      "declined": true
+    },
+    {
+      "batch": "1c758c21",
+      "kind": "real",
+      "n_rules": 2,
+      "confidence": "low",
+      "declined": false
+    },
+    {
+      "batch": "12e0c604",
+      "kind": "real",
+      "n_rules": 3,
+      "confidence": "medium",
+      "declined": false
+    },
+    {
+      "batch": "87a49e82",
+      "kind": "real",
+      "n_rules": 1,
+      "confidence": "low",
+      "declined": false
+    }
+  ]
+}

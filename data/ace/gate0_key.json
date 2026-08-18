@@ -1,0 +1,32 @@
+{
+  "2f5fcf3c": {
+    "kind": "shuffled",
+    "position": 0,
+    "source_chunk": 4
+  },
+  "1c758c21": {
+    "kind": "real",
+    "position": 1,
+    "source_chunk": 2
+  },
+  "87a49e82": {
+    "kind": "real",
+    "position": 2,
+    "source_chunk": 1
+  },
+  "12e0c604": {
+    "kind": "real",
+    "position": 3,
+    "source_chunk": 0
+  },
+  "b4c493d4": {
+    "kind": "shuffled",
+    "position": 4,
+    "source_chunk": 5
+  },
+  "6631c8cc": {
+    "kind": "shuffled",
+    "position": 5,
+    "source_chunk": 3
+  }
+}

@@ -64,14 +64,35 @@ from runner import ledger  # noqa: E402
 #: than a one-line answer.
 RATIONALE = "Let's think step by step in order to produce the answer. We ..."
 
-OUT = ROOT / "data" / "reads" / "official__gpt5nano__2026Q2__rationale.jsonl"
+#: **Both arms regenerate on OpenRouter.** The existing
+#: ``official__gpt5nano__2026Q2.jsonl`` column was produced against OpenAI
+#: direct, so pairing a new OpenRouter arm against it would confound the
+#: provider with the field description and leave no way to separate them. A
+#: confounded test is not worth the calls it saves.
+MODEL = "openrouter/openai/gpt-5-nano"
+
+ARMS = {
+    # (filename suffix, rationale_field or None)
+    "control": None,
+    "rationale": RATIONALE,
+}
 
 
-def run(events: list[dict], threads: int = 8) -> dict[str, float]:
-    """The published program with one field description restored."""
-    lm = dspy.LM(BP.LM_MODELS["gpt5nano"], timeout=120, cache=False)
-    predictor = dspy.ChainOfThought(
-        BP.PredictEarningsReturn, rationale_field=dspy.OutputField(desc=RATIONALE)
+def _out(arm: str) -> Path:
+    return ROOT / "data" / "reads" / f"h1__{arm}__or__2026Q2.jsonl"
+
+
+def run(events: list[dict], arm: str, threads: int = 8) -> dict[str, float]:
+    """One arm of the paired test, on OpenRouter."""
+    OUT = _out(arm)
+    rationale = ARMS[arm]
+    lm = dspy.LM(MODEL, timeout=120, cache=False)
+    predictor = (
+        dspy.ChainOfThought(BP.PredictEarningsReturn)
+        if rationale is None
+        else dspy.ChainOfThought(
+            BP.PredictEarningsReturn, rationale_field=dspy.OutputField(desc=rationale)
+        )
     )
 
     done = {}
@@ -85,7 +106,7 @@ def run(events: list[dict], threads: int = 8) -> dict[str, float]:
 
     def one(event):
         if not event["facts"]:
-            return event["event_id"], BP.NEUTRAL_PERCENTILE, 0, 0
+            return event["event_id"], BP.NEUTRAL_PERCENTILE, 0, 0, 0.0
         try:
             with dspy.context(lm=lm):
                 out = predictor(
@@ -98,19 +119,21 @@ def run(events: list[dict], threads: int = 8) -> dict[str, float]:
             except Exception:
                 pass
             return (event["event_id"], value,
-                    usage.get("prompt_tokens", 0), usage.get("completion_tokens", 0))
+                    usage.get("prompt_tokens", 0), usage.get("completion_tokens", 0),
+                    float(usage.get("cost") or 0.0))
         except Exception as exc:
             print(f"  [fail] {event['event_id']}: {type(exc).__name__}: {str(exc)[:90]}",
                   flush=True)
-            return event["event_id"], BP.NEUTRAL_PERCENTILE, 0, 0
+            return event["event_id"], BP.NEUTRAL_PERCENTILE, 0, 0, 0.0
 
     OUT.parent.mkdir(parents=True, exist_ok=True)
-    started, tin, tout = time.time(), 0, 0
+    started, tin, tout, cost = time.time(), 0, 0, 0.0
     with ThreadPoolExecutor(max_workers=threads) as pool, OUT.open("a") as fh:
-        for i, (event_id, value, pin, pout) in enumerate(pool.map(one, todo), 1):
+        for i, (event_id, value, pin, pout, c) in enumerate(pool.map(one, todo), 1):
             done[event_id] = value
             tin += pin
             tout += pout
+            cost += c
             fh.write(json.dumps({"event_id": event_id, "prediction": value,
                                  "prompt_tokens": pin, "completion_tokens": pout}) + "\n")
             if i % 100 == 0:
@@ -120,20 +143,20 @@ def run(events: list[dict], threads: int = 8) -> dict[str, float]:
 
     # One accounting path, whatever wrote the column.
     if tin or tout:
-        usd = ledger.record("openai/gpt-5-nano-2025-08-07", tin, tout,
-                            source="h1.rationale_field",
-                            note="H1 test: restored step-by-step rationale desc")
+        usd = ledger.record("openai/gpt-5-nano", tin, tout,
+                            source=f"h1.{arm}",
+                            note=f"H1 paired test on OpenRouter, arm={arm}",
+                            usd=cost or None)
         print(f"\nlogged to ledger: {tin} in / {tout} out -> ${usd:.4f}")
     return done
 
 
 def score(quarter: str = "2026Q2") -> None:
     frame = harness.load(quarter)
-    baseline_path = ROOT / "data" / "reads" / "official__gpt5nano__2026Q2.jsonl"
     baseline = {json.loads(l)["event_id"]: json.loads(l)["prediction"]
-                for l in baseline_path.open() if l.strip()}
+                for l in _out("control").open() if l.strip()} if _out("control").exists() else {}
     fixed = {json.loads(l)["event_id"]: json.loads(l)["prediction"]
-             for l in OUT.open() if l.strip()} if OUT.exists() else {}
+             for l in _out("rationale").open() if l.strip()} if _out("rationale").exists() else {}
 
     both = set(baseline) & set(fixed)
     sub = frame[frame.event_id.isin(both)].copy()
@@ -186,7 +209,12 @@ if __name__ == "__main__":
     if not args.score_only:
         screen = {e["event_id"] for e in reads.screen_events(700)}
         events = [e for e in harness.events_for("2026Q2") if e["event_id"] in screen][: args.limit]
-        print(f"H1: {len(events)} events, pinned {BP.LM_MODELS['gpt5nano']}, "
-              f"rationale = {RATIONALE!r}\n")
-        run(events, args.threads)
+        # ~1,400 calls at gpt-5-nano prices; guard against the key cap before
+        # any of them are made.
+        ledger.guard(estimated_usd=0.40)
+        print(f"H1 paired on OpenRouter: {len(events)} events x 2 arms, model {MODEL}")
+        print(f"  rationale = {RATIONALE!r}\n")
+        for arm in ("control", "rationale"):
+            print(f"--- arm: {arm} ---")
+            run(events, arm, args.threads)
     score()

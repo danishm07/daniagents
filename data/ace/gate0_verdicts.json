@@ -1,0 +1,45 @@
+{
+  "2f5fcf3c": {
+    "n_rules": 0,
+    "confidence": "none",
+    "rules": [],
+    "note": "nothing distinguishable; 13/50 events got identical 0.65 prediction spanning actuals 0.011-0.968"
+  },
+  "b4c493d4": {
+    "n_rules": 0,
+    "confidence": "none",
+    "rules": [],
+    "note": "nothing distinguishable; pred/actual corr ~+0.07; same content signature at both extremes"
+  },
+  "6631c8cc": {
+    "n_rules": 0,
+    "confidence": "none",
+    "rules": [],
+    "note": "nothing distinguishable; every content hypothesis failed on in-batch counterexamples"
+  },
+  "1c758c21": {
+    "n_rules": 2,
+    "confidence": "low",
+    "rules": [
+      "levered issuer, call centrally about balance-sheet repair -> 0.65-0.85",
+      "small/mid-cap >=40% YoY growth on TAM/pipeline narrative, net cash, no capital return -> 0.20-0.35"
+    ]
+  },
+  "12e0c604": {
+    "n_rules": 3,
+    "confidence": "medium",
+    "rules": [
+      "revenue declining YoY BUT realized turn AND guidance not deepening -> 0.70-0.85",
+      "revenue declining YoY AND guidance points to further deterioration -> 0.20-0.35",
+      "no facts extracted -> 0.50 exactly"
+    ]
+  },
+  "87a49e82": {
+    "n_rules": 1,
+    "confidence": "low",
+    "rules": [
+      "CEO/CFO departure disclosed alongside otherwise solid results -> 0.05-0.25"
+    ],
+    "note": "3 events with leadership departures all landed in bottom quartile"
+  }
+}
