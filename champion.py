@@ -133,17 +133,40 @@ def prompt_fingerprint() -> str:
     return hashlib.sha256(material.encode()).hexdigest()[:12]
 
 
-def live_payload(facts: list[str]) -> dict:
+def live_payload(facts: list[str], event_id: str = "offline-replay") -> dict:
     """The facts in the confirmed live ``information_url`` shape.
 
     Confirmed from production 2026-08-14: the archive's disclosure object,
     unwrapped. Using it here means ``_facts_text`` resolves the facts by the
     same path offline as it does on a live event — including the bullet-list
     rendering, which is part of the prompt.
+
+    Every key production sends is present, including the ones the prompt never
+    reads. ``_extract_facts`` resolves off ``items`` alone, so ``event_id``,
+    ``generated_at`` and the null ``url``/``bytes``/``sha256`` change no output
+    today — they are here so that ``runner.consistency`` can assert the *whole*
+    shape rather than the part currently in use. A payload that matches only on
+    the fields something happens to read is not a replica; it is a replica of
+    today's code path, and this project has already been caught once by exactly
+    that distinction (``summary["summary"]``, a key in neither shape, silently
+    degrading every prompt for two days).
     """
     return {
-        "schema_version": "1.0",
-        "items": [{"kind": "facts", "source": "earnings_call", "content": facts}],
+        "schema_version": "3",
+        "event_id": event_id,
+        "generated_at": "1970-01-01T00:00:00.000000+00:00",
+        "items": [
+            {
+                "id": f"{event_id}-facts",
+                "kind": "facts",
+                "source": "earnings_call",
+                "media_type": "application/json",
+                "content": facts,
+                "url": None,
+                "bytes": None,
+                "sha256": None,
+            }
+        ],
     }
 
 

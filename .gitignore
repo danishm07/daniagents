@@ -34,3 +34,13 @@ venv/
 # Champion column — regenerable from champion.py, but costs an API run.
 # Tracked deliberately: the research is not reproducible without it.
 !data/champion/
+
+# Raw external-API caches — large, regenerable from the source APIs, and the
+# same reasoning that gitignores data/archive/*. The DERIVED feature tables in
+# data/blocks/ ARE committed: they are the cycle's deliverable and cost real
+# fetches to rebuild.
+data/edgar/
+data/prices/
+data/flow/
+data/estimates/
+data/options/

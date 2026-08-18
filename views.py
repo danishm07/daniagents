@@ -53,7 +53,12 @@ def tfidf_residual(
     def view(events: list[dict], quarter: str) -> list[float]:
         train = harness.training_data(quarter)
         if train.empty:
-            return [0.5] * len(events)
+            # NaN, not 0.5. A neutral is sitting out in disguise: it scores
+            # exactly zero, drags the arm's pooled rho toward zero, and shows up
+            # in the metrics as a *measured* null rather than as the coverage
+            # hole it is. The runner's neutral-rate column caught this reading
+            # 0.333 on the first quarter, which has no prior quarter to fit on.
+            return [float("nan")] * len(events)
 
         target = harness.residualize(train, "y").to_numpy(dtype=float)
         vectorizer = TfidfVectorizer(
