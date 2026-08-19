@@ -140,6 +140,7 @@ paper's ACE interval overlaps its own control by 0.08 with no CI on the
 difference reported anywhere, failure is a live outcome rather than an unlikely
 one.
 
-Your own go/no-go put the expected gain at −0.5pp to +2.0pp with centre +0.5pp
+Your own go/no-go put the expected gain at −0.5pp to +2.0pp with
+centre +0.5pp
 and ~35% chance of clearing +0.5pp. Hold to that. If the result lands inside the
 noise band, we say so and stop.
