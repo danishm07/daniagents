@@ -426,15 +426,52 @@ def config_count(log: pd.DataFrame | None = None) -> int:
     return K_PRIOR + int(frame.config_hash.nunique())
 
 
-def promotion_floor(se_mean: float, k: int) -> float:
+#: Standard error of the ΔR² *difference* between two independent runs of the
+#: **same** prompt on the **same** events, at n=2,000. Measured 2026-08-19 on
+#: ``gemini-2.5-flash-lite``: two replicate columns agreed to 0.00007 in ΔR²
+#: (0.0489 vs 0.0489) yet the paired bootstrap se of their difference was
+#: 0.00417. A second replicate pair on ``gpt-5-nano`` implies 0.0038 when scaled
+#: to the same n, so the estimate holds across models.
+#:
+#: **This is a variance component the bootstrap cannot see.**
+#: :func:`bootstrap_diff` resamples *events* while holding the two prediction
+#: columns fixed, so it prices sampling of the data and not sampling of the
+#: model. Two runs of one prompt share only 35.7% of their predictions exactly
+#: and correlate 0.917 — re-running an arm is very nearly as large a
+#: perturbation as changing it.
+REPLICATE_SE_AT_2000 = 0.00417
+REPLICATE_SE_N = 2000
+
+
+def replicate_se(n: int) -> float:
+    """Run-to-run noise in a two-column ΔR² comparison at sample size ``n``."""
+    if n <= 0:
+        return float("inf")
+    return REPLICATE_SE_AT_2000 * math.sqrt(REPLICATE_SE_N / n)
+
+
+def promotion_floor(se_mean: float, k: int, n: int | None = None) -> float:
     """The gain a challenger must clear: the best draw ``K`` null configs would produce.
 
     Treats the ``K`` configurations as independent, which they are not — most
     are variants of each other, and correlated draws have a lower expected
     maximum. The floor is therefore conservative. That is the right direction to
     err, but it means a rejected candidate is "not proven", not "disproven".
+
+    ``n`` adds the **replicate** variance component — the run-to-run noise of the
+    LLM itself, which ``se_mean`` omits by construction. Without it this floor
+    has been understated for the whole project. Measured consequences at the
+    scales we actually work at: three separately-reported positive results
+    (+0.0017 fitted union, +0.0014 sector routing, +0.0017 ACE shrunk) all sit
+    at |z| ≈ 0.6 against the replicate floor alone, i.e. they are re-runs of the
+    same arm wearing different names.
+
+    Pass ``n`` for any comparison between two *generated* columns. Omit it only
+    when both columns are deterministic functions of cached data, where
+    re-running changes nothing.
     """
-    return se_mean * max(expected_best_of_k(k), Z_SINGLE_TEST)
+    total = se_mean if n is None else math.hypot(se_mean, replicate_se(n))
+    return total * max(expected_best_of_k(k), Z_SINGLE_TEST)
 
 
 # --------------------------------------------------------------------------

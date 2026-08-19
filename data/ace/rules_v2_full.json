@@ -1,0 +1,66 @@
+[
+  {
+    "section": "interactions",
+    "content": "Revenue down year-over-year AND management guides the next period (quarter or full year) to flat-or-higher revenue, or raises revenue or EBITDA guidance -> 0.80-0.95. The GUIDED forward line is the discriminator, not the trailing improvement: permanent cost cuts, gross-margin expansion and a narrowing loss on a still-shrinking forward outlook do NOT qualify for this band."
+  },
+  {
+    "section": "guidance_and_outlook",
+    "content": "Revenue down year-over-year AND the guided next period is worse than the reported one - a deeper guided decline, guided profit explicitly below the prior-year period, or a cut to a full-year target -> 0.05-0.20, and rank below every other declining-revenue event that guides to stabilization."
+  },
+  {
+    "section": "common_mistakes",
+    "content": "Revenue down year-over-year with record bookings, a record or rising backlog, or book-to-bill above 1x, BUT forward revenue guidance is flat or lower -> 0.05-0.25. Order-book strength that has not yet reached the guided revenue line is not a turn. Measured twice: this pattern produced the single worst outcome observed in two separate samples."
+  },
+  {
+    "section": "guidance_and_outlook",
+    "content": "Reported quarter is strong (beat, raise, or double-digit growth) AND the call discloses an explicit step-down in the very next period versus the one just reported - next-period margin guided below the reported margin, next-period growth guided below the reported growth rate, or a forward range framed at or below consensus -> 0.30-0.50 regardless of how good the reported quarter was. Rank on the guided rate, not the reported rate. Does not apply when the reported quarter was weak."
+  },
+  {
+    "section": "common_mistakes",
+    "content": "Any turn or improvement evidence is VOID when the same release cuts full-year guidance, guides the next period below the one just reported, or worsens a segment or end-market outlook -> cap at 0.35 however strong the improvement narrative reads."
+  },
+  {
+    "section": "common_mistakes",
+    "content": "Record results, all-time highs, exceeded the high end of guidance, raised full-year guidance, record capital returned, and total addressable market size carry NO ordering information - they appear with equal frequency at both extremes of the outcome distribution. On their own they must never move an event above roughly 0.60. Reserve the top band for events where a FORWARD or leading measure runs above the measure just reported."
+  },
+  {
+    "section": "common_mistakes",
+    "content": "Do not assign the same value to more than about one event in eight. A value reused across a third of events cannot discriminate, and the crowded top band is where the confidently-wrong events concentrate. Force separation inside it using the guided-forward-line test rather than defaulting impressive-looking quarters to a single high value."
+  },
+  {
+    "section": "common_mistakes",
+    "content": "If no facts were extracted from the call, or the facts are empty or unreadable -> 0.50 exactly. Never emit a confident non-neutral value on an event whose content is missing."
+  },
+  {
+    "section": "narrative_and_tone",
+    "content": "Most of the incremental news is future-dated - multi-year addressable market, pipeline value, capacity or production targets two or more years out, trial readouts, letters of intent, planned hiring against unserved demand, contracted recurring revenue growing faster than reported revenue, covered-lives or access counts far exceeding actual sales - AND the reported period core operating metric is flat or declining -> 0.20-0.40. A large number attached to something not yet sold is not a beat. Do not demote when the current rate is simultaneously accelerating."
+  },
+  {
+    "section": "interactions",
+    "content": "Reported revenue grows while the LEADING indicator deteriorates - bookings or closed sales down year-over-year or guided down, backlog shrinking, or backlog conversion explicitly lengthening -> 0.20-0.35. Mirror case: reported revenue grows AND the leading indicator grows faster - deferred revenue outgrowing revenue, record orders, book-to-bill above 1x for consecutive quarters -> 0.75-0.90."
+  },
+  {
+    "section": "surprise_quality",
+    "content": "Profit growth running several times the top-line growth rate while the top line itself is flat or decelerating, especially when the gap is sourced from cost cuts, pass-throughs, currency, tax items or one-time credits -> 0.30-0.45. The same margin expansion where the top line ACCELERATED versus the prior period is a positive -> 0.75-0.90."
+  },
+  {
+    "section": "surprise_quality",
+    "content": "A quantified one-time or non-operating item accounts for a large share of reported revenue or of the year-over-year growth - an upfront or milestone licence payment booked in revenue, a revenue deferral benefit, a favourable annual actuarial or assumption revision, revised prepayment assumptions, production tax credits, a gain on sale, or an acquisition closed in or just after the period - and the underlying rate excluding it is materially lower -> 0.30-0.50. Judge the ex-item rate, not the headline. Does not fire when the item is unquantified or small, nor when the one-off is a gain sitting inside a result that is still a loss."
+  },
+  {
+    "section": "surprise_quality",
+    "content": "The quarter discloses a noncash goodwill or intangible impairment charge -> 0.15-0.30, and apply this even when adjusted revenue, earnings and guidance all look clean and the charge is excluded from adjusted figures. The larger error is on impairments buried inside an otherwise good quarter."
+  },
+  {
+    "section": "margins_and_cashflow",
+    "content": "Record or sharply higher reported earnings accompanied by cash going the other way in the same period - operating cash flow negative or down year-over-year on a working-capital build, inventory months of supply rising materially sequentially, or capital spending well above the stated run-rate -> 0.15-0.30. The record and the cash outflow appearing in the SAME period is the trigger; either alone is not."
+  },
+  {
+    "section": "guidance_and_outlook",
+    "content": "Record or beat quarter where management explicitly guides a NAMED profitability driver to reverse or fade from the level just reported - margin compression of a stated size, an accretion or credit contribution stepping down, loss or charge-off rates guided higher, returns or efficiency guided worse than the quarter delivered, or an outlook that assumes no continuation of a price tailwind -> cap at 0.40-0.55 however strong the print."
+  },
+  {
+    "section": "common_mistakes",
+    "content": "Depositories, thrifts, specialty and consumer lenders, mortgage servicers and property or specialty insurers -> compress toward 0.40-0.55; do not place above 0.70 or below 0.30 on the strength of the quarter alone. Record annual earnings, double-digit tangible book growth, margin expansion, large buybacks and falling charge-offs do not earn the top band; a provision build or a new nonaccrual does not earn the bottom band. Within-sector ordering off reported optics is noise expressed as conviction."
+  }
+]

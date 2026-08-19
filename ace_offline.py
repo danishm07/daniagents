@@ -188,13 +188,62 @@ _ALLOWED = {
 }
 
 
+def _english_words() -> set[str]:
+    """The system dictionary, for telling a ticker from an emphasised word.
+
+    An allow-list alone does not work: rules legitimately shout ``GUIDED``,
+    ``VOID``, ``NOT`` for emphasis, and the list grows forever while still
+    rejecting the next word nobody predicted. The first version of this filter
+    rejected the highest-conviction rule in the set because it contained the
+    word "GUIDED". A dictionary check is the general form of the same test.
+    """
+    for path in (Path("/usr/share/dict/words"), Path("/usr/dict/words")):
+        if path.exists():
+            return {w.strip().lower() for w in path.open() if w.strip()}
+    return set()
+
+
+_WORDS = _english_words()
+
+
+def _is_english(token: str) -> bool:
+    """Is this an ordinary word in caps rather than a ticker?
+
+    The system dictionary stores stems, so ``GUIDED`` is absent while ``guide``
+    is present — which is exactly the case that rejected the highest-conviction
+    rule in the first curation run. Strip the common inflections before giving
+    up on a token.
+    """
+    word = token.lower()
+    if word in _WORDS:
+        return True
+    for suffix, restore in (("ed", ""), ("ed", "e"), ("s", ""), ("es", ""),
+                            ("ing", ""), ("ing", "e"), ("d", ""), ("er", ""),
+                            ("ly", ""), ("est", "")):
+        if word.endswith(suffix):
+            stem = word[: -len(suffix)] + restore
+            if len(stem) >= 3 and stem in _WORDS:
+                return True
+    return False
+
+
 def _proper_noun_leak(text: str) -> str | None:
+    """Flag a rule that names a specific company or year rather than a pattern.
+
+    The reflecting model may have training exposure to these outcomes, so a rule
+    naming a ticker is a memorised result wearing a rule's clothes. Flags a
+    2-6 character all-caps token only when it is neither a known financial
+    abbreviation nor an ordinary English word in caps.
+    """
     import re
 
-    for token in re.findall(r"\b[A-Z][A-Z0-9.]{1,5}\b", text):
-        if token not in _ALLOWED:
-            return f"possible ticker {token!r}"
-    for year in re.findall(r"\b20[0-9]{2}\b", text):
+    # 2-5 characters: the actual range of US equity tickers. A 6+ character
+    # all-caps token is emphasis, not a symbol.
+    for token in re.findall(r"\b[A-Z][A-Z0-9.]{1,4}\b", text):
+        if token in _ALLOWED or _is_english(token):
+            continue
+        return f"possible ticker {token!r}"
+    for year in re.findall(r"\b(?:19|20)[0-9]{2}\b", text):
         return f"specific year {year!r}"
     return None
 
