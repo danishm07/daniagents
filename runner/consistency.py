@@ -138,6 +138,19 @@ def check_prompt(event: dict) -> str:
     with_context = A.build_prompt({**event, "quarter": "2026Q2"}, "CONTEXT BLOCK\n")
     if not with_context.endswith(mine):
         raise ConsistencyError("a context arm rewrites the deployed prompt instead of prefixing it")
+
+    # A factless bundle must not reach the model at all. Production returns 0.5
+    # uncalled; the offline generators used to ask anyway, and ``_facts_text``
+    # then dumped the raw JSON blob in as the "facts". Five 2025Q4 events do
+    # this, and the divergence made offline columns non-comparable to live on
+    # those rows. ``build_prompt`` now returns ``None`` there.
+    empty = {**event, "facts": []}
+    if A.build_prompt(empty, "") is not None or A.build_prompt(empty, "CTX") is not None:
+        raise ConsistencyError(
+            "a factless bundle still builds a prompt — offline will call the model "
+            "on raw JSON where production submits 0.5"
+        )
+
     return f"prompt and system prompt identical across paths ({len(mine)} chars); context arms prefix"
 
 

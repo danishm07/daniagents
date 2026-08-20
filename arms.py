@@ -328,8 +328,24 @@ def tag_quarters(events: list[dict]) -> list[dict]:
     return [{**e, "quarter": by_id[e["event_id"]]} for e in events if e["event_id"] in by_id]
 
 
-def build_prompt(event, context: str) -> str:
+def build_prompt(event, context: str) -> str | None:
+    """The deployed prompt with ``context`` prefixed, or ``None`` for no facts.
+
+    ``None`` means *do not call the model, submit 0.5* — which is what
+    ``predict.predict`` does live, and what ``reads`` already did on the backfill
+    path. Every other offline generator asked anyway, and ``_facts_text`` then
+    fell through to dumping the raw JSON blob into the prompt.
+
+    Five of 6,144 dev events (UTZ, FUBO, HOG, FWONK, SRE, all 2025Q4) carry an
+    empty ``content`` list. Scoring impact is nil at that count; the reason to
+    fix it is that those five rows made offline columns and production disagree,
+    so any offline-vs-baseline comparison was measuring two things at once.
+    Returning ``None`` rather than a neutral string keeps a forgotten call site
+    loud instead of silently re-degrading.
+    """
     payload = champion.live_payload(event["facts"])
+    if not predict._extract_facts(payload):
+        return None
     base = reads.user_prompt(payload, event["ticker"], champion.EVENT_TYPE)
     return f"{context}\n{base}" if context else base
 
@@ -356,6 +372,9 @@ def run_arm(arm: str, model: str, events: list[dict], workers: int = 12) -> Path
     def one(event):
         idx = indices[event["quarter"]]
         prompt = build_prompt(event, builder(event, idx))
+        if prompt is None:  # no facts: production submits 0.5 without calling
+            return {"event_id": event["event_id"], "prediction": 0.5,
+                    "prompt_tokens": 0, "completion_tokens": 0, "no_facts": True}
         champion._throttle.wait(champion._throttle.estimate(1200))
         resp = client.chat.completions.parse(
             model=model,

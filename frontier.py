@@ -121,6 +121,9 @@ def run_model(model: str, events: list[dict], workers: int, max_tokens: int) -> 
 
     def one(event):
         payload = champion.live_payload(event["facts"])
+        if not predict._extract_facts(payload):  # production submits 0.5 uncalled
+            return {"event_id": event["event_id"], "prediction": 0.5,
+                    "prompt_tokens": 0, "completion_tokens": 0}
         champion._throttle.wait(champion._throttle.estimate(1100))
         resp = client.chat.completions.parse(
             model=model,

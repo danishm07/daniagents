@@ -88,6 +88,9 @@ def generate(events: list[dict], context: str, tag: str, workers: int = 12) -> d
 
     def one(event):
         prompt = ARMS.build_prompt(event, context)
+        if prompt is None:  # no facts: production submits 0.5 without calling
+            return {"event_id": event["event_id"], "prediction": 0.5,
+                    "prompt_tokens": 0, "completion_tokens": 0, "cost": 0.0}
         champion._throttle.wait(champion._throttle.estimate(2500))
         resp = client.chat.completions.parse(
             model=MODEL,
